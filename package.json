@@ -8,7 +8,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "check": "astro check",
-    "images": "node scripts/download-images.mjs"
+    "images": "NODE_USE_ENV_PROXY=1 node --disable-warning=ExperimentalWarning scripts/download-images.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.4",

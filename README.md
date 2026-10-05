@@ -13,6 +13,8 @@ npm run build    # compilación de producción (.vercel/output)
 npm run images   # descarga las fotos del catálogo y las guarda en WebP (public/img/products)
 ```
 
+**Nota:** `npm run images` activa `NODE_USE_ENV_PROXY=1` para que Node use el proxy cuando exista (entornos en la nube); en tu ordenador no hace nada.
+
 **Primera vez:** ejecuta `npm run images` para descargar las fotos desde flordlotosegovia.com. Se guardan
 optimizadas en `public/img/products` y la web ya no depende de la web antigua. Después, súbelas al
 repositorio (`git add public/img`). Cuando el cliente entregue fotos originales, sustitúyelas en esa misma
