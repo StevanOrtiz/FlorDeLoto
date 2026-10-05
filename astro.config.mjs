@@ -27,7 +27,8 @@ export default defineConfig({
   },
   env: {
     schema: {
-      DATABASE_URL: envField.string({ context: 'server', access: 'secret' }),
+      // Opcional en el esquema para que la compilación no la exija; src/lib/db.ts falla con un mensaje claro si falta al consultar.
+      DATABASE_URL: envField.string({ context: 'server', access: 'secret', optional: true }),
       TURNSTILE_SECRET_KEY: envField.string({ context: 'server', access: 'secret', optional: true }),
       PUBLIC_TURNSTILE_SITE_KEY: envField.string({ context: 'client', access: 'public', optional: true }),
       PUBLIC_GSC_VERIFICATION: envField.string({ context: 'client', access: 'public', optional: true }),
