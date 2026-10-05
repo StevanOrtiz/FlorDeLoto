@@ -1,5 +1,6 @@
 import { defineMiddleware } from 'astro:middleware';
 import { COOKIE_NAME, csrfOk, getSession, sameOrigin } from './lib/auth';
+import { withSecurityHeaders } from './lib/security-headers';
 
 const PUBLIC_ADMIN_PATHS = new Set(['/admin/login', '/api/admin/login']);
 const SAFE_METHODS = new Set(['GET', 'HEAD', 'OPTIONS']);
@@ -13,7 +14,9 @@ const json = (body: unknown, status: number) =>
  *  - en peticiones que cambian datos exige Origin del propio sitio y token CSRF;
  *  - todas las respuestas del panel salen con no-store y noindex.
  */
-export const onRequest = defineMiddleware(async (context, next) => {
+export const onRequest = defineMiddleware(async (context, next) => withSecurityHeaders(await handle(context, next)));
+
+async function handle(context: Parameters<Parameters<typeof defineMiddleware>[0]>[0], next: Parameters<Parameters<typeof defineMiddleware>[0]>[1]): Promise<Response> {
   const { pathname } = context.url;
   const isApi = pathname.startsWith('/api/admin/');
   const isPage = pathname === '/admin' || pathname.startsWith('/admin/');
@@ -44,4 +47,4 @@ export const onRequest = defineMiddleware(async (context, next) => {
   response.headers.set('X-Robots-Tag', 'noindex, nofollow');
   response.headers.set('X-Frame-Options', 'DENY');
   return response;
-});
+}

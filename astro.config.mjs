@@ -1,6 +1,10 @@
 // @ts-check
 import { defineConfig, envField } from 'astro/config';
 import vercel from '@astrojs/vercel';
+import netlify from '@astrojs/netlify';
+
+// Netlify define NETLIFY=true durante la compilación; en cualquier otro caso se usa el adaptador de Vercel.
+const adapter = process.env.NETLIFY ? netlify() : vercel();
 
 export default defineConfig({
   site: 'https://flordlotosegovia.com',
@@ -9,7 +13,7 @@ export default defineConfig({
   // Las páginas del catálogo y el panel se generan bajo demanda desde Neon.
   // Las páginas fijas (legales, 404, contacto) declaran `export const prerender = true`.
   output: 'server',
-  adapter: vercel(),
+  adapter,
   // URLs antiguas → 301 para conservar posicionamiento.
   redirects: {
     '/contact': { status: 301, destination: '/contacto' },
@@ -19,9 +23,7 @@ export default defineConfig({
     // Orquídeas y «más flores» se unen en Plantas.
     '/orquideas-segovia': { status: 301, destination: '/plantas-segovia' },
     '/mas-flores-segovia': { status: 301, destination: '/plantas-segovia' },
-    // Con parámetros dinámicos Astro usa la forma de texto (redirección permanente por defecto en GET).
-    '/orquideas-segovia/[slug]': '/plantas-segovia/[slug]',
-    '/mas-flores-segovia/[slug]': '/plantas-segovia/[slug]',
+    // Las fichas (/orquideas-segovia/[slug], /mas-flores-segovia/[slug]) se redirigen con rutas propias en src/pages.
   },
   env: {
     schema: {
