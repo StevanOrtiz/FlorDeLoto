@@ -1,0 +1,13 @@
+{
+  "name": "Flor de Loto Segovia",
+  "short_name": "Flor de Loto",
+  "lang": "es",
+  "start_url": "/",
+  "display": "browser",
+  "background_color": "#fbf6f1",
+  "theme_color": "#fbf6f1",
+  "icons": [
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml" },
+    { "src": "/apple-touch-icon.png", "sizes": "180x180", "type": "image/png" }
+  ]
+}

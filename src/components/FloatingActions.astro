@@ -1,0 +1,57 @@
+---
+import Icon from './Icon.astro';
+import { business, waLink } from '../lib/site';
+---
+<div class="fab" data-fab>
+  <div class="fab__panel" id="fab-panel" data-fab-panel hidden>
+    <p class="fab__title">¡Haz tu pedido aquí!</p>
+    <a class="fab__item fab__item--wa" href={waLink('¡Hola! Me gustaría hacer un pedido.')} target="_blank" rel="noopener">
+      <Icon name="whatsapp" size={20} /> WhatsApp
+    </a>
+    <a class="fab__item" href={business.phoneHref}><Icon name="phone" size={20} /> Llamar</a>
+    {business.channels.map((c) => (
+      <a class="fab__item" href={c.url} target="_blank" rel="noopener"><Icon name="bag" size={20} /> {c.name}</a>
+    ))}
+  </div>
+  <button class="fab__btn" type="button" aria-expanded="false" aria-controls="fab-panel" data-fab-toggle>
+    <span class="fab__icon fab__icon--open"><Icon name="whatsapp" size={28} /></span>
+    <span class="fab__icon fab__icon--close"><Icon name="close" size={24} /></span>
+    <span class="sr-only">Opciones para hacer tu pedido</span>
+  </button>
+</div>
+
+<style>
+  .fab { position: fixed; right: max(16px, env(safe-area-inset-right)); bottom: max(16px, env(safe-area-inset-bottom)); z-index: 90; display: grid; justify-items: end; gap: 12px; }
+  .fab__btn {
+    width: 62px; height: 62px; border-radius: 50%; border: 0; background: #1f7a4d; color: var(--white);
+    display: grid; place-items: center; box-shadow: 0 14px 30px -10px rgba(31, 122, 77, 0.65);
+    transition: transform 0.5s var(--ease); position: relative;
+  }
+  .fab__btn::before { content: ''; position: absolute; inset: 0; border-radius: 50%; border: 2px solid #1f7a4d; animation: pulse 2.6s var(--ease) infinite; }
+  .fab__btn:hover { transform: scale(1.07); }
+  .fab__icon { grid-area: 1 / 1; transition: transform 0.5s var(--ease), opacity 0.3s; display: grid; }
+  .fab__icon--close { opacity: 0; transform: rotate(-90deg); }
+  .fab__btn[aria-expanded='true'] { background: var(--wine); }
+  .fab__btn[aria-expanded='true']::before { display: none; }
+  .fab__btn[aria-expanded='true'] .fab__icon--open { opacity: 0; transform: rotate(90deg); }
+  .fab__btn[aria-expanded='true'] .fab__icon--close { opacity: 1; transform: none; }
+  .fab__panel { background: var(--white); border-radius: 22px; padding: 14px; box-shadow: var(--shadow); display: grid; gap: 4px; min-width: 230px; transform-origin: bottom right; }
+  .fab__panel:not([hidden]) { animation: pop 0.45s var(--ease) both; }
+  .fab__title { font-family: var(--font-serif); font-size: 1.15rem; padding: 4px 10px 8px; }
+  .fab__item { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 12px; text-decoration: none; font-size: var(--fs-sm); font-weight: 500; transition: background 0.2s; }
+  .fab__item:hover { background: var(--blush-50); }
+  .fab__item--wa { color: #1f7a4d; }
+  @keyframes pulse { 0% { transform: scale(1); opacity: 0.7; } 80%, 100% { transform: scale(1.5); opacity: 0; } }
+  @keyframes pop { from { opacity: 0; transform: scale(0.85) translateY(10px); } }
+</style>
+
+<script>
+  const toggle = document.querySelector<HTMLButtonElement>('[data-fab-toggle]')!;
+  const panel = document.querySelector<HTMLElement>('[data-fab-panel]')!;
+  const set = (open: boolean) => { toggle.setAttribute('aria-expanded', String(open)); panel.hidden = !open; };
+  toggle.addEventListener('click', () => set(toggle.getAttribute('aria-expanded') !== 'true'));
+  document.addEventListener('click', (e) => {
+    if (!panel.hidden && !(e.target as Element).closest('[data-fab]')) set(false);
+  });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') set(false); });
+</script>

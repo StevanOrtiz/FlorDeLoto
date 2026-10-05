@@ -1,0 +1,194 @@
+---
+import Icon from './Icon.astro';
+import { PUBLIC_TURNSTILE_SITE_KEY } from 'astro:env/client';
+import { EVENT_TYPES, type FormKind } from '../lib/validation';
+import { business, waLink } from '../lib/site';
+
+interface Props { kind?: FormKind; id?: string }
+const { kind = 'contacto', id = `form-${kind}` } = Astro.props;
+const today = new Date().toISOString().slice(0, 10);
+---
+<form class="cform" id={id} data-cform data-kind={kind} novalidate action="/api/contact" method="post">
+  <input type="hidden" name="kind" value={kind} />
+  <input type="hidden" name="ts" value="" data-ts />
+  <div class="hp" aria-hidden="true">
+    <label for={`${id}-website`}>No rellenes este campo</label>
+    <input id={`${id}-website`} type="text" name="website" tabindex="-1" autocomplete="off" />
+  </div>
+
+  <div class="cform__grid">
+    <div class="field">
+      <label for={`${id}-nombre`}>Nombre *</label>
+      <input id={`${id}-nombre`} name="nombre" type="text" autocomplete="name" required minlength="2" maxlength="100" aria-describedby={`${id}-nombre-err`} />
+      <p class="error" id={`${id}-nombre-err`} data-error="nombre"></p>
+    </div>
+    <div class="field">
+      <label for={`${id}-email`}>Correo electrónico *</label>
+      <input id={`${id}-email`} name="email" type="email" autocomplete="email" required maxlength="160" aria-describedby={`${id}-email-err`} />
+      <p class="error" id={`${id}-email-err`} data-error="email"></p>
+    </div>
+    <div class="field">
+      <label for={`${id}-telefono`}>Teléfono <span class="muted">(opcional)</span></label>
+      <input id={`${id}-telefono`} name="telefono" type="tel" autocomplete="tel" maxlength="20" aria-describedby={`${id}-telefono-err`} />
+      <p class="error" id={`${id}-telefono-err`} data-error="telefono"></p>
+    </div>
+
+    {kind === 'contacto' ? (
+      <div class="field">
+        <label for={`${id}-asunto`}>Asunto *</label>
+        <input id={`${id}-asunto`} name="asunto" type="text" required minlength="3" maxlength="140" aria-describedby={`${id}-asunto-err`} />
+        <p class="error" id={`${id}-asunto-err`} data-error="asunto"></p>
+      </div>
+    ) : (
+      <>
+        <div class="field">
+          <label for={`${id}-tipo`}>Tipo de evento *</label>
+          <select id={`${id}-tipo`} name="tipoEvento" required aria-describedby={`${id}-tipo-err`}>
+            <option value="">Elige una opción</option>
+            {EVENT_TYPES.map((t) => <option value={t}>{t}</option>)}
+          </select>
+          <p class="error" id={`${id}-tipo-err`} data-error="tipoEvento"></p>
+        </div>
+        <div class="field">
+          <label for={`${id}-fecha`}>Fecha del evento <span class="muted">(opcional)</span></label>
+          <input id={`${id}-fecha`} name="fecha" type="date" min={today} aria-describedby={`${id}-fecha-err`} />
+          <p class="error" id={`${id}-fecha-err`} data-error="fecha"></p>
+        </div>
+        <div class="field">
+          <label for={`${id}-lugar`}>Lugar <span class="muted">(opcional)</span></label>
+          <input id={`${id}-lugar`} name="lugar" type="text" maxlength="140" />
+          <p class="error"></p>
+        </div>
+      </>
+    )}
+
+    <div class="field cform__full">
+      <label for={`${id}-mensaje`}>{kind === 'evento' ? 'Cuéntanos tu idea *' : 'Mensaje *'}</label>
+      <textarea id={`${id}-mensaje`} name="mensaje" required minlength="10" maxlength="3000" aria-describedby={`${id}-mensaje-err`} placeholder={kind === 'evento' ? 'Estilo, colores, número de invitados, qué necesitas decorar…' : ''}></textarea>
+      <p class="error" id={`${id}-mensaje-err`} data-error="mensaje"></p>
+    </div>
+  </div>
+
+  <div class="field">
+    <label class="check">
+      <input type="checkbox" name="consentimiento" required aria-describedby={`${id}-consent-err`} />
+      <span>
+        He leído la <a href="/politica-de-privacidad" target="_blank">política de privacidad</a> y acepto que {business.name} trate mis datos para responder a mi consulta. *
+      </span>
+    </label>
+    <p class="error" id={`${id}-consent-err`} data-error="consentimiento"></p>
+  </div>
+
+  <p class="cform__legal">
+    <strong>Información básica sobre protección de datos.</strong> Responsable: {business.legal.razonSocial ?? business.name}.
+    Finalidad: responder a tu consulta o presupuesto. Legitimación: tu consentimiento. Destinatarios: no se ceden datos
+    a terceros, salvo obligación legal; proveedores de alojamiento como encargados del tratamiento. Derechos: acceso,
+    rectificación, supresión y otros, como se explica en la <a href="/politica-de-privacidad">política de privacidad</a>.
+  </p>
+
+  {PUBLIC_TURNSTILE_SITE_KEY && <div class="cf-turnstile" data-sitekey={PUBLIC_TURNSTILE_SITE_KEY} data-language="es"></div>}
+
+  <div class="cform__actions">
+    <button class="btn" type="submit" data-submit>
+      <span data-label>{kind === 'evento' ? 'Solicitar presupuesto' : 'Enviar mensaje'}</span>
+      <Icon name="arrow" />
+    </button>
+    <a class="link-arrow" href={waLink()} target="_blank" rel="noopener">o escríbenos por WhatsApp <Icon name="arrow" /></a>
+  </div>
+
+  <div class="cform__status" role="status" aria-live="polite" data-status></div>
+</form>
+
+<style>
+  .cform { position: relative; display: grid; gap: 18px; background: var(--white); border-radius: var(--radius-lg); padding: clamp(22px, 4vw, 44px); box-shadow: var(--shadow-soft); }
+  .cform__grid { display: grid; gap: 4px 18px; }
+  @media (min-width: 640px) { .cform__grid { grid-template-columns: 1fr 1fr; } .cform__full { grid-column: 1 / -1; } }
+  .cform__legal { font-size: var(--fs-xs); color: var(--ink-soft); line-height: 1.5; }
+  .cform__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 18px; }
+  .cform__status:empty { display: none; }
+  .cform__status { padding: 16px 18px; border-radius: 14px; font-weight: 500; }
+  .cform__status.is-ok { background: var(--sage-100); color: var(--forest); }
+  .cform__status.is-err { background: #fdecea; color: #8c1d18; }
+  .check { font-weight: 400 !important; }
+  [data-submit][disabled] { opacity: 0.7; cursor: progress; }
+</style>
+
+<script>
+  import { normalize, validate } from '../lib/validation';
+
+  document.querySelectorAll<HTMLFormElement>('[data-cform]').forEach((form) => {
+    const ts = form.querySelector<HTMLInputElement>('[data-ts]')!;
+    const status = form.querySelector<HTMLElement>('[data-status]')!;
+    const submit = form.querySelector<HTMLButtonElement>('[data-submit]')!;
+    const label = submit.querySelector<HTMLElement>('[data-label]')!;
+    const original = label.textContent;
+    ts.value = String(Date.now());
+
+    const showErrors = (errors: Record<string, string>) => {
+      form.querySelectorAll<HTMLElement>('[data-error]').forEach((p) => {
+        const key = p.dataset.error!;
+        p.textContent = errors[key] ?? '';
+        const input = form.querySelector<HTMLElement>(`[name="${key}"]`);
+        input?.setAttribute('aria-invalid', errors[key] ? 'true' : 'false');
+      });
+    };
+
+    const collect = () => {
+      const fd = new FormData(form);
+      const obj: Record<string, unknown> = Object.fromEntries(fd.entries());
+      obj.consentimiento = fd.get('consentimiento') === 'on';
+      return obj;
+    };
+
+    // Validación al salir de cada campo ya tocado
+    form.addEventListener('focusout', (e) => {
+      const el = e.target as HTMLInputElement;
+      if (!el.name || !el.value) return;
+      const errors = validate(normalize(collect()));
+      const p = form.querySelector<HTMLElement>(`[data-error="${el.name}"]`);
+      if (p) { p.textContent = errors[el.name] ?? ''; el.setAttribute('aria-invalid', errors[el.name] ? 'true' : 'false'); }
+    });
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      status.className = 'cform__status';
+      status.textContent = '';
+      const raw = collect();
+      const errors = validate(normalize(raw));
+      showErrors(errors);
+      const firstKey = Object.keys(errors)[0];
+      if (firstKey) {
+        form.querySelector<HTMLElement>(`[name="${firstKey}"]`)?.focus();
+        return;
+      }
+
+      submit.disabled = true;
+      label.textContent = 'Enviando…';
+      try {
+        const res = await fetch(form.action, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(raw),
+        });
+        const data = await res.json().catch(() => ({}));
+        if (res.ok && data.ok) {
+          form.reset();
+          ts.value = String(Date.now());
+          status.classList.add('is-ok');
+          status.textContent = '¡Gracias! Hemos recibido tu mensaje y te responderemos lo antes posible.';
+        } else {
+          if (data.errors) showErrors(data.errors);
+          status.classList.add('is-err');
+          status.textContent = data.error ?? 'Revisa los campos marcados.';
+        }
+      } catch {
+        status.classList.add('is-err');
+        status.textContent = 'No hay conexión. Inténtalo de nuevo o escríbenos por WhatsApp.';
+      } finally {
+        submit.disabled = false;
+        label.textContent = original;
+        (window as unknown as { turnstile?: { reset: () => void } }).turnstile?.reset();
+      }
+    });
+  });
+</script>

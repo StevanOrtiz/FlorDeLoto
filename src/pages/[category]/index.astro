@@ -1,0 +1,70 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import ProductCard from '../../components/ProductCard.astro';
+import OrderChannels from '../../components/OrderChannels.astro';
+import Icon from '../../components/Icon.astro';
+import { shopCategories, productsIn, type Category } from '../../data/products';
+
+export function getStaticPaths() {
+  return shopCategories.map((c) => ({ params: { category: c.path.slice(1) }, props: { cat: c } }));
+}
+interface Props { cat: Category }
+const { cat } = Astro.props;
+const items = productsIn(cat.id);
+const crumbs = [
+  { name: 'Inicio', href: '/' },
+  { name: 'Catálogo', href: '/catalogo' },
+  { name: cat.name, href: cat.path },
+];
+const others = shopCategories.filter((c) => c.id !== cat.id);
+const [first, ...rest] = cat.name.split(' ');
+---
+<Base title={cat.title} description={cat.description} breadcrumbs={crumbs} image={items[0]?.images[0]}>
+  <PageHero
+    crumbs={crumbs}
+    eyebrow="Floristería en Segovia"
+    title={`${first} <em>${rest.join(' ')}</em>`}
+    lead={cat.intro}
+    image={items[0]?.images[1] ?? items[0]?.images[0]}
+    imageAlt={items[0]?.name}
+  />
+
+  <section class="container cat-list" aria-labelledby="cat-h">
+    <h2 id="cat-h" class="sr-only">Nuestros {cat.name.toLowerCase()}</h2>
+    <div class="grid-products" data-stagger="0.06">
+      {items.map((p, i) => <ProductCard product={p} eager={i < 3} />)}
+    </div>
+
+    {(cat.id === 'orquideas' || cat.id === 'plantas') && (
+      <aside class="care-cta" data-reveal="up">
+        <Icon name="water" size={34} />
+        <div>
+          <h2 class="h3">¿Cómo se cuidan?</h2>
+          <p>Riego, luz y abono de cada planta en nuestra guía de cuidados.</p>
+        </div>
+        <a class="btn btn--sm" href="/cuidado-de-plantas">Ver guía <Icon name="arrow" /></a>
+      </aside>
+    )}
+
+    <nav class="more" aria-label="Otras categorías">
+      <p class="eyebrow">Sigue explorando</p>
+      <ul data-stagger>
+        {others.map((c) => <li><a href={c.path}>{c.name} <Icon name="arrow" /></a></li>)}
+      </ul>
+    </nav>
+  </section>
+
+  <OrderChannels title="¿Lo quieres para hoy?" />
+</Base>
+
+<style>
+  .cat-list { padding-bottom: clamp(48px, 8vw, 96px); }
+  .care-cta { margin-top: 48px; display: flex; flex-wrap: wrap; align-items: center; gap: 20px; padding: 28px; border-radius: var(--radius-lg); background: var(--sage-100); }
+  .care-cta > svg { color: var(--eucalyptus); }
+  .care-cta div { flex: 1 1 240px; }
+  .more { margin-top: clamp(56px, 8vw, 96px); display: grid; gap: 18px; }
+  .more ul { list-style: none; padding: 0; display: grid; gap: 0; border-top: 1px solid var(--line); }
+  .more a { display: flex; justify-content: space-between; align-items: center; padding: 22px 4px; border-bottom: 1px solid var(--line); font-family: var(--font-serif); font-size: var(--fs-xl); text-decoration: none; transition: padding 0.5s var(--ease), color 0.3s; }
+  .more a:hover { padding-left: 18px; color: var(--wine); }
+</style>

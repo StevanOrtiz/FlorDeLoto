@@ -1,0 +1,73 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Icon from '../components/Icon.astro';
+import { products, productUrl } from '../data/products';
+import { business } from '../lib/site';
+
+const plants = products.filter((p) => p.care);
+const crumbs = [{ name: 'Inicio', href: '/' }, { name: 'Cuidado de plantas', href: '/cuidado-de-plantas' }];
+const faq = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: plants.map((p) => ({
+    '@type': 'Question',
+    name: `¿Cómo cuidar la planta «${p.name}»?`,
+    acceptedAnswer: { '@type': 'Answer', text: p.care!.join(' ') },
+  })),
+};
+---
+<Base
+  title="Cuidado de plantas y orquídeas: riego, luz y abono"
+  description="Guía de cuidados de Flor de Loto Segovia: cómo regar una orquídea Phalaenopsis, cuidados de Schefflera, yuca y olivo. Consejos de floristas en Segovia."
+  breadcrumbs={crumbs}
+  jsonLd={[faq]}
+>
+  <PageHero
+    crumbs={crumbs}
+    eyebrow="Plantas y cuidados"
+    title="Consejos para que tus plantas <em>estén siempre bonitas</em>"
+    lead="Riego, luz y abono para las plantas que te llevas de nuestra floristería. ¿Tienes dudas con la tuya? Pregúntanos."
+  />
+
+  <section class="container care" aria-label="Guía por planta">
+    {plants.map((p, i) => (
+      <article class:list={['plant', { 'plant--rev': i % 2 }]} id={p.slug}>
+        <div class="plant__media" data-reveal="clip">
+          <img src={p.images[0]} alt={p.name} width="600" height="750" loading="lazy" data-zoom />
+        </div>
+        <div class="plant__body">
+          <h2 class="h2" data-split>{p.name}</h2>
+          <p class="lead" data-reveal="up">{p.description}</p>
+          {p.watering && <p class="plant__water" data-reveal="up"><Icon name="water" size={22} /> <span><strong>Riego:</strong> {p.watering}</span></p>}
+          <ul class="plant__tips" data-stagger>
+            {p.care!.map((c) => <li><Icon name="check" size={18} /> {c}</li>)}
+          </ul>
+          <a class="link-arrow" href={productUrl(p)} data-reveal="up">Ver {p.name} <Icon name="arrow" /></a>
+        </div>
+      </article>
+    ))}
+  </section>
+
+  <section class="section container">
+    <div class="ask" data-reveal="up">
+      <h2 class="h3">¿Tu planta no está como el primer día?</h2>
+      <p>Mándanos una foto por WhatsApp o pásate por la tienda y te aconsejamos.</p>
+      <a class="btn btn--wa" href={business.whatsapp} target="_blank" rel="noopener"><Icon name="whatsapp" /> Preguntar por WhatsApp</a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .care { display: grid; gap: clamp(64px, 10vw, 140px); padding-block: clamp(24px, 4vw, 48px); }
+  .plant { display: grid; gap: clamp(28px, 5vw, 80px); align-items: center; }
+  @media (min-width: 900px) { .plant { grid-template-columns: 1fr 1fr; } .plant--rev .plant__media { order: 2; } }
+  .plant__media { aspect-ratio: 4 / 5; border-radius: var(--radius-lg); overflow: hidden; background: var(--sage-100); max-height: 80vh; }
+  .plant__media img { width: 100%; height: 100%; object-fit: cover; }
+  .plant__body { display: grid; gap: 18px; justify-items: start; }
+  .plant__water { display: flex; gap: 10px; align-items: center; padding: 12px 18px; border-radius: 999px; background: var(--sage-100); color: var(--forest); }
+  .plant__tips { list-style: none; padding: 0; display: grid; gap: 10px; }
+  .plant__tips li { display: flex; gap: 10px; align-items: flex-start; }
+  .plant__tips svg { color: var(--eucalyptus); flex: none; margin-top: 4px; }
+  .ask { background: var(--blush-50); border-radius: var(--radius-lg); padding: clamp(28px, 5vw, 56px); display: grid; gap: 14px; justify-items: start; }
+</style>

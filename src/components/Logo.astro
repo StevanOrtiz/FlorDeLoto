@@ -1,0 +1,27 @@
+---
+// Marca provisional (flor de loto + nombre) hasta recibir el logo vectorial del cliente.
+interface Props { class?: string; light?: boolean }
+const { class: cls, light = false } = Astro.props;
+---
+<span class:list={['logo', cls, { 'logo--light': light }]}>
+  <svg class="logo__mark" viewBox="0 0 48 48" aria-hidden="true">
+    <path d="M24 8c4 5 6 10 6 15s-2.6 9-6 11c-3.4-2-6-6-6-11s2-10 6-15Z" fill="var(--blush-500)" />
+    <path d="M8 18c6 0 11 2.5 14 7s3.5 8.5 2 10c-5 .5-9.6-1.4-12.4-5.6S8 22 8 18Z" fill="var(--blush-300)" />
+    <path d="M40 18c-6 0-11 2.5-14 7s-3.5 8.5-2 10c5 .5 9.6-1.4 12.4-5.6S40 22 40 18Z" fill="var(--blush-300)" />
+    <path d="M6 36c6 3.5 12 4.5 18 4.5S36 39.5 42 36" fill="none" stroke="var(--sage-500)" stroke-width="2.2" stroke-linecap="round" />
+  </svg>
+  <span class="logo__text">
+    <span class="logo__name">Flor de Loto</span>{" "}
+    <span class="logo__city">Segovia</span>
+  </span>
+</span>
+
+<style>
+  .logo { display: inline-flex; align-items: center; gap: 10px; color: var(--ink); }
+  .logo--light { color: var(--white); }
+  .logo__mark { width: 40px; height: 40px; flex: none; transition: transform 0.8s var(--ease); }
+  :global(a:hover) > .logo .logo__mark { transform: rotate(-8deg) scale(1.06); }
+  .logo__text { display: grid; line-height: 1; }
+  .logo__name { font-family: var(--font-serif); font-size: 1.35rem; letter-spacing: -0.01em; }
+  .logo__city { font-size: 0.66rem; letter-spacing: 0.34em; text-transform: uppercase; opacity: 0.7; margin-top: 4px; }
+</style>

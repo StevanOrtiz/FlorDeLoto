@@ -1,0 +1,71 @@
+---
+import Icon from './Icon.astro';
+import { reviews } from '../data/reviews';
+import { business } from '../lib/site';
+const rows = [reviews.slice(0, 5), reviews.slice(5)];
+const r = business.rating;
+---
+<section class="reviews section" aria-labelledby="reviews-title">
+  <div class="container reviews__head">
+    <div>
+      <p class="eyebrow" data-reveal="up">Opiniones</p>
+      <h2 id="reviews-title" class="h2" data-split>Lo que dicen <em>quienes nos eligen</em></h2>
+    </div>
+    <div class="reviews__score" data-reveal="scale">
+      <p class="reviews__num"><span data-count={r.value}>{r.value.toLocaleString('es-ES')}</span><small>/5</small></p>
+      <p class="reviews__stars" aria-hidden="true">{Array.from({ length: 5 }).map(() => <Icon name="star" size={18} />)}</p>
+      <p class="reviews__count">{r.count} reseñas en Google</p>
+      <a class="link-arrow" href={business.googleReviews} target="_blank" rel="noopener">Ver todas en Google <Icon name="arrow" /></a>
+    </div>
+  </div>
+
+  <div class="reviews__rows">
+    {rows.map((row, i) => (
+      <div class:list={['reviews__row', { 'reviews__row--rev': i === 1 }]}>
+        <ul class="reviews__track">
+          {[...row, ...row].map((rv, j) => (
+            <li class="rcard" aria-hidden={j >= row.length ? 'true' : undefined}>
+              <p class="rcard__stars" role="img" aria-label={`${rv.rating} de 5 estrellas`}>
+                {Array.from({ length: rv.rating }).map(() => <Icon name="star" size={15} />)}
+              </p>
+              {rv.quote && <blockquote class="rcard__quote">«{rv.quote}»</blockquote>}
+              {rv.summary && <p class="rcard__summary">{rv.summary}</p>}
+              <p class="rcard__author">{rv.author} <span>· {rv.date}</span></p>
+            </li>
+          ))}
+        </ul>
+      </div>
+    ))}
+  </div>
+  <p class="container reviews__note">Selección de reseñas de 5 estrellas publicadas en Google. Los textos sin comillas son resúmenes.</p>
+</section>
+
+<style>
+  .reviews { background: var(--blush-50); overflow: hidden; }
+  .reviews__head { display: grid; gap: 32px; align-items: end; margin-bottom: clamp(40px, 6vw, 72px); }
+  @media (min-width: 900px) { .reviews__head { grid-template-columns: 1.5fr 1fr; } }
+  .reviews__head h2 { margin-top: 14px; max-width: 16ch; }
+  .reviews__head h2 :global(em) { color: var(--wine); }
+  .reviews__score { background: var(--white); border-radius: var(--radius); padding: 26px; box-shadow: var(--shadow-soft); display: grid; gap: 6px; justify-items: start; }
+  .reviews__num { font-family: var(--font-serif); font-size: clamp(3.4rem, 8vw, 5rem); line-height: 1; color: var(--wine); }
+  .reviews__num small { font-size: 0.4em; color: var(--ink-soft); }
+  .reviews__stars { display: flex; gap: 2px; color: #e0a43a; }
+  .reviews__count { color: var(--ink-soft); font-size: var(--fs-sm); margin-bottom: 8px; }
+  .reviews__rows { display: grid; gap: 20px; }
+  .reviews__row { overflow: hidden; mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); }
+  .reviews__track { list-style: none; padding: 0; display: flex; gap: 20px; width: max-content; animation: marquee 60s linear infinite; }
+  .reviews__row--rev .reviews__track { animation-direction: reverse; animation-duration: 70s; }
+  .reviews__row:hover .reviews__track { animation-play-state: paused; }
+  .rcard { width: min(82vw, 380px); flex: none; background: var(--white); border-radius: var(--radius); padding: 24px; display: grid; gap: 10px; align-content: start; box-shadow: 0 6px 20px -14px rgba(42,34,36,0.35); }
+  .rcard__stars { display: flex; gap: 2px; color: #e0a43a; }
+  .rcard__quote { font-family: var(--font-serif); font-size: 1.3rem; font-style: italic; line-height: 1.3; color: var(--wine); }
+  .rcard__summary { color: var(--ink-soft); }
+  .rcard__author { font-weight: 600; font-size: var(--fs-sm); }
+  .rcard__author span { font-weight: 400; color: var(--ink-soft); }
+  .reviews__note { margin-top: 28px; font-size: var(--fs-xs); color: var(--ink-soft); }
+  @keyframes marquee { to { transform: translateX(calc(-50% - 10px)); } }
+  @media (prefers-reduced-motion: reduce) {
+    .reviews__row { overflow-x: auto; mask-image: none; }
+    .reviews__track { animation: none; }
+  }
+</style>

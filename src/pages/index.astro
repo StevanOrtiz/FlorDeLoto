@@ -1,0 +1,410 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import ProductCard from '../components/ProductCard.astro';
+import Reviews from '../components/Reviews.astro';
+import OrderChannels from '../components/OrderChannels.astro';
+import Location from '../components/Location.astro';
+import { products, shopCategories, productsIn } from '../data/products';
+import { business, waLink } from '../lib/site';
+
+const find = (slug: string) => products.find((p) => p.slug === slug)!;
+const featured = ['ramo-24-rosas-rojas', 'ramo-girasoles-templanza', 'pack-amor', 'ramo-primavera', 'cupula-3-rosas-preservadas', 'orquidea-phalaenopsis', 'ramo-amantina', 'olivo-copa'].map(find);
+const heroImgs = [find('ramo-rosas-eucalipto').images[0], find('ramo-girasoles-templanza').images[0], find('ramo-primavera').images[0]];
+const catImg: Record<string, string> = {
+  ramos: find('ramo-amantina').images[0],
+  rosas: find('rosas-multicolor').images[0],
+  orquideas: find('planta-phalaenopsis-rosa').images[0],
+  plantas: find('olivo-copa').images[0],
+};
+
+const services = [
+  {
+    icon: 'truck',
+    title: 'Servicio a domicilio Premium',
+    text: 'Llevamos tus flores a casa, al trabajo o al hospital, en Segovia y alrededores.',
+    points: ['Ramos personalizados', 'Entregas en el mismo día (según disponibilidad)', 'Servicio en Segovia y alrededores', 'Tarjeta dedicatoria y envoltorios especiales'],
+    foot: 'Haz tu pedido online o por teléfono.',
+  },
+  {
+    icon: 'building',
+    title: 'Mantenimiento floral',
+    text: 'Para oficinas y despachos, hoteles y restaurantes, espacios de eventos, recepciones y hogares.',
+    points: ['Visitas periódicas para renovar o mantener los arreglos', 'Riego, limpieza y sustitución de flores', 'Diseños adaptados a la estación y al estilo del lugar', 'Frecuencia semanal, quincenal o mensual'],
+    foot: 'Pide tu propuesta sin compromiso.',
+  },
+  {
+    icon: 'chat',
+    title: 'Asesoramiento personalizado',
+    text: '¿No sabes qué elegir? Te ayudamos a encontrar las flores perfectas para cada momento.',
+    points: ['Decoración floral para eventos, bodas y celebraciones', 'Ideas para ambientar tu hogar o negocio', 'Combinaciones de colores, flores y estilos', 'Consejos de cuidado, mantenimiento y duración'],
+    foot: 'Cuéntanos tu idea.',
+  },
+] as const;
+
+const marquee = ['Ramos a medida', 'Entrega a domicilio', 'Rosas', 'Bodas y eventos', 'Orquídeas', 'Plantas de interior', 'Packs regalo', 'Coronas y centros'];
+---
+<Base
+  title="Flor de Loto Segovia | Floristería y arreglos florales en Segovia"
+  description="Floristería en Segovia con 4,7 de 5 en Google. Ramos y arreglos florales personalizados con entrega a domicilio. P.º Conde de Sepúlveda, 24. Pide por WhatsApp."
+>
+  <div class="progress" data-progress aria-hidden="true"></div>
+
+  <!-- ————— HERO ————— -->
+  <section class="hero">
+    <div class="hero__bg" aria-hidden="true">
+      <span class="blob blob--a"></span><span class="blob blob--b"></span><span class="blob blob--c"></span>
+    </div>
+    <div class="petals" aria-hidden="true">
+      {Array.from({ length: 9 }).map((_, i) => (
+        <svg class="petal" style={`--i:${i}`} viewBox="0 0 20 28"><path d="M10 0C16 7 20 13 20 18a10 10 0 0 1-20 0C0 13 4 7 10 0Z" /></svg>
+      ))}
+    </div>
+
+    <div class="container hero__inner">
+      <div class="hero__text">
+        <p class="eyebrow" data-reveal="up">Floristería en Segovia</p>
+        <h1 class="hero__title" data-split>Flores que convierten <em>sentimientos</em> en detalles</h1>
+        <p class="lead hero__lead hero-in" style="--d: 0.35s">
+          Arreglos florales únicos en Segovia, para regalar, celebrar y emocionar.
+        </p>
+        <div class="hero__ctas hero-in" style="--d: 0.5s">
+          <a class="btn btn--wa" href={waLink('¡Hola! Me gustaría hacer un pedido.')} target="_blank" rel="noopener">
+            <Icon name="whatsapp" /> Pedir por WhatsApp
+          </a>
+          <a class="btn btn--ghost" href="/catalogo">Ver nuestros arreglos <Icon name="arrow" /></a>
+        </div>
+        <a class="hero__rating hero-in" style="--d: 0.65s" href={business.googleReviews} target="_blank" rel="noopener">
+          <span class="hero__stars" aria-hidden="true">{Array.from({ length: 5 }).map(() => <Icon name="star" size={16} />)}</span>
+          <span><strong>{business.rating.value.toLocaleString('es-ES')}/5</strong> en Google · {business.rating.count} reseñas</span>
+        </a>
+      </div>
+
+      <div class="hero__collage">
+        <figure class="hero__img hero__img--1" data-reveal="clip">
+          <img src={heroImgs[0]} alt="Ramo de rosas en tonos pastel con eucalipto" width="640" height="800" fetchpriority="high" data-parallax="0.12" />
+        </figure>
+        <figure class="hero__img hero__img--2" data-reveal="clip" data-delay="0.25">
+          <img src={heroImgs[1]} alt="Ramo de girasoles con follaje rojo y eucalipto" width="480" height="600" data-parallax="0.2" />
+        </figure>
+        <figure class="hero__img hero__img--3" data-reveal="clip" data-delay="0.45">
+          <img src={heroImgs[2]} alt="Ramo de lirios con paniculata blanca" width="420" height="520" data-parallax="0.28" />
+        </figure>
+        <div class="hero__badge" data-reveal="scale" data-delay="1">
+          <svg viewBox="0 0 120 120" class="hero__badge-ring" aria-hidden="true">
+            <defs><path id="circle" d="M60 60m-46 0a46 46 0 1 1 92 0a46 46 0 1 1-92 0" /></defs>
+            <text><textPath href="#circle" textLength="286" lengthAdjust="spacing">hecho a mano · en Segovia · </textPath></text>
+          </svg>
+          <Icon name="flower" size={30} />
+        </div>
+      </div>
+    </div>
+
+    <a class="hero__scroll" href="#marca" aria-label="Bajar a la siguiente sección">
+      <span></span>
+    </a>
+  </section>
+
+  <!-- ————— MARQUEE ————— -->
+  <div class="band-wrap" id="marca">
+    <div class="band" aria-hidden="true">
+      <div class="band__track">
+        {[...marquee, ...marquee].map((m) => <span>{m}<Icon name="sparkles" size={20} /></span>)}
+      </div>
+    </div>
+  </div>
+
+  <!-- ————— CONFIANZA ————— -->
+  <section class="trust container" aria-label="Por qué elegirnos">
+    <ul class="trust__list" data-stagger>
+      <li><span class="trust__num"><span data-count="4.7">4,7</span>/5</span><span>valoración en Google</span></li>
+      <li><span class="trust__num">+<span data-count="330">330</span></span><span>reseñas de clientes</span></li>
+      <li><span class="trust__icon"><Icon name="truck" size={34} /></span><span>Entrega a domicilio</span></li>
+      <li><span class="trust__icon"><Icon name="card" size={34} /></span><span>Pago con tarjeta y móvil</span></li>
+    </ul>
+  </section>
+
+  <!-- ————— SOBRE NOSOTROS ————— -->
+  <section class="about section" aria-labelledby="about-title">
+    <div class="container about__grid">
+      <div class="about__media" data-reveal="clip">
+        <img src={find('ramo-armonia').images[0]} alt="Ramo de paniculata blanca con helechos" width="700" height="900" loading="lazy" data-zoom />
+      </div>
+      <div class="about__text">
+        <p class="eyebrow" data-reveal="up">Sobre nosotros</p>
+        <h2 id="about-title" class="h2" data-split>El arte de <em>las flores</em></h2>
+        <p class="lead" data-reveal="up">
+          En Flor de Loto Segovia creamos arreglos florales únicos, pensados para sorprender y hacer especial cada ocasión.
+        </p>
+        <p data-reveal="up">
+          Las flores son nuestras mejores aliadas para sorprender y transmitir emociones. Por eso cuidamos cada
+          detalle y cada acabado: cada arreglo transmite emociones, celebra momentos y llena de vida cualquier espacio.
+        </p>
+        <ul class="about__chips" data-stagger>
+          <li><Icon name="heart" size={18} /> Ramos a medida</li>
+          <li><Icon name="leaf" size={18} /> Flor fresca</li>
+          <li><Icon name="sparkles" size={18} /> Atención al detalle</li>
+        </ul>
+        <a class="link-arrow" href="/contacto" data-reveal="up">Ven a conocernos <Icon name="arrow" /></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ————— SERVICIOS (scroll horizontal en escritorio) ————— -->
+  <section class="services" data-hscroll aria-labelledby="services-title">
+    <div class="services__track" data-hscroll-track>
+      <div class="services__intro">
+        <p class="eyebrow">Servicios</p>
+        <h2 id="services-title" class="h2">Mucho más que <em>un ramo</em></h2>
+        <p class="lead">Del regalo de última hora al mantenimiento floral de tu negocio.</p>
+        <p class="services__hint" aria-hidden="true">Desliza <Icon name="arrow" size={18} /></p>
+      </div>
+      {services.map((s, i) => (
+        <article class="scard" data-reveal="up">
+          <span class="scard__num">0{i + 1}</span>
+          <span class="scard__icon"><Icon name={s.icon} size={34} /></span>
+          <h3 class="scard__title">{s.title}</h3>
+          <p class="scard__text">{s.text}</p>
+          <ul class="scard__points">
+            {s.points.map((pt) => <li><Icon name="check" size={18} /> {pt}</li>)}
+          </ul>
+          <a class="link-arrow scard__foot" href={waLink(`¡Hola! Me interesa el servicio «${s.title}».`)} target="_blank" rel="noopener">{s.foot} <Icon name="arrow" /></a>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <!-- ————— CATEGORÍAS ————— -->
+  <section class="cats section" aria-labelledby="cats-title">
+    <div class="container">
+      <div class="cats__head">
+        <p class="eyebrow" data-reveal="up">Catálogo</p>
+        <h2 id="cats-title" class="h2" data-split>Encuentra <em>el detalle perfecto</em></h2>
+      </div>
+      <div class="cats__grid">
+        {shopCategories.map((c, i) => (
+          <a class="cat" href={c.path} data-reveal="up" data-delay={String(i * 0.08)}>
+            <img src={catImg[c.id]} alt="" width="600" height="800" loading="lazy" />
+            <span class="cat__shade"></span>
+            <span class="cat__body">
+              <span class="cat__count">{productsIn(c.id).length} diseños</span>
+              <span class="cat__name">{c.name}</span>
+              <span class="cat__go"><Icon name="arrow" /></span>
+            </span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ————— DESTACADOS ————— -->
+  <section class="featured section" aria-labelledby="featured-title">
+    <div class="container">
+      <div class="featured__head">
+        <div>
+          <p class="eyebrow" data-reveal="up">Los más pedidos</p>
+          <h2 id="featured-title" class="h2" data-split>Hechos a mano, <em>uno a uno</em></h2>
+        </div>
+        <a class="btn btn--ghost" href="/catalogo" data-reveal="up">Ver todo el catálogo <Icon name="arrow" /></a>
+      </div>
+      <div class="grid-products" data-stagger="0.08">
+        {featured.map((p) => <ProductCard product={p} showCategory />)}
+      </div>
+    </div>
+  </section>
+
+  <!-- ————— BODAS Y FUNERALES ————— -->
+  <section class="moments" aria-label="Bodas, eventos y funerales">
+    <a class="moment" href="/bodas-eventos-segovia">
+      <div class="moment__media"><img src={find('cupula-3-rosas-preservadas').images[0]} alt="" width="900" height="1100" loading="lazy" data-zoom /></div>
+      <div class="moment__body" data-reveal="up">
+        <Icon name="ring" size={34} />
+        <p class="eyebrow" style="color: var(--blush-100)">Bodas y eventos</p>
+        <h2 class="h2">El día más especial merece <em>flores únicas</em></h2>
+        <p>Arreglos florales para bodas tradicionales y temáticas, comuniones y celebraciones.</p>
+        <span class="link-arrow">Descubrir <Icon name="arrow" /></span>
+      </div>
+    </a>
+    <a class="moment moment--calm" href="/funerales-segovia">
+      <div class="moment__media"><img src={productsIn('funerales')[8].images[0]} alt="" width="900" height="1100" loading="lazy" data-zoom /></div>
+      <div class="moment__body" data-reveal="up" data-delay="0.15">
+        <Icon name="leaf" size={34} />
+        <p class="eyebrow" style="color: var(--sage-300)">Funerales</p>
+        <h2 class="h2">Cuando faltan las palabras, <em>acompañamos</em></h2>
+        <p>Coronas, centros y ramos funerarios preparados con respeto y cuidado.</p>
+        <span class="link-arrow">Ver arreglos <Icon name="arrow" /></span>
+      </div>
+    </a>
+  </section>
+
+  <Reviews />
+
+  <!-- ————— CUIDADOS ————— -->
+  <section class="care section" aria-labelledby="care-title">
+    <div class="container care__grid">
+      <div>
+        <p class="eyebrow" data-reveal="up">Plantas y cuidados</p>
+        <h2 id="care-title" class="h2" data-split>Para que tus plantas <em>estén siempre bonitas</em></h2>
+        <p class="lead" data-reveal="up">Riego, luz y abono: te contamos cómo cuidar cada planta que te llevas a casa.</p>
+        <a class="btn" href="/cuidado-de-plantas" data-reveal="up">Ver la guía de cuidados <Icon name="arrow" /></a>
+      </div>
+      <ul class="care__tips" data-stagger>
+        <li><Icon name="sun" size={30} /><strong>Luz</strong><span>Orquídeas: luz indirecta y brillante.</span></li>
+        <li><Icon name="water" size={30} /><strong>Riego</strong><span>Phalaenopsis: sumergir la maceta en agua tibia una vez por semana.</span></li>
+        <li><Icon name="leaf" size={30} /><strong>Abono</strong><span>Schefflera: de mayo a septiembre.</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <OrderChannels />
+  <Location />
+</Base>
+
+<style>
+  .progress { position: fixed; top: 0; left: 0; right: 0; height: 3px; background: var(--wine); transform: scaleX(0); transform-origin: left; z-index: 110; }
+
+  /* Hero */
+  .hero { position: relative; min-height: 100svh; display: flex; align-items: center; padding-top: calc(var(--header-h) + 32px); padding-bottom: 80px; overflow: hidden; }
+  .hero__bg { position: absolute; inset: 0; z-index: -2; }
+  .blob { position: absolute; border-radius: 50%; filter: blur(70px); opacity: 0.6; animation: drift 20s ease-in-out infinite alternate; }
+  .blob--a { width: 50vw; height: 50vw; max-width: 700px; max-height: 700px; background: var(--blush-100); top: -15%; right: -10%; }
+  .blob--b { width: 38vw; height: 38vw; max-width: 520px; max-height: 520px; background: var(--sage-100); bottom: -15%; left: -10%; animation-delay: -7s; }
+  .blob--c { width: 22vw; height: 22vw; background: #f9e3cf; top: 40%; left: 40%; animation-delay: -12s; }
+  @keyframes drift { to { transform: translate(-8%, 10%) scale(1.1); } }
+
+  .petals { position: absolute; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; }
+  .petal { position: absolute; top: -40px; width: calc(12px + var(--i) * 1.5px); fill: var(--blush-300); opacity: 0.7; left: calc(var(--i) * 11% + 3%); animation: fall calc(14s + var(--i) * 1.7s) linear infinite; animation-delay: calc(var(--i) * -2.3s); }
+  .petal:nth-child(3n) { fill: var(--sage-300); }
+  @keyframes fall {
+    0% { transform: translate3d(0, -5vh, 0) rotate(0deg); }
+    50% { transform: translate3d(40px, 55vh, 0) rotate(200deg); }
+    100% { transform: translate3d(-20px, 115vh, 0) rotate(420deg); }
+  }
+
+  .hero__inner { display: grid; gap: clamp(40px, 6vw, 80px); align-items: center; }
+  @media (min-width: 960px) { .hero__inner { grid-template-columns: 1.05fr 0.95fr; } }
+  .hero__text { display: grid; gap: 22px; justify-items: start; }
+  .hero__title { font-size: var(--fs-3xl); max-width: 12ch; }
+  .hero__title :global(em) { color: var(--wine); }
+  .hero__lead { max-width: 44ch; }
+  /* Entrada por CSS (no espera al JS): el texto cuenta pronto para el LCP. */
+  :global(.js-anim) .hero-in { animation: hero-in 1s var(--ease) var(--d, 0s) both; }
+  @keyframes hero-in { from { opacity: 0.01; transform: translateY(28px); } }
+  .hero__ctas { display: flex; flex-wrap: wrap; gap: 12px; }
+  .hero__rating { display: inline-flex; gap: 10px; align-items: center; font-size: var(--fs-sm); color: var(--ink-soft); text-decoration: none; }
+  .hero__stars { display: flex; color: #e0a43a; }
+
+  .hero__collage { position: relative; aspect-ratio: 1 / 1.05; width: min(100%, 600px); justify-self: center; }
+  .hero__img { position: absolute; overflow: hidden; box-shadow: var(--shadow); background: var(--blush-50); }
+  .hero__img img { width: 100%; height: 120%; object-fit: cover; margin-top: -10%; }
+  .hero__img--1 { left: 14%; top: 0; width: 58%; height: 78%; border-radius: 300px 300px var(--radius-lg) var(--radius-lg); }
+  .hero__img--2 { right: 0; bottom: 4%; width: 40%; height: 46%; border-radius: var(--radius-lg); }
+  .hero__img--3 { left: 0; bottom: 0; width: 34%; height: 38%; border-radius: 200px; }
+  .hero__badge { position: absolute; right: 6%; top: 8%; width: clamp(96px, 14vw, 124px); aspect-ratio: 1; border-radius: 50%; background: var(--white); display: grid; place-items: center; color: var(--wine); box-shadow: var(--shadow-soft); }
+  .hero__badge-ring { position: absolute; inset: 0; animation: spin 18s linear infinite; }
+  .hero__badge-ring text { font-size: 11px; text-transform: uppercase; fill: var(--ink); font-family: var(--font-sans); }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .hero__scroll { position: absolute; left: 50%; bottom: 22px; transform: translateX(-50%); width: 26px; height: 42px; border: 1.5px solid var(--ink-soft); border-radius: 20px; display: none; }
+  .hero__scroll span { position: absolute; left: 50%; top: 8px; width: 4px; height: 8px; margin-left: -2px; border-radius: 2px; background: var(--wine); animation: wheel 1.8s var(--ease) infinite; }
+  @media (min-width: 960px) and (min-height: 760px) { .hero__scroll { display: block; } }
+  @keyframes wheel { to { transform: translateY(14px); opacity: 0; } }
+
+  /* Banda */
+  .band-wrap { overflow: hidden; padding-block: 24px; margin-block: -24px; position: relative; z-index: 2; }
+  .band { background: var(--wine); color: var(--blush-50); overflow: hidden; padding-block: 20px; transform: rotate(-1.5deg); margin-inline: -2vw; }
+  .band__track { display: flex; width: max-content; animation: band 38s linear infinite; }
+  .band__track span { display: inline-flex; align-items: center; gap: 28px; padding-right: 28px; font-family: var(--font-serif); font-style: italic; font-size: clamp(1.4rem, 3vw, 2.2rem); white-space: nowrap; }
+  @keyframes band { to { transform: translateX(-50%); } }
+
+  /* Confianza */
+  .trust { padding-block: clamp(56px, 8vw, 96px) 0; }
+  .trust__list { list-style: none; padding: 0; display: grid; gap: 14px; grid-template-columns: repeat(2, 1fr); }
+  @media (min-width: 900px) { .trust__list { grid-template-columns: repeat(4, 1fr); } }
+  .trust__list li { display: grid; gap: 6px; justify-items: center; text-align: center; padding: 26px 14px; border-radius: var(--radius); background: var(--white); box-shadow: var(--shadow-soft); font-size: var(--fs-sm); color: var(--ink-soft); }
+  .trust__num { font-family: var(--font-serif); font-size: clamp(2rem, 5vw, 2.9rem); color: var(--wine); line-height: 1.1; }
+  .trust__icon { color: var(--wine); height: clamp(2.2rem, 5.5vw, 3.2rem); display: grid; place-items: center; }
+
+  /* Sobre nosotros */
+  .about__grid { display: grid; gap: clamp(40px, 6vw, 96px); align-items: center; }
+  @media (min-width: 900px) { .about__grid { grid-template-columns: 0.9fr 1.1fr; } }
+  .about__media { border-radius: var(--radius-lg); overflow: hidden; aspect-ratio: 4 / 5; box-shadow: var(--shadow); background: var(--blush-50); }
+  .about__media img { width: 100%; height: 100%; object-fit: cover; }
+  .about__text { display: grid; gap: 20px; justify-items: start; }
+  .about__text h2 :global(em) { color: var(--wine); }
+  .about__chips { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 10px; }
+  .about__chips li { display: inline-flex; gap: 8px; align-items: center; padding: 10px 16px; border-radius: 999px; background: var(--sage-100); color: var(--forest); font-size: var(--fs-sm); font-weight: 500; }
+
+  /* Servicios */
+  .services { background: var(--forest); color: #efe7e1; overflow: hidden; }
+  .services__track { display: grid; gap: 20px; padding: clamp(72px, 10vw, 120px) var(--gutter); }
+  .services__intro { display: grid; gap: 16px; align-content: center; max-width: 520px; }
+  .services__intro .eyebrow { color: var(--blush-300); }
+  .services__intro h2 { color: var(--white); }
+  .services__intro h2 :global(em) { color: var(--blush-300); }
+  .services__intro .lead { color: #cfc3bd; }
+  .services__hint { display: none; align-items: center; gap: 8px; font-size: var(--fs-sm); color: var(--blush-300); }
+  .scard { position: relative; background: #314437; border-radius: var(--radius-lg); padding: clamp(28px, 3vw, 44px); display: grid; gap: 14px; align-content: start; border: 1px solid rgba(255,255,255,0.08); }
+  .scard__num { position: absolute; top: 22px; right: 28px; font-family: var(--font-serif); font-style: italic; font-size: 3.4rem; color: rgba(232,180,184,0.22); line-height: 1; }
+  .scard__icon { width: 64px; height: 64px; border-radius: 20px; display: grid; place-items: center; background: var(--blush-300); color: var(--forest); }
+  .scard__title { font-size: var(--fs-xl); color: var(--white); }
+  .scard__text { color: #cfc3bd; }
+  .scard__points { list-style: none; padding: 0; display: grid; gap: 10px; margin-top: 4px; }
+  .scard__points li { display: flex; gap: 10px; align-items: flex-start; }
+  .scard__points svg { color: var(--sage-300); flex: none; margin-top: 4px; }
+  .scard__foot { color: var(--blush-300); margin-top: 8px; }
+  @media (min-width: 900px) {
+    .services__track { display: flex; gap: 28px; width: max-content; height: 100svh; align-items: center; padding-right: 10vw; }
+    .services__intro { width: 34vw; flex: none; }
+    .services__hint { display: inline-flex; }
+    .scard { width: min(460px, 36vw); flex: none; min-height: 62vh; }
+  }
+
+  /* Categorías */
+  .cats__head { margin-bottom: clamp(32px, 5vw, 56px); display: grid; gap: 14px; }
+  .cats__head h2 :global(em), .featured__head h2 :global(em), .care h2 :global(em) { color: var(--wine); }
+  .cats__grid { display: grid; gap: 12px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  @media (min-width: 900px) { .cats__grid { grid-template-columns: repeat(4, 1fr); gap: 16px; } }
+  .cat { position: relative; aspect-ratio: 3 / 4; border-radius: var(--radius-lg); overflow: hidden; color: var(--white); text-decoration: none; background: var(--blush-100); }
+  .cat img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 1.4s var(--ease); }
+  .cat:hover img { transform: scale(1.08); }
+  .cat__shade { position: absolute; inset: 0; background: linear-gradient(180deg, transparent 40%, rgba(38,53,43,0.85)); }
+  .cat__body { position: absolute; left: 22px; right: 22px; bottom: 22px; display: grid; gap: 4px; }
+  .cat__count { font-size: var(--fs-xs); letter-spacing: 0.14em; text-transform: uppercase; opacity: 0.85; }
+  .cat__name { font-family: var(--font-serif); font-size: clamp(1.1rem, 0.8rem + 1.4vw, 2.2rem); line-height: 1.1; padding-right: 0; }
+  @media (min-width: 900px) { .cat__name { padding-right: 54px; } }
+  .cat__go { position: absolute; right: 0; bottom: 0; width: 46px; height: 46px; border-radius: 50%; background: var(--white); color: var(--wine); display: grid; place-items: center; transition: transform 0.6s var(--ease); }
+  .cat:hover .cat__go { transform: rotate(-45deg); }
+  @media (max-width: 899px) { .cat__go { display: none; } .cat__body { left: 14px; right: 14px; bottom: 14px; } .cat { border-radius: var(--radius); } }
+
+  /* Destacados */
+  .featured { padding-top: 0; }
+  .featured__head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 24px; margin-bottom: clamp(32px, 5vw, 56px); }
+  .featured__head > div { display: grid; gap: 14px; }
+
+  /* Momentos */
+  .moments { display: grid; }
+  @media (min-width: 900px) { .moments { grid-template-columns: 1fr 1fr; } }
+  .moment { position: relative; min-height: clamp(520px, 80vh, 760px); display: flex; align-items: flex-end; overflow: hidden; color: var(--white); text-decoration: none; }
+  .moment__media { position: absolute; inset: 0; overflow: hidden; background: var(--wine); }
+  .moment__media img { width: 100%; height: 100%; object-fit: cover; opacity: 0.55; }
+  .moment::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(94,34,48,0.1), rgba(94,34,48,0.85)); }
+  .moment--calm .moment__media { background: var(--forest); }
+  .moment--calm::after { background: linear-gradient(180deg, rgba(38,53,43,0.1), rgba(38,53,43,0.9)); }
+  .moment__body { position: relative; z-index: 1; padding: clamp(28px, 5vw, 64px); display: grid; gap: 14px; max-width: 560px; }
+  .moment__body h2 :global(em) { color: var(--blush-300); }
+  .moment--calm .moment__body h2 :global(em) { color: var(--sage-300); }
+  .moment__body p:not(.eyebrow) { color: rgba(255,255,255,0.88); }
+  .moment .link-arrow { color: var(--white); }
+
+  /* Cuidados */
+  .care__grid { display: grid; gap: clamp(32px, 5vw, 72px); align-items: center; }
+  @media (min-width: 900px) { .care__grid { grid-template-columns: 1fr 1fr; } }
+  .care__grid > div { display: grid; gap: 18px; justify-items: start; }
+  .care__tips { list-style: none; padding: 0; display: grid; gap: 14px; }
+  .care__tips li { display: grid; grid-template-columns: 40px 1fr; gap: 2px 18px; align-items: center; padding: 22px; border-radius: var(--radius); background: var(--white); box-shadow: var(--shadow-soft); }
+  .care__tips svg { grid-column: 1; grid-row: 1 / 3; color: var(--eucalyptus); }
+  .care__tips strong, .care__tips span { grid-column: 2; }
+  .care__tips strong { font-family: var(--font-serif); font-weight: 400; font-size: 1.3rem; }
+  .care__tips span { color: var(--ink-soft); font-size: var(--fs-sm); }
+</style>

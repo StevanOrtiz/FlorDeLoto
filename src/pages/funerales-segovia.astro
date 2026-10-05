@@ -1,0 +1,63 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Icon from '../components/Icon.astro';
+import { productsIn, getCategory } from '../data/products';
+import { business, waLink } from '../lib/site';
+
+const cat = getCategory('funerales');
+const items = productsIn('funerales');
+const crumbs = [{ name: 'Inicio', href: '/' }, { name: 'Funerales', href: cat.path }];
+---
+<Base title={cat.title} description={cat.description} breadcrumbs={crumbs} image={items[0].images[0]} bodyClass="calm">
+  <PageHero crumbs={crumbs} eyebrow="Flores para funerales" title="Cuando faltan las palabras, <em>las flores acompañan</em>" lead={cat.intro}>
+    <div class="f-ctas" data-reveal="up" data-delay="0.5">
+      <a class="btn" href={business.phoneHref}><Icon name="phone" /> Llamar ahora</a>
+      <a class="btn btn--ghost" href={waLink('Hola, necesito encargar flores para un funeral.')} target="_blank" rel="noopener"><Icon name="whatsapp" /> WhatsApp</a>
+    </div>
+  </PageHero>
+
+  <section class="container f-list" aria-label="Coronas, centros y ramos funerarios">
+    <ul class="f-grid" data-stagger="0.06">
+      {items.map((p) => (
+        <li class="fcard">
+          <div class="fcard__media"><img src={p.images[0]} alt={p.name} width="600" height="750" loading="lazy" /></div>
+          <div class="fcard__body">
+            <h2 class="fcard__name">{p.name}</h2>
+            <a class="link-arrow" href={waLink(`Hola, quiero información sobre el «${p.name}».`)} target="_blank" rel="noopener">Consultar <Icon name="arrow" /></a>
+          </div>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <section class="section container f-help" aria-labelledby="help-title">
+    <div class="f-help__box" data-reveal="up">
+      <Icon name="leaf" size={36} />
+      <h2 id="help-title" class="h3">Nos encargamos de todo</h2>
+      <p>Dinos a qué tanatorio o iglesia hay que llevar las flores, la hora y el texto de la cinta o la tarjeta. Te ayudamos a elegir el arreglo adecuado.</p>
+      <div class="f-ctas">
+        <a class="btn" href={business.phoneHref}><Icon name="phone" /> {business.phone}</a>
+        <a class="btn btn--ghost" href={waLink('Hola, necesito encargar flores para un funeral.')} target="_blank" rel="noopener"><Icon name="whatsapp" /> Escribir por WhatsApp</a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .f-ctas { display: flex; flex-wrap: wrap; gap: 12px; }
+  .f-list { padding-bottom: 24px; }
+  .f-grid { list-style: none; padding: 0; display: grid; gap: clamp(16px, 2.4vw, 28px); grid-template-columns: repeat(auto-fill, minmax(min(100%, 250px), 1fr)); }
+  .fcard { background: var(--white); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow-soft); }
+  .fcard__media { aspect-ratio: 4 / 5; overflow: hidden; background: var(--sage-100); }
+  .fcard__media img { width: 100%; height: 100%; object-fit: cover; transition: transform 1.2s var(--ease); }
+  .fcard:hover img { transform: scale(1.05); }
+  .fcard__body { padding: 18px 20px 22px; display: grid; gap: 8px; }
+  .fcard__name { font-size: 1.3rem; }
+  .f-help__box { background: var(--forest); color: #efe7e1; border-radius: var(--radius-lg); padding: clamp(28px, 5vw, 64px); display: grid; gap: 16px; justify-items: start; }
+  .f-help__box > svg { color: var(--sage-300); }
+  .f-help__box h2 { color: var(--white); }
+  .f-help__box p { max-width: 60ch; color: #cfc3bd; }
+  .f-help__box .btn--ghost { --fg: var(--white); border-color: rgba(255,255,255,0.3); }
+  .f-help__box .btn--ghost::after { background: rgba(255,255,255,0.1); }
+</style>

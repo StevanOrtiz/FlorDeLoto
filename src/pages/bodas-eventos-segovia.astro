@@ -1,0 +1,118 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import ContactForm from '../components/ContactForm.astro';
+import Icon from '../components/Icon.astro';
+import { products } from '../data/products';
+import { business, waLink } from '../lib/site';
+
+const crumbs = [{ name: 'Inicio', href: '/' }, { name: 'Bodas y eventos', href: '/bodas-eventos-segovia' }];
+const img = (slug: string, i = 0) => products.find((p) => p.slug === slug)!.images[i];
+const gallery = [
+  { src: img('ramo-amantina'), alt: 'Ramo de rosas blancas con aspidistra' },
+  { src: img('ramo-armonia', 1), alt: 'Ramo de paniculata blanca' },
+  { src: img('cupula-3-rosas-preservadas'), alt: 'Cúpula de rosas preservadas' },
+  { src: img('rosas-multicolor', 1), alt: 'Ramo de rosas multicolor' },
+  { src: img('jarron-aromas-naturales', 1), alt: 'Jarrón de eucalipto' },
+  { src: img('ramo-primavera', 1), alt: 'Ramo de lirios' },
+];
+const offer = [
+  { icon: 'ring', title: 'Bodas', text: 'Para bodas tradicionales y para enlaces temáticos.' },
+  { icon: 'sparkles', title: 'Comuniones y bautizos', text: 'Decoración floral de iglesias y celebraciones familiares.' },
+  { icon: 'building', title: 'Eventos y empresas', text: 'Recepciones, espacios de eventos y mantenimiento floral periódico.' },
+  { icon: 'chat', title: 'Asesoramiento', text: 'Combinaciones de colores, tipos de flores y estilos para tu día.' },
+] as const;
+const bodasNet = business.channels.find((c) => c.name === 'Bodas.net')!;
+---
+<Base
+  title="Flores para bodas y eventos en Segovia"
+  description="Decoración floral para bodas, comuniones y eventos en Segovia: ramos de novia, iglesias y celebraciones. Pide tu presupuesto a Flor de Loto Segovia."
+  breadcrumbs={crumbs}
+  image={gallery[0].src}
+>
+  <PageHero
+    crumbs={crumbs}
+    eyebrow="Bodas y eventos"
+    title="Flores para <em>los días que no se olvidan</em>"
+    lead="Una amplia gama de arreglos florales, tanto para bodas tradicionales como para enlaces temáticos, comuniones y celebraciones."
+    image={gallery[1].src}
+    imageAlt={gallery[1].alt}
+  >
+    <div class="hero-ctas" data-reveal="up" data-delay="0.5">
+      <a class="btn" href="#presupuesto">Pedir presupuesto <Icon name="arrow" /></a>
+      <a class="btn btn--ghost" href={bodasNet.url} target="_blank" rel="noopener">Ver en Bodas.net <Icon name="external" size={16} /></a>
+    </div>
+  </PageHero>
+
+  <section class="section container" aria-labelledby="offer-title">
+    <h2 id="offer-title" class="sr-only">Qué hacemos</h2>
+    <ul class="offer" data-stagger>
+      {offer.map((o) => (
+        <li><span class="offer__icon"><Icon name={o.icon} size={30} /></span><h3>{o.title}</h3><p>{o.text}</p></li>
+      ))}
+    </ul>
+  </section>
+
+  <section class="gallery-wall" aria-label="Galería">
+    <div class="gallery-wall__grid">
+      {gallery.map((g, i) => (
+        <figure class:list={['gw', `gw--${i + 1}`]} data-reveal="clip" data-delay={String((i % 3) * 0.1)}>
+          <img src={g.src} alt={g.alt} width="600" height="750" loading="lazy" data-parallax="0.1" />
+        </figure>
+      ))}
+    </div>
+    <p class="container gallery-wall__note">Algunos de nuestros arreglos. Pregúntanos por diseños para tu evento.</p>
+  </section>
+
+  <section class="section container steps-wrap" aria-labelledby="steps-title">
+    <p class="eyebrow" data-reveal="up">Cómo trabajamos</p>
+    <h2 id="steps-title" class="h2" data-split>De la idea <em>al gran día</em></h2>
+    <ol class="steps" data-stagger>
+      <li><span>1</span><h3>Nos cuentas tu idea</h3><p>Fecha, lugar, estilo y colores. Por formulario, WhatsApp o en la tienda.</p></li>
+      <li><span>2</span><h3>Te asesoramos</h3><p>Proponemos flores, combinaciones y estilos adaptados a tu celebración.</p></li>
+      <li><span>3</span><h3>Lo hacemos realidad</h3><p>Preparamos cada arreglo con atención al detalle y a su acabado.</p></li>
+    </ol>
+  </section>
+
+  <section class="section quote" id="presupuesto" aria-labelledby="quote-title">
+    <div class="container quote__grid">
+      <div class="quote__intro">
+        <p class="eyebrow" data-reveal="up">Presupuesto sin compromiso</p>
+        <h2 id="quote-title" class="h2" data-split>Cuéntanos <em>tu celebración</em></h2>
+        <p class="lead" data-reveal="up">Cuanto antes nos escribas, mejor podremos ayudarte, sobre todo en fechas de mucha demanda.</p>
+        <a class="link-arrow" href={waLink('¡Hola! Quiero pedir presupuesto para un evento.')} target="_blank" rel="noopener" data-reveal="up">Prefiero escribir por WhatsApp <Icon name="arrow" /></a>
+      </div>
+      <div data-reveal="up"><ContactForm kind="evento" /></div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .hero-ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 8px; }
+  .offer { list-style: none; padding: 0; display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); }
+  .offer li { padding: 28px; border-radius: var(--radius); background: var(--white); box-shadow: var(--shadow-soft); display: grid; gap: 10px; align-content: start; }
+  .offer__icon { width: 58px; height: 58px; border-radius: 18px; background: var(--blush-50); color: var(--wine); display: grid; place-items: center; }
+  .offer h3 { font-size: 1.45rem; }
+  .offer p { color: var(--ink-soft); }
+
+  .gallery-wall__grid { display: grid; gap: 12px; padding-inline: var(--gutter); grid-template-columns: repeat(2, 1fr); }
+  @media (min-width: 900px) { .gallery-wall__grid { grid-template-columns: repeat(4, 1fr); grid-auto-rows: 22vw; } .gw--1 { grid-row: span 2; } .gw--4 { grid-column: span 2; } }
+  .gw { overflow: hidden; border-radius: var(--radius); background: var(--blush-50); aspect-ratio: 4 / 5; }
+  @media (min-width: 900px) { .gw { aspect-ratio: auto; } }
+  .gw img { width: 100%; height: 120%; object-fit: cover; margin-top: -10%; }
+  .gallery-wall__note { margin-top: 16px; font-size: var(--fs-xs); color: var(--ink-soft); }
+
+  .steps-wrap { display: grid; gap: 16px; }
+  .steps-wrap h2 :global(em), .quote h2 :global(em) { color: var(--wine); }
+  .steps { list-style: none; padding: 0; display: grid; gap: 16px; margin-top: 24px; counter-reset: s; }
+  @media (min-width: 900px) { .steps { grid-template-columns: repeat(3, 1fr); } }
+  .steps li { position: relative; padding: 32px 28px; border-top: 1px solid var(--wine); display: grid; gap: 10px; }
+  .steps span { font-family: var(--font-serif); font-style: italic; font-size: 3rem; color: var(--blush-500); line-height: 1; }
+  .steps h3 { font-size: 1.5rem; }
+  .steps p { color: var(--ink-soft); }
+
+  .quote { background: var(--blush-50); }
+  .quote__grid { display: grid; gap: clamp(32px, 5vw, 72px); }
+  @media (min-width: 960px) { .quote__grid { grid-template-columns: 0.8fr 1.2fr; align-items: start; } .quote__intro { position: sticky; top: calc(var(--header-h) + 32px); } }
+  .quote__intro { display: grid; gap: 16px; justify-items: start; }
+</style>

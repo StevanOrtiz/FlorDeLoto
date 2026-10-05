@@ -1,0 +1,33 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+---
+<Base title="Página no encontrada" description="La página que buscas no existe o ha cambiado de dirección." noindex>
+  <section class="nf">
+    <div class="nf__petals" aria-hidden="true">
+      {Array.from({ length: 6 }).map((_, i) => <span style={`--i:${i}`}></span>)}
+    </div>
+    <div class="narrow nf__inner">
+      <p class="nf__code" aria-hidden="true">4<span>0</span>4</p>
+      <h1 class="h2" data-split>Esta flor <em>se ha deshojado</em></h1>
+      <p class="lead" data-reveal="up">La página que buscas no existe o ha cambiado de dirección. Te ayudamos a encontrar lo que necesitas.</p>
+      <div class="nf__ctas" data-reveal="up">
+        <a class="btn" href="/"><Icon name="arrowLeft" /> Volver al inicio</a>
+        <a class="btn btn--ghost" href="/catalogo">Ver el catálogo</a>
+        <a class="btn btn--ghost" href="/contacto">Contacto</a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .nf { position: relative; min-height: 100svh; display: grid; place-items: center; text-align: center; padding: calc(var(--header-h) + 40px) 0 80px; overflow: hidden; }
+  .nf__inner { display: grid; gap: 20px; justify-items: center; }
+  .nf__inner h1 :global(em) { color: var(--wine); }
+  .nf__code { font-family: var(--font-serif); font-size: clamp(6rem, 26vw, 15rem); line-height: 0.9; color: var(--blush-300); }
+  .nf__code span { display: inline-block; color: var(--wine); font-style: italic; animation: sway 4s ease-in-out infinite; }
+  .nf__ctas { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+  .nf__petals span { position: absolute; top: -30px; left: calc(var(--i) * 17% + 5%); width: 16px; height: 22px; border-radius: 50% 50% 50% 0; background: var(--blush-300); opacity: 0.6; animation: drop calc(9s + var(--i) * 1.3s) linear infinite; animation-delay: calc(var(--i) * -1.6s); }
+  @keyframes sway { 50% { transform: rotate(-12deg) translateY(-6px); } }
+  @keyframes drop { to { transform: translateY(110vh) rotate(540deg); } }
+</style>

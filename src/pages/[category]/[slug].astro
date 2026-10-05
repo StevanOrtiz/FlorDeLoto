@@ -1,0 +1,203 @@
+---
+import Base from '../../layouts/Base.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import ProductCard from '../../components/ProductCard.astro';
+import Icon from '../../components/Icon.astro';
+import { products, getCategory, productsIn, formatPrice, productUrl, type Product } from '../../data/products';
+import { business, waLink, SITE_URL } from '../../lib/site';
+
+export function getStaticPaths() {
+  return products
+    .filter((p) => p.category !== 'funerales')
+    .map((p) => ({ params: { category: getCategory(p.category).path.slice(1), slug: p.slug }, props: { product: p } }));
+}
+interface Props { product: Product }
+const { product: p } = Astro.props;
+const cat = getCategory(p.category);
+const url = productUrl(p);
+const crumbs = [
+  { name: 'Inicio', href: '/' },
+  { name: cat.name, href: cat.path },
+  { name: p.name, href: url },
+];
+const related = productsIn(p.category).filter((x) => x.slug !== p.slug).slice(0, 4);
+const isPlant = p.category === 'orquideas' || p.category === 'plantas';
+
+const description = `${p.name}: ${p.description}${p.dimensions ? ` Medidas: ${p.dimensions}.` : ''} Floristería en Segovia con entrega a domicilio.`.slice(0, 158);
+
+const productLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Product',
+  name: p.name,
+  description: p.description,
+  image: p.images,
+  url: new URL(url, SITE_URL).href,
+  category: cat.name,
+  brand: { '@type': 'Brand', name: business.name },
+  ...(p.dimensions ? { size: p.dimensions } : {}),
+  // `offers` se añadirá cuando haya precios oficiales.
+  ...(p.price != null
+    ? { offers: { '@type': 'Offer', price: p.price, priceCurrency: 'EUR', availability: 'https://schema.org/InStock', url: new URL(url, SITE_URL).href } }
+    : {}),
+};
+---
+<Base title={`${p.name} | ${cat.short} en Segovia`} description={description} breadcrumbs={crumbs} image={p.images[0]} jsonLd={[productLd]}>
+  <article class="product container">
+    <div class="product__crumbs"><Breadcrumbs items={crumbs} /></div>
+
+    <div class="product__grid">
+      <div class="gallery" data-gallery>
+        <div class="gallery__main" data-reveal="clip">
+          {p.images.map((src, i) => (
+            <img src={src} alt={i === 0 ? p.name : `${p.name}, vista ${i + 1}`} width="800" height="1000" loading={i === 0 ? 'eager' : 'lazy'} fetchpriority={i === 0 ? 'high' : undefined} class:list={{ 'is-active': i === 0 }} data-gallery-img />
+          ))}
+        </div>
+        {p.images.length > 1 && (
+          <div class="gallery__thumbs" role="group" aria-label="Imágenes del producto">
+            {p.images.map((src, i) => (
+              <button type="button" aria-pressed={i === 0 ? 'true' : 'false'} data-gallery-thumb={i}>
+                <img src={src} alt="" width="120" height="150" loading="lazy" />
+                <span class="sr-only">Ver imagen {i + 1}</span>
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+
+      <div class="info">
+        <p class="eyebrow" data-reveal="up">{cat.name}</p>
+        <h1 class="info__title" data-split>{p.name}</h1>
+        <p class="info__price" data-reveal="up">{formatPrice(p)}</p>
+        <p class="lead" data-reveal="up">{p.description}</p>
+
+        {p.occasions && (
+          <ul class="tags" aria-label="Ocasiones" data-reveal="up">
+            {p.occasions.map((o) => <li>{o}</li>)}
+          </ul>
+        )}
+
+        <div class="info__ctas" data-reveal="up">
+          <a class="btn btn--wa" href={waLink(`¡Hola! Me gustaría pedir el «${p.name}». ¿Me confirmáis precio y disponibilidad?`)} target="_blank" rel="noopener">
+            <Icon name="whatsapp" /> Pedir por WhatsApp
+          </a>
+          <a class="btn btn--ghost" href={business.phoneHref}><Icon name="phone" /> Llamar</a>
+        </div>
+
+        <dl class="specs" data-stagger>
+          {p.composition && (
+            <div>
+              <dt><Icon name="flower" size={20} /> Composición</dt>
+              <dd><ul>{p.composition.map((c) => <li>{c}</li>)}</ul></dd>
+            </div>
+          )}
+          {p.dimensions && (
+            <div>
+              <dt><Icon name="ruler" size={20} /> Medidas aproximadas</dt>
+              <dd>{p.dimensions}</dd>
+            </div>
+          )}
+          {p.watering && (
+            <div>
+              <dt><Icon name="water" size={20} /> Riego</dt>
+              <dd>{p.watering}</dd>
+            </div>
+          )}
+          {p.care && (
+            <div>
+              <dt><Icon name="sun" size={20} /> Cuidados</dt>
+              <dd><ul>{p.care.map((c) => <li>{c}</li>)}</ul></dd>
+            </div>
+          )}
+          <div>
+            <dt><Icon name="truck" size={20} /> Entrega</dt>
+            <dd>
+              <ul>
+                <li>Entrega a domicilio en Segovia y alrededores.</li>
+                <li>Entregas en el mismo día, según disponibilidad.</li>
+                <li>Con tarjeta dedicatoria y envoltorios especiales si lo pides.</li>
+                <li>También puedes recogerlo en la tienda.</li>
+              </ul>
+            </dd>
+          </div>
+        </dl>
+
+        <p class="info__note">
+          {isPlant ? 'Las medidas de las plantas son aproximadas.' : 'Las medidas son aproximadas.'}
+          {p.price == null && ' Escríbenos y te confirmamos precio y disponibilidad antes de preparar tu pedido.'}
+        </p>
+
+        <div class="info__channels">
+          <p>¿Prefieres una app de reparto?</p>
+          <ul>
+            {business.channels.filter((c) => c.name !== 'Bodas.net').map((c) => (
+              <li><a href={c.url} target="_blank" rel="noopener">{c.name} <Icon name="external" size={13} /></a></li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  {related.length > 0 && (
+    <section class="related section" aria-labelledby="related-title">
+      <div class="container">
+        <h2 id="related-title" class="h2" data-split>También <em>te puede gustar</em></h2>
+        <div class="grid-products" data-stagger="0.08">
+          {related.map((r) => <ProductCard product={r} />)}
+        </div>
+      </div>
+    </section>
+  )}
+</Base>
+
+<style>
+  .product { padding-top: calc(var(--header-h) + 28px); }
+  .product__crumbs { margin-bottom: 24px; }
+  .product__grid { display: grid; gap: clamp(32px, 5vw, 80px); align-items: start; }
+  @media (min-width: 960px) { .product__grid { grid-template-columns: 1fr 1fr; } }
+
+  .gallery { display: grid; gap: 12px; }
+  @media (min-width: 960px) { .gallery { position: sticky; top: calc(var(--header-h) + 24px); } }
+  .gallery__main { position: relative; aspect-ratio: 4 / 5; border-radius: var(--radius-lg); overflow: hidden; background: var(--blush-50); box-shadow: var(--shadow); }
+  .gallery__main img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transform: scale(1.05); transition: opacity 0.7s var(--ease), transform 1.2s var(--ease); }
+  .gallery__main img.is-active { opacity: 1; transform: none; }
+  .gallery__thumbs { display: flex; gap: 10px; }
+  .gallery__thumbs button { width: 76px; aspect-ratio: 4 / 5; padding: 0; border: 2px solid transparent; border-radius: 14px; overflow: hidden; background: var(--blush-50); transition: border-color 0.3s, transform 0.4s var(--ease); }
+  .gallery__thumbs button:hover { transform: translateY(-3px); }
+  .gallery__thumbs button[aria-pressed='true'] { border-color: var(--wine); }
+  .gallery__thumbs img { width: 100%; height: 100%; object-fit: cover; }
+
+  .info { display: grid; gap: 20px; justify-items: start; }
+  .info__title { font-size: var(--fs-2xl); }
+  .info__price { font-size: var(--fs-lg); font-weight: 600; color: var(--wine); }
+  .tags { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+  .tags li { padding: 6px 14px; border-radius: 999px; background: var(--blush-50); color: var(--wine); font-size: var(--fs-xs); font-weight: 600; }
+  .info__ctas { display: flex; flex-wrap: wrap; gap: 10px; }
+  .specs { width: 100%; display: grid; border-top: 1px solid var(--line); }
+  .specs > div { display: grid; gap: 8px; padding-block: 18px; border-bottom: 1px solid var(--line); }
+  @media (min-width: 600px) { .specs > div { grid-template-columns: 220px 1fr; } }
+  .specs dt { display: inline-flex; gap: 10px; align-items: center; font-weight: 600; }
+  .specs dt svg { color: var(--eucalyptus); }
+  .specs dd { margin: 0; color: var(--ink-soft); }
+  .specs ul { padding-left: 1.1em; display: grid; gap: 4px; }
+  .info__note { font-size: var(--fs-xs); color: var(--ink-soft); }
+  .info__channels { font-size: var(--fs-sm); color: var(--ink-soft); }
+  .info__channels ul { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 6px; }
+  .info__channels a { display: inline-flex; gap: 4px; align-items: center; color: var(--wine); font-weight: 600; }
+  .related h2 { margin-bottom: clamp(28px, 4vw, 48px); }
+  .related h2 :global(em) { color: var(--wine); }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-gallery]').forEach((g) => {
+    const imgs = g.querySelectorAll<HTMLImageElement>('[data-gallery-img]');
+    const thumbs = g.querySelectorAll<HTMLButtonElement>('[data-gallery-thumb]');
+    thumbs.forEach((t) =>
+      t.addEventListener('click', () => {
+        const i = Number(t.dataset.galleryThumb);
+        imgs.forEach((im, j) => im.classList.toggle('is-active', i === j));
+        thumbs.forEach((b, j) => b.setAttribute('aria-pressed', String(i === j)));
+      }),
+    );
+  });
+</script>

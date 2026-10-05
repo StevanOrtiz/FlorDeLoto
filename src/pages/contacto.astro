@@ -1,0 +1,62 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import ContactForm from '../components/ContactForm.astro';
+import Location from '../components/Location.astro';
+import Icon from '../components/Icon.astro';
+import { business, waLink } from '../lib/site';
+
+const crumbs = [{ name: 'Inicio', href: '/' }, { name: 'Contacto', href: '/contacto' }];
+---
+<Base
+  title="Contacto | Floristería en Segovia"
+  description="Contacta con Flor de Loto Segovia: teléfono y WhatsApp +34 691 26 41 12, formulario y tienda en P.º Conde de Sepúlveda, 24, Segovia. Pedidos personalizados."
+  breadcrumbs={crumbs}
+>
+  <PageHero
+    crumbs={crumbs}
+    eyebrow="Contacto"
+    title="¿Nos quieres <em>contar algo?</em>"
+    lead="Consultas o pedidos personalizados por teléfono, WhatsApp, con el formulario o en la tienda. Te respondemos encantados."
+  />
+
+  <section class="container contact" aria-label="Formas de contacto">
+    <div class="contact__quick" data-stagger>
+      <a class="qcard qcard--wa" href={waLink('¡Hola! Tengo una consulta.')} target="_blank" rel="noopener">
+        <Icon name="whatsapp" size={30} /><span><strong>WhatsApp</strong>La respuesta más rápida</span>
+      </a>
+      <a class="qcard" href={business.phoneHref}>
+        <Icon name="phone" size={28} /><span><strong>¡Llámanos!</strong>{business.phone}</span>
+      </a>
+      <a class="qcard" href={business.social.instagram.url} target="_blank" rel="noopener">
+        <Icon name="instagram" size={28} /><span><strong>Instagram</strong>{business.social.instagram.handle}</span>
+      </a>
+    </div>
+
+    <div class="contact__form">
+      <div class="contact__intro">
+        <h2 class="h2" data-split>Escríbenos</h2>
+        <p class="muted" data-reveal="up">Rellena el formulario y te contestaremos por correo o por teléfono, como prefieras.</p>
+      </div>
+      <div data-reveal="up"><ContactForm kind="contacto" /></div>
+    </div>
+  </section>
+
+  <Location />
+</Base>
+
+<style>
+  .contact { display: grid; gap: clamp(40px, 6vw, 80px); }
+  .contact__quick { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); }
+  .qcard { display: flex; gap: 16px; align-items: center; padding: 22px; border-radius: var(--radius); background: var(--white); text-decoration: none; box-shadow: var(--shadow-soft); transition: transform 0.5s var(--ease); }
+  .qcard:hover { transform: translateY(-4px); }
+  .qcard svg { color: var(--wine); flex: none; }
+  .qcard span { display: grid; color: var(--ink-soft); font-size: var(--fs-sm); }
+  .qcard strong { font-family: var(--font-serif); font-weight: 400; font-size: 1.3rem; color: var(--ink); }
+  .qcard--wa { background: #1f7a4d; }
+  .qcard--wa svg, .qcard--wa strong { color: var(--white); }
+  .qcard--wa span { color: var(--white); }
+  .contact__form { display: grid; gap: 28px; }
+  @media (min-width: 960px) { .contact__form { grid-template-columns: 0.7fr 1.3fr; align-items: start; } .contact__intro { position: sticky; top: calc(var(--header-h) + 32px); } }
+  .contact__intro { display: grid; gap: 12px; }
+</style>

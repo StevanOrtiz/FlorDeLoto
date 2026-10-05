@@ -1,0 +1,118 @@
+---
+import Logo from './Logo.astro';
+import Icon from './Icon.astro';
+import { business, fullAddress, waLink } from '../lib/site';
+import { categories } from '../data/products';
+
+const year = new Date().getFullYear();
+const legalName = business.legal.razonSocial ?? business.name;
+---
+<footer class="footer">
+  <div class="footer__cta container" data-reveal="up">
+    <p class="eyebrow" style="color: var(--blush-300)">¿Hablamos?</p>
+    <h2 class="footer__title">¿A quién le regalarías <em>un arreglo</em> como este?</h2>
+    <p class="footer__lead">Escríbenos por WhatsApp y lo creamos para ti.</p>
+    <div class="footer__btns">
+      <a class="btn btn--light" href={waLink('¡Hola! Quiero encargar un arreglo floral.')} target="_blank" rel="noopener">
+        <Icon name="whatsapp" /> Escríbenos por WhatsApp
+      </a>
+      <a class="btn btn--ghost footer__ghost" href={business.phoneHref}><Icon name="phone" /> {business.phone}</a>
+    </div>
+  </div>
+
+  <div class="container footer__grid">
+    <div class="footer__brand">
+      <a href="/"><Logo light /></a>
+      <p>{business.tagline}. {business.claim}.</p>
+      <div class="footer__social">
+        <a href={business.social.instagram.url} target="_blank" rel="noopener" aria-label="Instagram de Flor de Loto Segovia"><Icon name="instagram" /></a>
+        <a href={business.social.facebook.url} target="_blank" rel="noopener" aria-label="Facebook de Flor de Loto Segovia"><Icon name="facebook" /></a>
+        <a href={business.whatsapp} target="_blank" rel="noopener" aria-label="WhatsApp de Flor de Loto Segovia"><Icon name="whatsapp" /></a>
+      </div>
+    </div>
+
+    <div>
+      <h3 class="footer__h">Visítanos</h3>
+      <address>
+        <a href={business.maps} target="_blank" rel="noopener"><Icon name="pin" size={18} /> {fullAddress}</a>
+        <a href={business.phoneHref}><Icon name="phone" size={18} /> {business.phone}</a>
+        {business.email && <a href={`mailto:${business.email}`}><Icon name="mail" size={18} /> {business.email}</a>}
+      </address>
+      <ul class="footer__hours">
+        {business.hours.store.map((h) => (
+          <li><span>{h.days}</span><span>{h.open ? `${h.open}–${h.close}` : h.label}</span></li>
+        ))}
+      </ul>
+    </div>
+
+    <div>
+      <h3 class="footer__h">Flores</h3>
+      <ul class="footer__links">
+        <li><a href="/catalogo">Todo el catálogo</a></li>
+        {categories.map((c) => <li><a href={c.path}>{c.short}</a></li>)}
+        <li><a href="/bodas-eventos-segovia">Bodas y eventos</a></li>
+        <li><a href="/cuidado-de-plantas">Cuidado de plantas</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <h3 class="footer__h">Pide también en</h3>
+      <ul class="footer__links">
+        {business.channels.map((c) => (
+          <li><a href={c.url} target="_blank" rel="noopener">{c.name} <Icon name="external" size={13} /></a></li>
+        ))}
+      </ul>
+    </div>
+  </div>
+
+  <div class="container footer__bottom">
+    <p>© {year} {legalName}. Todos los derechos reservados.</p>
+    <ul>
+      <li><a href="/aviso-legal">Aviso legal</a></li>
+      <li><a href="/politica-de-privacidad">Privacidad</a></li>
+      <li><a href="/politica-de-cookies">Cookies</a></li>
+      <li><button type="button" data-cookie-settings>Configurar cookies</button></li>
+    </ul>
+  </div>
+
+  <div class="footer__wordmark" aria-hidden="true">
+    <span data-marquee data-text="Flor de Loto · Segovia · Flor de Loto · Segovia · "></span>
+  </div>
+</footer>
+
+<style>
+  .footer { background: var(--forest); color: #efe7e1; position: relative; overflow: hidden; padding-top: clamp(72px, 10vw, 140px); }
+  .footer a { text-decoration: none; }
+  .footer__cta { text-align: center; padding-bottom: clamp(64px, 8vw, 110px); border-bottom: 1px solid rgba(255,255,255,0.12); }
+  .footer__title { font-size: var(--fs-2xl); color: var(--white); max-width: 18ch; margin: 18px auto 14px; }
+  .footer__title em { color: var(--blush-300); }
+  .footer__lead { color: #d4c9c3; font-size: var(--fs-lg); }
+  .footer__btns { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 32px; }
+  .footer__ghost { --fg: var(--white); border-color: rgba(255,255,255,0.3); }
+  .footer__ghost::after { background: rgba(255,255,255,0.1); }
+
+  .footer__grid { display: grid; gap: 40px; padding-block: 64px; grid-template-columns: 1fr; }
+  @media (min-width: 700px) { .footer__grid { grid-template-columns: 1fr 1fr; } }
+  @media (min-width: 1050px) { .footer__grid { grid-template-columns: 1.4fr 1.2fr 0.8fr 0.9fr; } }
+  .footer__brand p { margin-top: 18px; color: #cfc3bd; max-width: 34ch; }
+  .footer__social { display: flex; gap: 10px; margin-top: 22px; }
+  .footer__social a { width: 44px; height: 44px; display: grid; place-items: center; border-radius: 50%; border: 1px solid rgba(255,255,255,0.2); transition: background 0.3s, transform 0.4s var(--ease); }
+  .footer__social a:hover { background: var(--blush-500); transform: translateY(-3px); border-color: transparent; }
+  .footer__h { font-family: var(--font-sans); font-size: var(--fs-xs); letter-spacing: 0.18em; text-transform: uppercase; color: var(--blush-300); margin-bottom: 18px; font-weight: 600; }
+  address { font-style: normal; display: grid; gap: 12px; }
+  address a { display: flex; gap: 10px; align-items: flex-start; }
+  address a:hover, .footer__links a:hover { color: var(--blush-300); }
+  .footer__hours { list-style: none; padding: 0; margin-top: 20px; display: grid; gap: 6px; font-size: var(--fs-sm); color: #cfc3bd; }
+  .footer__hours li { display: flex; justify-content: space-between; gap: 16px; max-width: 280px; }
+  .footer__links { list-style: none; padding: 0; display: grid; gap: 10px; }
+  .footer__links a { display: inline-flex; gap: 6px; align-items: center; transition: color 0.3s; }
+
+  .footer__bottom { display: flex; flex-wrap: wrap; gap: 14px 28px; justify-content: space-between; padding-block: 24px; border-top: 1px solid rgba(255,255,255,0.12); font-size: var(--fs-xs); color: #b9aea8; }
+  .footer__bottom ul { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 8px 20px; }
+  .footer__bottom a:hover, .footer__bottom button:hover { color: var(--white); }
+  .footer__bottom button { background: none; border: 0; padding: 0; font-size: inherit; text-decoration: underline; text-underline-offset: 0.2em; }
+
+  .footer__wordmark { white-space: nowrap; font-family: var(--font-serif); font-style: italic; font-size: clamp(4rem, 16vw, 14rem); line-height: 1; color: rgba(232, 180, 184, 0.12); padding-bottom: 0.1em; user-select: none; }
+  .footer__wordmark span { display: inline-block; }
+  .footer__wordmark span::before { content: attr(data-text); }
+</style>

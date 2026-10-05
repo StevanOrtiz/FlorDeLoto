@@ -1,0 +1,6 @@
+---
+// Muestra un dato legal; si aún falta, lo marca de forma visible para completarlo antes de publicar.
+interface Props { value: string | null | undefined; label: string }
+const { value, label } = Astro.props;
+---
+{value ? <>{value}</> : <span class="pending">[Pendiente: {label}]</span>}

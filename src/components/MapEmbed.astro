@@ -1,0 +1,59 @@
+---
+import Icon from './Icon.astro';
+import { business, fullAddress } from '../lib/site';
+---
+<div class="map" data-map data-src={business.mapsEmbed}>
+  <div class="map__placeholder" data-map-placeholder>
+    <svg class="map__art" viewBox="0 0 400 300" aria-hidden="true">
+      <path d="M0 220 C80 180 120 240 200 200 S320 140 400 170" fill="none" stroke="var(--sage-300)" stroke-width="18" opacity="0.6" />
+      <path d="M60 0 L140 300 M260 0 L220 300 M0 90 L400 120" stroke="var(--white)" stroke-width="10" />
+      <circle cx="200" cy="140" r="34" fill="var(--blush-300)" opacity="0.5" />
+    </svg>
+    <div class="map__pin"><Icon name="pin" size={34} /></div>
+    <div class="map__info">
+      <p class="map__addr">{fullAddress}</p>
+      <p class="map__note">Para ver el mapa interactivo cargaremos Google Maps, que puede instalar cookies propias.</p>
+      <div class="map__btns">
+        <button type="button" class="btn btn--sm" data-map-load>Cargar mapa</button>
+        <a class="btn btn--ghost btn--sm" href={business.directions} target="_blank" rel="noopener">Cómo llegar <Icon name="external" size={14} /></a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .map { position: relative; border-radius: var(--radius-lg); overflow: hidden; min-height: 380px; height: 100%; background: var(--sage-100); box-shadow: var(--shadow-soft); }
+  .map :global(iframe) { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+  .map__placeholder { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; padding: 24px; }
+  .map__art { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .map__pin { position: absolute; top: 34%; left: 50%; transform: translate(-50%, -100%); color: var(--wine); animation: bob 2.4s ease-in-out infinite; }
+  .map__info { position: relative; margin-top: 30%; background: rgba(255,255,255,0.94); border-radius: 18px; padding: 18px; max-width: 360px; box-shadow: var(--shadow-soft); }
+  .map__addr { font-family: var(--font-serif); font-size: 1.2rem; }
+  .map__note { font-size: var(--fs-xs); color: var(--ink-soft); margin-top: 6px; }
+  .map__btns { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-top: 12px; }
+  @keyframes bob { 50% { transform: translate(-50%, -115%); } }
+</style>
+
+<script>
+  import { getConsent, setConsent } from '../scripts/consent';
+
+  const load = (wrap: HTMLElement) => {
+    if (wrap.querySelector('iframe')) return;
+    const f = document.createElement('iframe');
+    f.src = wrap.dataset.src!;
+    f.title = 'Mapa de Flor de Loto Segovia en Google Maps';
+    f.loading = 'lazy';
+    f.referrerPolicy = 'no-referrer-when-downgrade';
+    wrap.querySelector('[data-map-placeholder]')?.remove();
+    wrap.appendChild(f);
+  };
+
+  const maps = document.querySelectorAll<HTMLElement>('[data-map]');
+  maps.forEach((wrap) => {
+    if (getConsent()?.external) load(wrap);
+    wrap.querySelector('[data-map-load]')?.addEventListener('click', () => setConsent({ external: true }));
+  });
+  window.addEventListener('consent:change', (e) => {
+    if ((e as CustomEvent).detail.external) maps.forEach(load);
+  });
+</script>

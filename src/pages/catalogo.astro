@@ -1,0 +1,102 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import ProductCard from '../components/ProductCard.astro';
+import OrderChannels from '../components/OrderChannels.astro';
+import { products, shopCategories } from '../data/products';
+import { SITE_URL } from '../lib/site';
+
+const items = products.filter((p) => p.category !== 'funerales');
+const crumbs = [{ name: 'Inicio', href: '/' }, { name: 'Catálogo', href: '/catalogo' }];
+const itemList = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: 'Catálogo de Flor de Loto Segovia',
+  itemListElement: shopCategories.map((c, i) => ({ '@type': 'ListItem', position: i + 1, name: c.name, url: new URL(c.path, SITE_URL).href })),
+};
+---
+<Base
+  title="Catálogo de flores, ramos y plantas en Segovia"
+  description="Ramos de flores, rosas y packs regalo, orquídeas, plantas, cestas y terrarios. Floristería en Segovia con entrega a domicilio. Pide por WhatsApp."
+  breadcrumbs={crumbs}
+  jsonLd={[itemList]}
+>
+  <PageHero
+    crumbs={crumbs}
+    eyebrow="Catálogo"
+    title="Flores para <em>cada momento</em>"
+    lead="Ramos, rosas, orquídeas y plantas hechos a mano en Segovia. ¿Buscas algo distinto? Escríbenos y lo preparamos a tu medida."
+  />
+
+  <section class="container catalog" aria-labelledby="catalog-h">
+    <h2 id="catalog-h" class="sr-only">Productos</h2>
+    <div class="filters" role="group" aria-label="Filtrar por categoría" data-reveal="up">
+      <button type="button" class="chip" aria-pressed="true" data-filter="all">Todo <span>{items.length}</span></button>
+      {shopCategories.map((c) => (
+        <button type="button" class="chip" aria-pressed="false" data-filter={c.id}>
+          {c.short} <span>{items.filter((p) => p.category === c.id).length}</span>
+        </button>
+      ))}
+    </div>
+    <p class="sr-only" aria-live="polite" data-filter-status></p>
+    <div class="grid-products" data-grid data-stagger="0.05">
+      {items.map((p, i) => <ProductCard product={p} eager={i < 3} showCategory />)}
+    </div>
+    <p class="catalog__note">
+      ¿Quieres saber el precio de algún arreglo? Escríbenos por WhatsApp o llámanos y te confirmamos precio y
+      disponibilidad antes de preparar tu pedido.
+    </p>
+  </section>
+
+  <OrderChannels title="¿Te has enamorado de alguno?" />
+</Base>
+
+<style>
+  .catalog { padding-bottom: clamp(48px, 8vw, 96px); }
+  .filters { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: clamp(28px, 4vw, 44px); position: sticky; top: calc(var(--header-h) + 8px); z-index: 5; padding: 8px; margin-inline: -8px; border-radius: 999px; }
+  .chip { display: inline-flex; gap: 8px; align-items: center; padding: 10px 18px; border-radius: 999px; border: 1px solid var(--line); background: var(--white); font-size: var(--fs-sm); font-weight: 500; transition: background 0.3s, color 0.3s, transform 0.4s var(--ease); }
+  .chip span { font-size: var(--fs-xs); opacity: 0.85; }
+  .chip:hover { transform: translateY(-2px); }
+  .chip[aria-pressed='true'] { background: var(--wine); color: var(--white); border-color: var(--wine); }
+  .catalog__note { margin-top: 40px; font-size: var(--fs-sm); color: var(--ink-soft); max-width: 70ch; }
+  :global(.pcard[hidden]) { display: none; }
+</style>
+
+<script>
+  import { gsap } from 'gsap';
+  import { Flip } from 'gsap/Flip';
+  gsap.registerPlugin(Flip);
+
+  const grid = document.querySelector<HTMLElement>('[data-grid]')!;
+  const cards = Array.from(grid.querySelectorAll<HTMLElement>('.pcard'));
+  const chips = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-filter]'));
+  const status = document.querySelector<HTMLElement>('[data-filter-status]')!;
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const apply = (id: string, animate = true) => {
+    const state = Flip.getState(cards);
+    let shown = 0;
+    cards.forEach((c) => {
+      const match = id === 'all' || c.dataset.category === id;
+      c.hidden = !match;
+      if (match) { shown++; c.style.opacity = '1'; c.style.transform = ''; }
+    });
+    chips.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.filter === id)));
+    status.textContent = `${shown} productos`;
+    if (animate && !reduce) {
+      Flip.from(state, {
+        duration: 0.7,
+        ease: 'power3.inOut',
+        scale: true,
+        absolute: true,
+        onEnter: (els) => gsap.fromTo(els, { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, duration: 0.6 }),
+        onLeave: (els) => gsap.to(els, { opacity: 0, scale: 0.9, duration: 0.4 }),
+      });
+    }
+    history.replaceState(null, '', id === 'all' ? location.pathname : `#${id}`);
+  };
+
+  chips.forEach((b) => b.addEventListener('click', () => apply(b.dataset.filter!)));
+  const initial = location.hash.slice(1);
+  if (chips.some((b) => b.dataset.filter === initial)) apply(initial, false);
+</script>

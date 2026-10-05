@@ -1,0 +1,106 @@
+---
+// Gestor de consentimiento (guía de cookies de la AEPD, 2023):
+// - Por defecto no se carga nada de terceros.
+// - "Aceptar" y "Rechazar" tienen el mismo nivel y la misma visibilidad.
+// - La elección se puede cambiar en cualquier momento ("Configurar cookies" en el pie).
+// La preferencia se guarda en localStorage (almacenamiento técnico, exento de consentimiento).
+---
+<div class="cc" data-cc hidden role="region" aria-label="Aviso de cookies">
+  <div class="cc__box">
+    <p class="cc__title">Tu privacidad, primero</p>
+    <p class="cc__text">
+      Solo usamos almacenamiento técnico necesario. Si aceptas, cargaremos contenido de terceros (el mapa de
+      Google Maps), que puede instalar sus propias cookies.
+      <a href="/politica-de-cookies">Más información sobre cookies</a>.
+    </p>
+    <div class="cc__actions">
+      <button type="button" class="btn btn--sm" data-cc-accept>Aceptar</button>
+      <button type="button" class="btn btn--sm" data-cc-reject>Rechazar</button>
+      <button type="button" class="btn btn--ghost btn--sm" data-cc-config>Configurar</button>
+    </div>
+  </div>
+</div>
+
+<dialog class="cc-dialog" data-cc-dialog aria-labelledby="cc-dialog-title">
+  <form method="dialog" class="cc-dialog__inner">
+    <h2 id="cc-dialog-title" class="cc__title">Configuración de cookies</h2>
+    <div class="cc-row">
+      <div>
+        <p class="cc-row__name">Técnicas y necesarias</p>
+        <p class="cc-row__desc">Recuerdan tu elección sobre cookies. Siempre activas.</p>
+      </div>
+      <span class="cc-row__fixed">Siempre activas</span>
+    </div>
+    <div class="cc-row">
+      <div>
+        <p class="cc-row__name">Contenido de terceros</p>
+        <p class="cc-row__desc">Mapa de Google Maps. Google puede instalar cookies propias al cargarlo.</p>
+      </div>
+      <label class="switch">
+        <input type="checkbox" name="external" data-cc-external />
+        <span class="switch__ui" aria-hidden="true"></span>
+        <span class="sr-only">Permitir contenido de terceros</span>
+      </label>
+    </div>
+    <p class="cc-row__desc">No usamos cookies analíticas ni publicitarias.</p>
+    <div class="cc__actions">
+      <button value="save" class="btn btn--sm" data-cc-save>Guardar preferencias</button>
+      <button value="cancel" class="btn btn--ghost btn--sm">Cancelar</button>
+    </div>
+  </form>
+</dialog>
+
+<style>
+  .cc { position: fixed; left: 16px; right: 16px; bottom: 16px; z-index: 120; display: flex; justify-content: flex-start; pointer-events: none; }
+  .cc__box { pointer-events: auto; max-width: 460px; background: var(--white); border-radius: 22px; padding: 22px; box-shadow: 0 30px 70px -20px rgba(42,34,36,0.45); border: 1px solid var(--line); }
+  .cc:not([hidden]) .cc__box { animation: cc-in 0.7s var(--ease) both; }
+  .cc__title { font-family: var(--font-serif); font-size: 1.3rem; margin-bottom: 8px; }
+  .cc__text { font-size: var(--fs-sm); color: var(--ink-soft); }
+  .cc__actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+  .cc__actions .btn { flex: 1 1 auto; }
+  .cc-dialog { border: 0; border-radius: 24px; padding: 0; max-width: min(520px, calc(100% - 32px)); box-shadow: var(--shadow); }
+  .cc-dialog::backdrop { background: rgba(38, 53, 43, 0.5); backdrop-filter: blur(4px); }
+  .cc-dialog__inner { padding: 26px; display: grid; gap: 18px; }
+  .cc-row { display: flex; justify-content: space-between; gap: 18px; align-items: center; padding-bottom: 16px; border-bottom: 1px solid var(--line); }
+  .cc-row__name { font-weight: 600; }
+  .cc-row__desc { font-size: var(--fs-sm); color: var(--ink-soft); }
+  .cc-row__fixed { font-size: var(--fs-xs); color: var(--eucalyptus); font-weight: 600; white-space: nowrap; }
+  .switch { position: relative; display: inline-flex; flex: none; }
+  .switch input { position: absolute; opacity: 0; inset: 0; cursor: pointer; }
+  .switch__ui { width: 50px; height: 30px; border-radius: 999px; background: #d9d1cd; position: relative; transition: background 0.3s; }
+  .switch__ui::after { content: ''; position: absolute; top: 3px; left: 3px; width: 24px; height: 24px; border-radius: 50%; background: var(--white); transition: transform 0.4s var(--ease); box-shadow: 0 2px 6px rgba(0,0,0,0.2); }
+  .switch input:checked + .switch__ui { background: var(--eucalyptus); }
+  .switch input:checked + .switch__ui::after { transform: translateX(20px); }
+  .switch input:focus-visible + .switch__ui { outline: 2px solid var(--wine); outline-offset: 3px; }
+  @media (max-width: 600px) {
+    .cc { left: 10px; right: 10px; bottom: 10px; }
+    .cc__box { padding: 16px; border-radius: 18px; }
+    .cc__title { font-size: 1.1rem; margin-bottom: 4px; }
+    .cc__text { font-size: 0.85rem; line-height: 1.45; }
+    .cc__actions { margin-top: 12px; gap: 6px; }
+    .cc__actions .btn { min-height: 42px; padding: 0.5em 0.9em; flex: 1 1 0; }
+  }
+  @keyframes cc-in { from { opacity: 0; transform: translateY(30px); } }
+</style>
+
+<script>
+  import { getConsent, setConsent } from '../scripts/consent';
+
+  const banner = document.querySelector<HTMLElement>('[data-cc]')!;
+  const dialog = document.querySelector<HTMLDialogElement>('[data-cc-dialog]')!;
+  const ext = document.querySelector<HTMLInputElement>('[data-cc-external]')!;
+
+  if (!getConsent()) banner.hidden = false;
+
+  const decide = (external: boolean) => { setConsent({ external }); banner.hidden = true; };
+  banner.querySelector('[data-cc-accept]')!.addEventListener('click', () => decide(true));
+  banner.querySelector('[data-cc-reject]')!.addEventListener('click', () => decide(false));
+
+  const openSettings = () => { ext.checked = !!getConsent()?.external; dialog.showModal(); };
+  banner.querySelector('[data-cc-config]')!.addEventListener('click', openSettings);
+  document.querySelectorAll('[data-cookie-settings]').forEach((b) => b.addEventListener('click', openSettings));
+
+  dialog.addEventListener('close', () => {
+    if (dialog.returnValue === 'save') decide(ext.checked);
+  });
+</script>

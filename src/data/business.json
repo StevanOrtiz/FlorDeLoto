@@ -1,0 +1,60 @@
+{
+  "name": "Flor de Loto Segovia",
+  "tagline": "Flores que convierten sentimientos en detalles",
+  "claim": "Para regalar, celebrar y emocionar",
+  "legal": {
+    "razonSocial": null,
+    "nif": null,
+    "registro": null,
+    "_nota": "Pendiente del cliente. Obligatorio por la LSSI-CE para el aviso legal."
+  },
+  "email": null,
+  "phone": "+34 691 26 41 12",
+  "phoneHref": "tel:+34691264112",
+  "whatsapp": "https://wa.link/2u7xn4",
+  "whatsappNumber": "34691264112",
+  "_whatsappNota": "Confirmar con el cliente que el WhatsApp es el mismo número que el teléfono.",
+  "address": {
+    "street": "P.º Conde de Sepúlveda, 24",
+    "postalCode": "40006",
+    "city": "Segovia",
+    "region": "Castilla y León",
+    "country": "ES",
+    "countryName": "España"
+  },
+  "geo": { "lat": 40.93803, "lng": -4.11478, "plusCode": "WVQP+63 Segovia" },
+  "maps": "https://www.google.com/maps/search/?api=1&query=Flor%20de%20Loto%20Segovia&query_place_id=ChIJ6UAkCOQ-QQ0RXk857kPOj4I",
+  "directions": "https://www.google.com/maps/dir/?api=1&destination=Flor%20de%20Loto%20Segovia&destination_place_id=ChIJ6UAkCOQ-QQ0RXk857kPOj4I",
+  "mapsEmbed": "https://www.google.com/maps?q=40.93803,-4.11478&z=17&output=embed",
+  "googleReviews": "https://www.google.com/maps/search/?api=1&query=Flor%20de%20Loto%20Segovia&query_place_id=ChIJ6UAkCOQ-QQ0RXk857kPOj4I",
+  "rating": { "value": 4.7, "count": 334, "source": "Google", "date": "2026-10" },
+  "social": {
+    "instagram": { "url": "https://www.instagram.com/flordelotosegovia/", "handle": "@flordelotosegovia" },
+    "facebook": { "url": "https://www.facebook.com/FlorDeLotoSegovia", "handle": "FlorDeLotoSegovia" }
+  },
+  "channels": [
+    { "name": "Glovo", "url": "https://glovoapp.com/es/es/segovia/flor-de-loto-segovia/", "note": "Ramos, rosas y plantas a domicilio" },
+    { "name": "Just Eat", "url": "https://www.just-eat.es/restaurants-flor-de-loto-segovia/menu", "note": "Pedido mínimo de 12 €" },
+    { "name": "Udora (antes Flowwow)", "url": "https://udora.es/shop/flor-de-loto/", "note": "Regalos florales y plantas" },
+    { "name": "Bodas.net", "url": "https://www.bodas.net/floristerias/flor-de-loto--e123285/", "note": "Flores para tu boda" }
+  ],
+  "hours": {
+    "_nota": "Datos de Google Maps. El sábado de la tienda aparece como 10:00–02:00 (probable error): confirmar con el cliente antes de publicar.",
+    "store": [
+      { "days": "Lunes a viernes", "dayCodes": ["Mo", "Tu", "We", "Th", "Fr"], "open": "10:00", "close": "20:00" },
+      { "days": "Sábado", "dayCodes": ["Sa"], "open": null, "close": null, "label": "Consúltanos" },
+      { "days": "Domingo", "dayCodes": ["Su"], "open": null, "close": null, "label": "Cerrado" }
+    ],
+    "online": [
+      { "days": "Lunes a viernes", "open": "10:00", "close": "20:00" },
+      { "days": "Sábado", "open": "10:00", "close": "20:00" },
+      { "days": "Domingo", "open": "10:00", "close": "14:00" }
+    ]
+  },
+  "amenities": [
+    "Entrega a domicilio",
+    "Recogida en tienda",
+    "Pago con tarjeta y móvil (NFC)",
+    "Local accesible en silla de ruedas"
+  ]
+}

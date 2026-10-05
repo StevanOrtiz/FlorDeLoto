@@ -1,0 +1,49 @@
+---
+import Breadcrumbs from './Breadcrumbs.astro';
+interface Props {
+  eyebrow?: string;
+  title: string;
+  lead?: string;
+  image?: string;
+  imageAlt?: string;
+  crumbs?: { name: string; href: string }[];
+}
+const { eyebrow, title, lead, image, imageAlt = '', crumbs } = Astro.props;
+---
+<section class:list={['phero', { 'phero--img': image }]}>
+  <div class="phero__bg" aria-hidden="true">
+    <span class="blob blob--1"></span><span class="blob blob--2"></span>
+  </div>
+  <div class="container phero__inner">
+    <div class="phero__text">
+      {crumbs && <Breadcrumbs items={crumbs} />}
+      {eyebrow && <p class="eyebrow" data-reveal="up">{eyebrow}</p>}
+      <h1 class="phero__title" data-split set:html={title} />
+      {lead && <p class="lead phero__lead" data-reveal="up" data-delay="0.3">{lead}</p>}
+      <slot />
+    </div>
+    {image && (
+      <div class="phero__media" data-reveal="clip">
+        <img src={image} alt={imageAlt} width="800" height="1000" loading="eager" fetchpriority="high" data-zoom />
+      </div>
+    )}
+  </div>
+</section>
+
+<style>
+  .phero { position: relative; padding-top: calc(var(--header-h) + clamp(40px, 7vw, 100px)); padding-bottom: clamp(48px, 7vw, 100px); overflow: hidden; }
+  .phero__bg { position: absolute; inset: 0; z-index: -1; }
+  .blob { position: absolute; border-radius: 50%; filter: blur(60px); opacity: 0.55; animation: drift 18s ease-in-out infinite alternate; }
+  .blob--1 { width: 46vw; height: 46vw; max-width: 620px; max-height: 620px; background: var(--blush-100); top: -10%; right: -10%; }
+  .blob--2 { width: 34vw; height: 34vw; max-width: 460px; max-height: 460px; background: var(--sage-100); bottom: -20%; left: -8%; animation-delay: -6s; }
+  @keyframes drift { to { transform: translate(-6%, 8%) scale(1.08); } }
+  .phero__inner { display: grid; gap: clamp(32px, 5vw, 72px); align-items: center; }
+  .phero--img .phero__inner { grid-template-columns: 1fr; }
+  @media (min-width: 900px) { .phero--img .phero__inner { grid-template-columns: 1.15fr 0.85fr; } }
+  .phero__text { display: grid; gap: 18px; justify-items: start; }
+  .phero__title { font-size: var(--fs-3xl); max-width: 14ch; }
+  .phero__title :global(em) { color: var(--wine); }
+  .phero__lead { max-width: 52ch; }
+  .phero__media { border-radius: var(--radius-lg) var(--radius-lg) 200px 200px; overflow: hidden; aspect-ratio: 4 / 5; max-height: 70vh; width: 100%; box-shadow: var(--shadow); background: var(--blush-50); }
+  .phero__media img { width: 100%; height: 100%; object-fit: cover; }
+</style>

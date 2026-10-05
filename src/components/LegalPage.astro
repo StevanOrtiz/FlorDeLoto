@@ -1,0 +1,32 @@
+---
+import Base from '../layouts/Base.astro';
+import Breadcrumbs from './Breadcrumbs.astro';
+interface Props { title: string; description: string; path: string; updated: string }
+const { title, description, path, updated } = Astro.props;
+const crumbs = [{ name: 'Inicio', href: '/' }, { name: title, href: path }];
+---
+<Base title={title} description={description} breadcrumbs={crumbs}>
+  <article class="legal narrow">
+    <Breadcrumbs items={crumbs} />
+    <h1 class="h2" data-split>{title}</h1>
+    <p class="legal__updated">Última actualización: {updated}</p>
+    <div class="prose"><slot /></div>
+  </article>
+</Base>
+
+<style>
+  .legal { padding: calc(var(--header-h) + 40px) 0 clamp(64px, 10vw, 120px); display: grid; gap: 18px; }
+  .legal > * { min-width: 0; }
+  .legal__updated { color: var(--ink-soft); font-size: var(--fs-sm); }
+  .prose { margin-top: 16px; }
+  .prose :global(h2) { font-size: var(--fs-xl); margin: 2.2em 0 0.6em; }
+  .prose :global(h3) { font-size: 1.3rem; margin: 1.6em 0 0.4em; }
+  .prose :global(p), .prose :global(ul), .prose :global(table) { margin-bottom: 1em; }
+  .prose :global(ul) { padding-left: 1.2em; }
+  .prose :global(li) { margin-bottom: 0.35em; }
+  .prose :global(a) { color: var(--wine); }
+  .prose :global(table) { width: 100%; border-collapse: collapse; font-size: var(--fs-sm); display: block; overflow-x: auto; }
+  .prose :global(th), .prose :global(td) { border: 1px solid var(--line); padding: 10px 12px; text-align: left; vertical-align: top; }
+  .prose :global(th) { background: var(--blush-50); }
+  .prose :global(.pending) { background: #fff3cd; color: #6b4e00; padding: 0 4px; border-radius: 4px; font-weight: 600; }
+</style>

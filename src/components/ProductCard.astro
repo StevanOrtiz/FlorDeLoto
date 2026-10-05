@@ -1,0 +1,66 @@
+---
+import Icon from './Icon.astro';
+import { type Product, productUrl, formatPrice, getCategory } from '../data/products';
+import { waLink } from '../lib/site';
+
+interface Props { product: Product; eager?: boolean; showCategory?: boolean }
+const { product: p, eager = false, showCategory = false } = Astro.props;
+const href = productUrl(p);
+const [img1, img2] = p.images;
+---
+<article class="pcard" data-category={p.category}>
+  <a href={href} class="pcard__media" aria-label={`Ver ${p.name}`}>
+    <img src={img1} alt={p.name} width="600" height="750" loading={eager ? 'eager' : 'lazy'} decoding="async" />
+    {img2 && <img class="pcard__alt" src={img2} alt="" width="600" height="750" loading="lazy" decoding="async" />}
+    <span class="pcard__view">Ver detalle <Icon name="arrow" size={16} /></span>
+  </a>
+  <div class="pcard__body">
+    {showCategory && <p class="pcard__cat">{getCategory(p.category).short}</p>}
+    <h3 class="pcard__name"><a href={href}>{p.name}</a></h3>
+    {p.dimensions && <p class="pcard__meta"><Icon name="ruler" size={15} /> {p.dimensions}</p>}
+    <div class="pcard__foot">
+      <span class="pcard__price">{formatPrice(p)}</span>
+      <a class="pcard__wa" href={waLink(`¡Hola! Me interesa el «${p.name}». ¿Me dais más información?`)} target="_blank" rel="noopener" aria-label={`Pedir ${p.name} por WhatsApp`}>
+        <Icon name="whatsapp" size={20} />
+      </a>
+    </div>
+  </div>
+</article>
+
+<style>
+  .pcard { position: relative; display: flex; flex-direction: column; background: var(--white); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow-soft); transition: transform 0.7s var(--ease), box-shadow 0.7s var(--ease); }
+  .pcard:hover { transform: translateY(-6px); box-shadow: var(--shadow); }
+  .pcard__media { position: relative; display: block; aspect-ratio: 4 / 5; overflow: hidden; background: var(--blush-50); }
+  .pcard__media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 1.2s var(--ease), opacity 0.7s var(--ease); }
+  .pcard__alt { opacity: 0; }
+  .pcard:hover .pcard__media img { transform: scale(1.06); }
+  .pcard:hover .pcard__alt { opacity: 1; }
+  .pcard__view {
+    position: absolute; left: 14px; bottom: 14px; display: inline-flex; gap: 6px; align-items: center;
+    padding: 8px 14px; border-radius: 999px; background: rgba(255,255,255,0.92); font-size: var(--fs-xs); font-weight: 600;
+    transform: translateY(12px); opacity: 0; transition: transform 0.5s var(--ease), opacity 0.4s;
+  }
+  .pcard:hover .pcard__view, .pcard__media:focus-visible .pcard__view { transform: none; opacity: 1; }
+  .pcard__body { padding: 18px 20px 20px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
+  .pcard__cat { font-size: var(--fs-xs); letter-spacing: 0.14em; text-transform: uppercase; color: var(--eucalyptus); font-weight: 600; }
+  .pcard__name { font-size: 1.35rem; }
+  .pcard__name a { text-decoration: none; }
+  .pcard__name a::after { content: ''; position: absolute; inset: 0; z-index: 0; }
+  .pcard__meta { display: inline-flex; align-items: center; gap: 6px; font-size: var(--fs-xs); color: var(--ink-soft); }
+  .pcard__foot { display: flex; justify-content: space-between; align-items: center; margin-top: auto; padding-top: 12px; }
+  .pcard__price { font-weight: 600; color: var(--wine); font-size: var(--fs-sm); }
+  .pcard__wa { position: relative; z-index: 1; width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; background: var(--sage-100); color: #1f7a4d; transition: background 0.3s, color 0.3s, transform 0.4s var(--ease); }
+  .pcard__wa:hover { background: #1f7a4d; color: var(--white); transform: rotate(-10deg) scale(1.08); }
+  .pcard__media { z-index: 1; }
+  @media (max-width: 599px) {
+    .pcard { border-radius: 18px; }
+    .pcard__body { padding: 12px 12px 14px; gap: 4px; }
+    .pcard__name { font-size: 1.05rem; }
+    .pcard__cat { font-size: 0.66rem; }
+    .pcard__meta { font-size: 0.72rem; }
+    .pcard__price { font-size: 0.8rem; }
+    .pcard__wa { width: 38px; height: 38px; }
+    .pcard__view { display: none; }
+  }
+  @media (hover: none) { .pcard__alt { display: none; } .pcard__view { opacity: 1; transform: none; } }
+</style>

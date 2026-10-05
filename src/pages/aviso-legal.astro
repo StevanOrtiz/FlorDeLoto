@@ -1,0 +1,42 @@
+---
+import LegalPage from '../components/LegalPage.astro';
+import Pending from '../components/Pending.astro';
+import { business, fullAddress, SITE_URL } from '../lib/site';
+const L = business.legal;
+---
+<LegalPage title="Aviso legal" description="Aviso legal de Flor de Loto Segovia: datos identificativos del titular, condiciones de uso y propiedad intelectual." path="/aviso-legal" updated="5 de octubre de 2026">
+  <h2>1. Datos identificativos</h2>
+  <p>En cumplimiento del artículo 10 de la Ley 34/2002, de Servicios de la Sociedad de la Información y de Comercio Electrónico (LSSI-CE), te informamos de los datos del titular de este sitio web:</p>
+  <ul>
+    <li><strong>Titular:</strong> <Pending value={L.razonSocial} label="nombre o razón social" /></li>
+    <li><strong>Nombre comercial:</strong> {business.name}</li>
+    <li><strong>NIF/CIF:</strong> <Pending value={L.nif} label="NIF/CIF" /></li>
+    <li><strong>Domicilio:</strong> {fullAddress}, {business.address.countryName}</li>
+    <li><strong>Teléfono:</strong> <a href={business.phoneHref}>{business.phone}</a></li>
+    <li><strong>Correo electrónico:</strong> {business.email ? <a href={`mailto:${business.email}`}>{business.email}</a> : <Pending value={null} label="correo electrónico" />}</li>
+    <li><strong>Datos registrales:</strong> <Pending value={L.registro} label="inscripción en el Registro Mercantil, si es sociedad" /></li>
+    <li><strong>Sitio web:</strong> {SITE_URL}</li>
+  </ul>
+
+  <h2>2. Objeto</h2>
+  <p>Este sitio web presenta la floristería {business.name}, sus productos y servicios, y facilita el contacto para hacer pedidos y consultas. La compra se realiza por teléfono, por WhatsApp, en la tienda o a través de plataformas de terceros enlazadas (Glovo, Just Eat, Udora, Bodas.net), que tienen sus propias condiciones.</p>
+
+  <h2>3. Condiciones de uso</h2>
+  <p>El acceso a la web es gratuito y supone aceptar este aviso legal. Te comprometes a hacer un uso adecuado de los contenidos y a no emplearlos para actividades ilícitas o contrarias a la buena fe.</p>
+
+  <h2>4. Información sobre productos y precios</h2>
+  <p>Las fotografías y descripciones son orientativas. Al trabajar con flor natural, cada arreglo es único. Cuando un precio no aparece publicado, te lo confirmaremos antes de aceptar tu pedido, con los impuestos incluidos.</p>
+
+  <h2>5. Propiedad intelectual e industrial</h2>
+  <p>Los textos, fotografías, diseño, logotipos y demás contenidos de esta web pertenecen a su titular o se usan con autorización. No se permite su reproducción, distribución o transformación sin permiso expreso, salvo para uso personal y privado.</p>
+
+  <h2>6. Enlaces a terceros</h2>
+  <p>La web contiene enlaces a sitios de terceros (redes sociales, plataformas de reparto, Google Maps). No somos responsables de sus contenidos ni de sus políticas de privacidad.</p>
+
+  <h2>7. Responsabilidad</h2>
+  <p>Trabajamos para que la información sea correcta y esté actualizada, pero no podemos garantizar la ausencia de errores ni la disponibilidad continua del sitio. Podemos modificar los contenidos sin previo aviso.</p>
+
+  <h2>8. Legislación aplicable</h2>
+  <p>Este aviso legal se rige por la legislación española. Para cualquier controversia, las partes se someten a los juzgados y tribunales que correspondan según la normativa de consumidores y usuarios.</p>
+  <p>Como consumidor, también puedes acudir a la plataforma europea de resolución de litigios en línea: <a href="https://ec.europa.eu/consumers/odr" target="_blank" rel="noopener">ec.europa.eu/consumers/odr</a>.</p>
+</LegalPage>
