@@ -1,7 +1,7 @@
 // Catálogo derivado de flor-de-loto-catalogo.json (web actual, extraído el 05/10/2026).
 // Textos corregidos y reescritos solo con la información disponible: no se inventan datos.
 // Precios: `price` queda en null hasta tener la lista oficial del cliente (se muestra "Consultar").
-// Imágenes: se enlazan las de la web actual hasta recibir los originales en alta resolución.
+// Imágenes: copias locales en public/img/products (se descargan con `npm run images`).
 
 export type CategoryId = 'ramos' | 'rosas' | 'orquideas' | 'plantas' | 'funerales';
 
@@ -29,7 +29,15 @@ export interface Product {
   price: number | null;
 }
 
-const IMG = 'https://flordlotosegovia.com/assets/img/products';
+/**
+ * Ruta local optimizada (WebP) de una foto de la web antigua.
+ * `src` es la ruta original dentro de flordlotosegovia.com/assets/img/products/.
+ * scripts/download-images.mjs usa estas mismas rutas para descargarlas.
+ */
+export function img(src: string) {
+  const local = decodeURIComponent(src).replace(/\s+/g, '-').replace(/\.(jpe?g|png)$/i, '.webp');
+  return `/img/products/${local}`;
+}
 
 export const categories: Category[] = [
   {
@@ -99,7 +107,7 @@ export const products: Product[] = [
       'Una nube de paniculata blanca (gypsophila) recién cortada, enmarcada con helechos. Sencillo, delicado y luminoso.',
     composition: ['Paniculata blanca · 12 ud.', 'Helechos · 7 ud.'],
     dimensions: '40 × 45 cm',
-    images: [`${IMG}/bouquet/ramo-armonia_1.jpg`, `${IMG}/bouquet/ramo-armonia_2.jpg`, `${IMG}/bouquet/ramo-armonia_3.jpg`],
+    images: [img('bouquet/ramo-armonia_1.jpg'), img('bouquet/ramo-armonia_2.jpg'), img('bouquet/ramo-armonia_3.jpg')],
     price: null,
   },
   {
@@ -111,7 +119,7 @@ export const products: Product[] = [
     composition: ['Girasol teddy · 6 ud.', 'Solidago amarillo · 5 ud.', 'Eucalipto · 5 ud.', 'Follaje rojo decorativo · 6 ud.', 'Helechos · 4 ud.'],
     dimensions: '45 × 45 cm',
     occasions: ['Cumpleaños', 'Ánimo', 'Felicitaciones'],
-    images: [`${IMG}/bouquet/ramo-girasoles_templanza_1.jpg`, `${IMG}/bouquet/ramo-girasoles_templanza_2.jpg`],
+    images: [img('bouquet/ramo-girasoles_templanza_1.jpg'), img('bouquet/ramo-girasoles_templanza_2.jpg')],
     price: null,
   },
   {
@@ -123,7 +131,7 @@ export const products: Product[] = [
     composition: ['Clavel colombiano · 12 ud.', 'Gypsophila · 6 ud.', 'Helechos · 7 ud.'],
     dimensions: '45 × 45 cm',
     occasions: ['Aniversario', 'Amor'],
-    images: [`${IMG}/bouquet/ramo-claveles_rojos_1.jpg`, `${IMG}/bouquet/ramo-claveles_rojos_2.jpg`],
+    images: [img('bouquet/ramo-claveles_rojos_1.jpg'), img('bouquet/ramo-claveles_rojos_2.jpg')],
     price: null,
   },
   {
@@ -134,7 +142,7 @@ export const products: Product[] = [
       'Rosas blancas con hojas de aspidistra, helechos y solidago verde. Clásico y refinado: paz, amor y respeto.',
     composition: ['Rosas blancas · 6 ud.', 'Helechos · 5 ud.', 'Hojas de aspidistra · 4 ud.', 'Solidago verde · 3 ud.'],
     dimensions: '40 × 50 cm',
-    images: [`${IMG}/bouquet/ramo-amantina_1.jpg`, `${IMG}/bouquet/ramo-amantina_2.jpg`, `${IMG}/bouquet/ramo-amantina_3.jpg`],
+    images: [img('bouquet/ramo-amantina_1.jpg'), img('bouquet/ramo-amantina_2.jpg'), img('bouquet/ramo-amantina_3.jpg')],
     price: null,
   },
   {
@@ -145,7 +153,7 @@ export const products: Product[] = [
       'Once lirios con paniculata blanca y verde tropical. Un ramo de gran tamaño y colorido espectacular.',
     composition: ['Lirios · 11 ud.', 'Verde tropical · 8 ud.', 'Paniculata blanca · 4 ud.'],
     dimensions: '55 × 55 cm',
-    images: [`${IMG}/bouquet/ramo-primavera_1.jpg`, `${IMG}/bouquet/ramo-primavera_2.jpg`, `${IMG}/bouquet/ramo-primavera_3.jpg`],
+    images: [img('bouquet/ramo-primavera_1.jpg'), img('bouquet/ramo-primavera_2.jpg'), img('bouquet/ramo-primavera_3.jpg')],
     price: null,
   },
   {
@@ -157,7 +165,7 @@ export const products: Product[] = [
     composition: ['Rosas · 12 ud.', 'Eucalipto · 8 ud.', 'Helechos y hojas decorativas · 5 ud.', 'Paniculata · 2 ud.', 'Solidago amarillo · 1 ud.'],
     dimensions: '55 × 60 cm',
     occasions: ['Amor', 'Agradecimiento'],
-    images: [`${IMG}/bouquet/ramo-rosas_eucalipto.jpg`],
+    images: [img('bouquet/ramo-rosas_eucalipto.jpg')],
     price: null,
   },
   {
@@ -169,7 +177,7 @@ export const products: Product[] = [
     composition: ['Gerbera · 10 ud.', 'Helechos y follaje · 6 ud.', 'Solidago amarillo · 3 ud.', 'Paniculata · 2 ud.'],
     dimensions: '40 × 55 cm',
     occasions: ['Cumpleaños', 'Ánimo'],
-    images: [`${IMG}/bouquet/ramo-gerber_1.jpg`, `${IMG}/bouquet/ramo-gerber_2.jpg`],
+    images: [img('bouquet/ramo-gerber_1.jpg'), img('bouquet/ramo-gerber_2.jpg')],
     price: null,
   },
   {
@@ -179,7 +187,7 @@ export const products: Product[] = [
     description: 'Margaritas con eucalipto y solidago amarillo. Un ramo lleno de luz y frescura.',
     composition: ['Margaritas · 10 ud.', 'Eucalipto · 5 ud.', 'Solidago amarillo · 3 ud.'],
     dimensions: '45 × 55 cm',
-    images: [`${IMG}/bouquet/ramo-margaritas_1.jpg`, `${IMG}/bouquet/ramo-margaritas_2.jpg`, `${IMG}/bouquet/ramo-margaritas_3.jpg`],
+    images: [img('bouquet/ramo-margaritas_1.jpg'), img('bouquet/ramo-margaritas_2.jpg'), img('bouquet/ramo-margaritas_3.jpg')],
     price: null,
   },
   {
@@ -191,7 +199,7 @@ export const products: Product[] = [
     composition: ['Rosas rojas · 24 ud.', 'Helechos y follaje · 10 ud.', 'Paniculata · 4 ud.', 'Solidago amarillo · 3 ud.'],
     dimensions: '45 × 55 cm',
     occasions: ['Aniversario', 'San Valentín', 'Declaración'],
-    images: [`${IMG}/bouquet/ramo_24_rosas_rojas_1.jpg`, `${IMG}/bouquet/ramo_24_rosas_rojas_2.jpg`, `${IMG}/bouquet/ramo_24_rosas_rojas_3.jpg`],
+    images: [img('bouquet/ramo_24_rosas_rojas_1.jpg'), img('bouquet/ramo_24_rosas_rojas_2.jpg'), img('bouquet/ramo_24_rosas_rojas_3.jpg')],
     price: null,
   },
   {
@@ -203,7 +211,7 @@ export const products: Product[] = [
     composition: ['Gerberas fucsias', 'Lirios orientales rosados', 'Iris azules', 'Crisantemos', 'Clavel amarillo', 'Astromelias', 'Margaritas mini', 'Verdes ornamentales'],
     dimensions: '30–40 × 40–45 cm',
     occasions: ['Celebraciones', 'Cumpleaños'],
-    images: [`${IMG}/bouquet/ramo-amsterdam.jpg`],
+    images: [img('bouquet/ramo-amsterdam.jpg')],
     price: null,
   },
   {
@@ -214,7 +222,7 @@ export const products: Product[] = [
       'Lirios blancos, gerberas y rosas amarillas, claveles rosados y púrpuras y una rosa azul teñida, con helechos y papel blanco. Un ramo alto, colorido y variado.',
     composition: ['Lirios blancos', 'Gerberas amarillas', 'Rosas amarillas', 'Claveles rosados y púrpuras', 'Rosa azul teñida', 'Helechos'],
     dimensions: '40–50 cm de ancho × 60–70 cm de alto',
-    images: [`${IMG}/bouquet/ramo-colombia.jpg`],
+    images: [img('bouquet/ramo-colombia.jpg')],
     price: null,
   },
   {
@@ -225,7 +233,7 @@ export const products: Product[] = [
       'Una rosa naranja en el centro rodeada de lirios amarillos, crisantemos, claveles y alstroemerias, con papel blanco y lazo verde.',
     composition: ['Rosa naranja', 'Lirios amarillos', 'Crisantemos', 'Claveles', 'Alstroemerias', 'Verdes'],
     dimensions: '40–45 cm de ancho × 50–60 cm de alto',
-    images: [`${IMG}/bouquet/ramo-malaga.jpg`],
+    images: [img('bouquet/ramo-malaga.jpg')],
     price: null,
   },
 
@@ -237,7 +245,7 @@ export const products: Product[] = [
     description: 'Diez rosas de colores con eucalipto, paniculata y solidago. Una explosión de color para cualquier ocasión.',
     composition: ['Rosas multicolor · 10 ud.', 'Helechos y follaje · 6 ud.', 'Eucalipto · 5 ud.', 'Paniculata · 3 ud.', 'Solidago amarillo · 3 ud.'],
     dimensions: '60 × 60 cm',
-    images: [`${IMG}/floors/rouses/rosas-multicolor_1.jpg`, `${IMG}/floors/rouses/rosas-multicolor_2.jpg`],
+    images: [img('floors/rouses/rosas-multicolor_1.jpg'), img('floors/rouses/rosas-multicolor_2.jpg')],
     price: null,
   },
   {
@@ -248,7 +256,7 @@ export const products: Product[] = [
     composition: ['Rosa roja · 1 ud.', 'Eucalipto · 4 ud.', 'Paniculata · 2 ud.', 'Jarrón de vidrio · 1 ud.'],
     dimensions: '12 × 40 cm',
     occasions: ['Amor', 'Agradecimiento'],
-    images: [`${IMG}/floors/rouses/rosas-unica%20_jarron.jpg`],
+    images: [img('floors/rouses/rosas-unica%20_jarron.jpg')],
     price: null,
   },
   {
@@ -259,7 +267,7 @@ export const products: Product[] = [
     composition: ['Cúpula de cristal con rosas preservadas · 1 ud.'],
     dimensions: '21 × 34 cm',
     occasions: ['Aniversario', 'Recuerdo'],
-    images: [`${IMG}/floors/rouses/rosas-3_rosas_preservadas.jpg`],
+    images: [img('floors/rouses/rosas-3_rosas_preservadas.jpg')],
     price: null,
   },
   {
@@ -270,7 +278,7 @@ export const products: Product[] = [
     composition: ['Rosas azules teñidas', 'Bombones Ferrero Rocher', 'Oso de peluche', 'Vino Merlot', 'Globo', 'Tarjeta'],
     dimensions: 'Caja 30 × 20 × 10 cm · 50–60 cm de alto en total',
     occasions: ['San Valentín', 'Aniversario'],
-    images: [`${IMG}/floors/rouses/rosas-damita.jpg`],
+    images: [img('floors/rouses/rosas-damita.jpg')],
     price: null,
   },
   {
@@ -281,7 +289,7 @@ export const products: Product[] = [
     composition: ['Rosas rojas', 'Lirios', 'Margaritas', 'Bombones Ferrero Rocher', 'Vino Viña Ardanza Reserva'],
     dimensions: 'Caja 30 × 20 × 10 cm · 40–50 cm de alto en total',
     occasions: ['San Valentín', 'Aniversario'],
-    images: [`${IMG}/floors/rouses/rosas-pack_amor.jpg`],
+    images: [img('floors/rouses/rosas-pack_amor.jpg')],
     price: null,
   },
   {
@@ -292,7 +300,7 @@ export const products: Product[] = [
     composition: ['Rosas', 'Lirios', 'Margaritas', 'Oso de peluche', 'Vino de San Valentín', 'Bombones Nestlé', 'Globo LOVE'],
     dimensions: 'Caja 35 × 30 × 10 cm · 50–60 cm de alto en total',
     occasions: ['San Valentín', 'Aniversario'],
-    images: [`${IMG}/floors/rouses/rosas-pack_siempre_juntos.jpg`],
+    images: [img('floors/rouses/rosas-pack_siempre_juntos.jpg')],
     price: null,
   },
   {
@@ -303,7 +311,7 @@ export const products: Product[] = [
     composition: ['Rosas blancas', 'Oso de peluche', 'Globo «te amo»', 'Letrero LOVE'],
     dimensions: 'Caja 25 × 20 × 10 cm · 40–50 cm de alto en total',
     occasions: ['San Valentín', 'Amor'],
-    images: [`${IMG}/floors/rouses/rosas-te_amo.jpg`],
+    images: [img('floors/rouses/rosas-te_amo.jpg')],
     price: null,
   },
 
@@ -321,9 +329,9 @@ export const products: Product[] = [
       'Abono cada 2–3 semanas durante el crecimiento.',
     ],
     images: [
-      `${IMG}/floors/orchid/orquidea-phalaenopsis_1.jpg`,
-      `${IMG}/floors/orchid/orquidea-phalaenopsis_2.jpg`,
-      `${IMG}/floors/orchid/orquidea-orquidea-phalaenopsis_1.jpg`,
+      img('floors/orchid/orquidea-phalaenopsis_1.jpg'),
+      img('floors/orchid/orquidea-phalaenopsis_2.jpg'),
+      img('floors/orchid/orquidea-orquidea-phalaenopsis_1.jpg'),
     ],
     price: null,
   },
@@ -335,7 +343,7 @@ export const products: Product[] = [
     dimensions: '25 × 70 cm',
     watering: 'Una vez por semana',
     care: ['Luz indirecta.', 'Riego una vez por semana.'],
-    images: [`${IMG}/floors/orchid/planta-phalaenospsis_1.jpg`, `${IMG}/floors/orchid/planta-phalaenospsis_2.jpg`],
+    images: [img('floors/orchid/planta-phalaenospsis_1.jpg'), img('floors/orchid/planta-phalaenospsis_2.jpg')],
     price: null,
   },
 
@@ -348,7 +356,7 @@ export const products: Product[] = [
     dimensions: '45 × 130 cm',
     watering: 'Cada 12 días aproximadamente',
     care: ['Luz intensa.', 'Temperatura entre 10 y 25 °C.', 'Riego cada 12 días.', 'Abono de mayo a septiembre.'],
-    images: [`${IMG}/floors/more/planta-schefflera_1.jpg`, `${IMG}/floors/more/planta-schefflera_2.jpg`],
+    images: [img('floors/more/planta-schefflera_1.jpg'), img('floors/more/planta-schefflera_2.jpg')],
     price: null,
   },
   {
@@ -359,7 +367,7 @@ export const products: Product[] = [
     dimensions: '30 cm × 1 m',
     watering: 'Una vez por semana',
     care: ['Riego una vez por semana.', 'Ya trasplantado.'],
-    images: [`${IMG}/floors/more/planta-olivo_copa_1.jpg`, `${IMG}/floors/more/planta-olivo_copa_2.jpg`, `${IMG}/floors/more/planta-olivo_copa_3.jpg`],
+    images: [img('floors/more/planta-olivo_copa_1.jpg'), img('floors/more/planta-olivo_copa_2.jpg'), img('floors/more/planta-olivo_copa_3.jpg')],
     price: null,
   },
   {
@@ -370,7 +378,7 @@ export const products: Product[] = [
     dimensions: '25 cm × 1 m',
     watering: 'Una vez por semana',
     care: ['Riego una vez por semana.', 'Muy resistente a la sequía.'],
-    images: [`${IMG}/floors/more/planta-yucca.jpg`],
+    images: [img('floors/more/planta-yucca.jpg')],
     price: null,
   },
   {
@@ -380,7 +388,7 @@ export const products: Product[] = [
     description: 'Veinte tallos de eucalipto en cesta de mimbre. Decora y perfuma con un aroma natural y relajante.',
     composition: ['Eucalipto · 20 ud.', 'Cesta de mimbre · 1 ud.'],
     dimensions: '50 × 30 cm',
-    images: [`${IMG}/floors/more/cesta-aromas_naturales_1.jpg`],
+    images: [img('floors/more/cesta-aromas_naturales_1.jpg')],
     price: null,
   },
   {
@@ -391,9 +399,9 @@ export const products: Product[] = [
     composition: ['Eucalipto · 20 ud.'],
     dimensions: '50 × 70 cm',
     images: [
-      `${IMG}/floors/more/planta-jarron_aromas_naturales_1.jpg`,
-      `${IMG}/floors/more/planta-jarron_aromas_naturales_2.jpg`,
-      `${IMG}/floors/more/planta-jarron_aromas_naturales_3.jpg`,
+      img('floors/more/planta-jarron_aromas_naturales_1.jpg'),
+      img('floors/more/planta-jarron_aromas_naturales_2.jpg'),
+      img('floors/more/planta-jarron_aromas_naturales_3.jpg'),
     ],
     price: null,
   },
@@ -404,7 +412,7 @@ export const products: Product[] = [
     description: 'Cesta de mimbre blanco con orquídeas amarillas, bromelias naranjas y plantas de flor, rematada con cinta amarilla.',
     composition: ['Orquídeas amarillas', 'Bromelias naranjas', 'Plantas de flor', 'Cesta de mimbre blanco'],
     dimensions: 'Ø 25–30 cm · 40–50 cm de alto',
-    images: [`${IMG}/floors/more/cesta-alegria.jpg`],
+    images: [img('floors/more/cesta-alegria.jpg')],
     price: null,
   },
   {
@@ -415,7 +423,7 @@ export const products: Product[] = [
     composition: ['Anthuriums rojos', 'Calathea', 'Kalanchoe', 'Plantas verdes'],
     dimensions: 'Recipiente 25–30 cm · 40–50 cm de alto',
     occasions: ['Nacimiento'],
-    images: [`${IMG}/floors/more/cesta-nacimientos.jpg`],
+    images: [img('floors/more/cesta-nacimientos.jpg')],
     price: null,
   },
   {
@@ -426,7 +434,7 @@ export const products: Product[] = [
     composition: ['Croton', 'Plantas de hoja fina', 'Ciclamen o prímula', 'Hiedra'],
     dimensions: 'Caja 30 × 20 × 15 cm · 40–50 cm de alto',
     occasions: ['Nacimiento'],
-    images: [`${IMG}/floors/more/cesta-plantas_madrid.jpg`],
+    images: [img('floors/more/cesta-plantas_madrid.jpg')],
     price: null,
   },
   {
@@ -436,7 +444,7 @@ export const products: Product[] = [
     description: 'Terrario hexagonal de vidrio con ficus pumila, musgo, suculentas y una figura de dos niños.',
     composition: ['Ficus pumila', 'Musgo', 'Suculentas', 'Figura decorativa'],
     dimensions: '25 cm de base · 25–30 cm de alto',
-    images: [`${IMG}/floors/more/terrario-pareja_feliz.jpg`],
+    images: [img('floors/more/terrario-pareja_feliz.jpg')],
     price: null,
   },
   {
@@ -446,20 +454,20 @@ export const products: Product[] = [
     description: 'Terrario de cúpula con cinta roja, ficus pumila, musgo y una figura de dos niños.',
     composition: ['Ficus pumila', 'Musgo', 'Figura decorativa', 'Cúpula de vidrio con cinta roja'],
     dimensions: '20–25 cm de base · 25–30 cm de alto',
-    images: [`${IMG}/floors/more/terrario-pareja.jpg`],
+    images: [img('floors/more/terrario-pareja.jpg')],
     price: null,
   },
 
   // ——— Funerales (sin descripción en la web actual: solo galería y consulta) ———
-  { slug: 'centro-funerario-azul-naranja', name: 'Centro funerario azul y naranja', category: 'funerales', description: '', images: [`${IMG}/funerals/funeral-centro_funerario_azul_y_naranja.jpeg`], price: null },
-  { slug: 'centro-funerario-bidasoa', name: 'Centro funerario Bidasoa', category: 'funerales', description: '', images: [`${IMG}/funerals/funeral-centro_funerario_bidasoa.jpeg`], price: null },
-  { slug: 'centro-funerario-semblante', name: 'Centro funerario Semblante', category: 'funerales', description: '', images: [`${IMG}/funerals/funeral-centro_funerario_semblante.jpeg`], price: null },
-  { slug: 'centro-funerario-f12', name: 'Centro funerario F12', category: 'funerales', description: '', images: [`${IMG}/funerals/funeral-centro_funerario-F12.jpeg`], price: null },
-  { slug: 'ramo-funerario', name: 'Ramo funerario', category: 'funerales', description: '', images: [`${IMG}/funerals/ramo_funerario.jpeg`], price: null },
-  { slug: 'centro-funerario-espana', name: 'Centro funerario España', category: 'funerales', description: '', images: [`${IMG}/funerals/funeral-centro_funerario_espana.jpeg`], price: null },
-  { slug: 'centro-funerario-f123', name: 'Centro funerario F123', category: 'funerales', description: '', images: [`${IMG}/funerals/funeral-centro-F123.jpeg`], price: null },
-  { slug: 'centro-laurel-f111', name: 'Centro de laurel F111', category: 'funerales', description: '', images: [`${IMG}/funerals/funeral-centro-F111.jpeg`], price: null },
-  { slug: 'corona-flores-lisboa', name: 'Corona de flores Lisboa', category: 'funerales', description: '', images: [`${IMG}/funerals/funeral-corona_lisboa.jpeg`], price: null },
+  { slug: 'centro-funerario-azul-naranja', name: 'Centro funerario azul y naranja', category: 'funerales', description: '', images: [img('funerals/funeral-centro_funerario_azul_y_naranja.jpeg')], price: null },
+  { slug: 'centro-funerario-bidasoa', name: 'Centro funerario Bidasoa', category: 'funerales', description: '', images: [img('funerals/funeral-centro_funerario_bidasoa.jpeg')], price: null },
+  { slug: 'centro-funerario-semblante', name: 'Centro funerario Semblante', category: 'funerales', description: '', images: [img('funerals/funeral-centro_funerario_semblante.jpeg')], price: null },
+  { slug: 'centro-funerario-f12', name: 'Centro funerario F12', category: 'funerales', description: '', images: [img('funerals/funeral-centro_funerario-F12.jpeg')], price: null },
+  { slug: 'ramo-funerario', name: 'Ramo funerario', category: 'funerales', description: '', images: [img('funerals/ramo_funerario.jpeg')], price: null },
+  { slug: 'centro-funerario-espana', name: 'Centro funerario España', category: 'funerales', description: '', images: [img('funerals/funeral-centro_funerario_espana.jpeg')], price: null },
+  { slug: 'centro-funerario-f123', name: 'Centro funerario F123', category: 'funerales', description: '', images: [img('funerals/funeral-centro-F123.jpeg')], price: null },
+  { slug: 'centro-laurel-f111', name: 'Centro de laurel F111', category: 'funerales', description: '', images: [img('funerals/funeral-centro-F111.jpeg')], price: null },
+  { slug: 'corona-flores-lisboa', name: 'Corona de flores Lisboa', category: 'funerales', description: '', images: [img('funerals/funeral-corona_lisboa.jpeg')], price: null },
 ];
 
 export const getCategory = (id: CategoryId) => categories.find((c) => c.id === id)!;

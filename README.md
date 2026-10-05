@@ -10,7 +10,13 @@ npm install
 npm run dev      # desarrollo en http://localhost:4321
 npm run check    # comprobación de tipos (TypeScript + Astro)
 npm run build    # compilación de producción (.vercel/output)
+npm run images   # descarga las fotos del catálogo y las guarda en WebP (public/img/products)
 ```
+
+**Primera vez:** ejecuta `npm run images` para descargar las fotos desde flordlotosegovia.com. Se guardan
+optimizadas en `public/img/products` y la web ya no depende de la web antigua. Después, súbelas al
+repositorio (`git add public/img`). Cuando el cliente entregue fotos originales, sustitúyelas en esa misma
+carpeta con el mismo nombre.
 
 ## Estructura
 
@@ -76,7 +82,7 @@ propone WhatsApp: no se pierde ningún mensaje en silencio.
 - [ ] Horario real del sábado y del domingo (Google muestra el sábado de 10:00 a 02:00, probable error).
 - [ ] Lista oficial de precios.
 - [ ] Zonas y coste de envío, y plazos de encargo en fechas de alta demanda.
-- [ ] Logo vectorial y fotos originales en alta resolución (hoy se usan las de la web antigua).
+- [ ] Logo vectorial y fotos originales en alta resolución (hoy se usan las de la web antigua, descargadas con `npm run images`).
 - [ ] Permiso para mostrar nombres de clientes (ahora solo el nombre de pila) y del equipo.
 - [ ] Confirmar el dominio (flordlotosegovia.com) y la página de Facebook.
 - [ ] Revisión de los textos legales por un profesional.
