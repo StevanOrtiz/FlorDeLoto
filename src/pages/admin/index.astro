@@ -1,0 +1,86 @@
+---
+import Admin from '../../layouts/Admin.astro';
+import { getCategories, getProducts, formatPrice, productUrl } from '../../lib/catalog';
+
+const admin = Astro.locals.admin!;
+const q = (Astro.url.searchParams.get('q') ?? '').trim().slice(0, 60);
+const categories = await getCategories();
+const catParam = Astro.url.searchParams.get('cat') ?? '';
+const cat = categories.some((c) => c.id === catParam) ? catParam : '';
+
+const [all, items] = await Promise.all([
+  getProducts({ all: true }),
+  getProducts({ all: true, search: q || undefined, category: cat || undefined }),
+]);
+const published = all.filter((p) => p.published).length;
+---
+<Admin title="Catálogo" admin={admin}>
+  <div class="container apage">
+    <div class="apage__head">
+      <div>
+        <h1>Catálogo</h1>
+        <p>Crea, edita y elimina los productos que se muestran en la web.</p>
+      </div>
+      <a class="btn" href="/admin/productos/nuevo">+ Nuevo producto</a>
+    </div>
+
+    <div class="stats" aria-label="Resumen">
+      <span class="stat"><strong>{all.length}</strong> productos</span>
+      <span class="stat"><strong>{published}</strong> publicados</span>
+      <span class="stat"><strong>{all.length - published}</strong> ocultos</span>
+    </div>
+
+    <form class="afilters" method="get" action="/admin" role="search">
+      <div class="field">
+        <label for="f-q">Buscar</label>
+        <input id="f-q" name="q" type="search" value={q} placeholder="Nombre o dirección" maxlength="60" />
+      </div>
+      <div class="field">
+        <label for="f-cat">Categoría</label>
+        <select id="f-cat" name="cat">
+          <option value="">Todas</option>
+          {categories.map((c) => <option value={c.id} selected={c.id === cat}>{c.name}</option>)}
+        </select>
+      </div>
+      <button class="btn btn--ghost" type="submit">Filtrar</button>
+      {(q || cat) && <a class="btn btn--ghost" href="/admin">Quitar filtros</a>}
+    </form>
+
+    <div class="acard" style="padding: 12px clamp(8px, 2vw, 20px)">
+      {items.length === 0 ? (
+        <p class="aempty">No hay productos con esos filtros.</p>
+      ) : (
+        <table class="atable">
+          <thead>
+            <tr><th scope="col"><span class="sr-only">Foto</span></th><th scope="col">Producto</th><th scope="col">Categoría</th><th scope="col">Precio</th><th scope="col">Estado</th><th scope="col"><span class="sr-only">Acciones</span></th></tr>
+          </thead>
+          <tbody>
+            {items.map((p) => (
+              <tr>
+                <td>{p.images[0] ? <img class="atable__thumb" src={p.images[0].thumb} alt="" width="56" height="70" loading="lazy" /> : <span class="atable__thumb"></span>}</td>
+                <td>
+                  <a class="atable__name" href={`/admin/productos/${p.id}`}>{p.name}</a>
+                  <div class="atable__slug">/{p.slug}</div>
+                </td>
+                <td>{p.subcategory ? `${p.categoryName} · ${p.subcategory}` : p.categoryName}</td>
+                <td>{p.price == null ? <span class="muted">—</span> : formatPrice(p)}</td>
+                <td>
+                  <div class="pills">
+                    <span class:list={['pill', p.published ? 'pill--ok' : 'pill--off']}>{p.published ? 'Publicado' : 'Oculto'}</span>
+                    {p.featured && <span class="pill pill--star">Destacado</span>}
+                  </div>
+                </td>
+                <td>
+                  <div class="atable__actions">
+                    <a class="btn btn--ghost btn--sm" href={`/admin/productos/${p.id}`}>Editar</a>
+                    {p.published && p.category !== 'funerales' && <a class="btn btn--ghost btn--sm" href={productUrl(p)} target="_blank" rel="noopener">Ver</a>}
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+    </div>
+  </div>
+</Admin>

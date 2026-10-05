@@ -1,0 +1,57 @@
+---
+import '../styles/global.css';
+import '../styles/admin.css';
+import Logo from '../components/Logo.astro';
+import type { AdminSession } from '../lib/auth';
+
+interface Props { title: string; admin?: AdminSession | null }
+const { title, admin } = Astro.props;
+---
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title} · Panel de Flor de Loto</title>
+    <meta name="robots" content="noindex, nofollow, noarchive" />
+    <meta name="referrer" content="same-origin" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    {admin && <meta name="csrf-token" content={admin.csrf} />}
+  </head>
+  <body class="admin">
+    <a class="skip-link" href="#main">Saltar al contenido</a>
+    {admin && (
+      <header class="atop">
+        <div class="container atop__inner">
+          <a class="atop__brand" href="/admin" aria-label="Panel de administración">
+            <Logo /><span class="atop__tag">Panel</span>
+          </a>
+          <nav class="atop__nav" aria-label="Panel">
+            <span class="atop__user">{admin.email}</span>
+            <a class="btn btn--ghost btn--sm" href="/" target="_blank" rel="noopener">Ver la web</a>
+            <button class="btn btn--ghost btn--sm" type="button" data-logout>Cerrar sesión</button>
+          </nav>
+        </div>
+      </header>
+    )}
+    <main id="main">
+      <slot />
+    </main>
+
+    <div class="toast" role="status" aria-live="polite" data-toast></div>
+    <dialog class="cdialog" data-confirm aria-labelledby="confirm-title">
+      <form method="dialog">
+        <h2 id="confirm-title" data-confirm-title>¿Seguro?</h2>
+        <p data-confirm-text></p>
+        <div class="row">
+          <button class="btn btn--ghost btn--sm" value="cancel">Cancelar</button>
+          <button class="btn btn--danger btn--sm" value="ok" data-confirm-ok>Eliminar</button>
+        </div>
+      </form>
+    </dialog>
+
+    <script>
+      import '../scripts/admin';
+    </script>
+  </body>
+</html>

@@ -5,18 +5,25 @@ import ProductCard from '../components/ProductCard.astro';
 import Reviews from '../components/Reviews.astro';
 import OrderChannels from '../components/OrderChannels.astro';
 import Location from '../components/Location.astro';
-import { products, shopCategories, productsIn } from '../data/products';
+import { getProducts, getCategories } from '../lib/catalog';
+import { cachePublic } from '../lib/cache';
 import { business, waLink } from '../lib/site';
 
-const find = (slug: string) => products.find((p) => p.slug === slug)!;
-const featured = ['ramo-24-rosas-rojas', 'ramo-girasoles-templanza', 'pack-amor', 'ramo-primavera', 'cupula-3-rosas-preservadas', 'orquidea-phalaenopsis', 'ramo-amantina', 'olivo-copa'].map(find);
-const heroImgs = [find('ramo-rosas-eucalipto').images[0], find('ramo-girasoles-templanza').images[0], find('ramo-primavera').images[0]];
-const catImg: Record<string, string> = {
-  ramos: find('ramo-amantina').images[0],
-  rosas: find('rosas-multicolor').images[0],
-  orquideas: find('planta-phalaenopsis-rosa').images[0],
-  plantas: find('olivo-copa').images[0],
-};
+cachePublic(Astro.response);
+const [products, categories] = await Promise.all([getProducts(), getCategories()]);
+const shopCategories = categories.filter((c) => c.id !== 'funerales');
+const inCat = (id: string) => products.filter((p) => p.category === id);
+const photo = (p?: { images: { src: string; alt: string }[] }, n = 0) => p?.images[n] ?? p?.images[0] ?? null;
+
+// «Los más pedidos»: los marcados como destacados en el panel; si no hay ninguno, los primeros del catálogo.
+const flagged = products.filter((p) => p.featured && p.category !== 'funerales');
+const featured = (flagged.length ? flagged : products.filter((p) => p.category !== 'funerales')).slice(0, 8);
+// Collage del hero: la primera foto de tres destacados con foto.
+const heroImgs = featured.filter((p) => p.images.length > 0).slice(0, 3).map((p) => p.images[0]);
+const catImg: Record<string, string | undefined> = Object.fromEntries(shopCategories.map((c) => [c.id, photo(inCat(c.id).find((p) => p.images.length))?.src]));
+const aboutImg = photo(inCat('ramos').find((p) => p.images.length));
+const weddingImg = photo(inCat('rosas').filter((p) => p.images.length).at(-1));
+const funeralImg = photo(inCat('funerales').filter((p) => p.images.length).at(-1));
 
 const services = [
   {
@@ -42,7 +49,7 @@ const services = [
   },
 ] as const;
 
-const marquee = ['Ramos a medida', 'Entrega a domicilio', 'Rosas', 'Bodas y eventos', 'Orquídeas', 'Plantas de interior', 'Packs regalo', 'Coronas y centros'];
+const marquee = ['Ramos a medida', 'Entrega a domicilio', 'Rosas', 'Bodas & eventos', 'Orquídeas', 'Plantas de interior', 'Packs regalo', 'Coronas y centros'];
 ---
 <Base
   title="Flor de Loto Segovia | Floristería y arreglos florales en Segovia"
@@ -81,15 +88,21 @@ const marquee = ['Ramos a medida', 'Entrega a domicilio', 'Rosas', 'Bodas y even
       </div>
 
       <div class="hero__collage">
-        <figure class="hero__img hero__img--1" data-reveal="clip">
-          <img src={heroImgs[0]} alt="Ramo de rosas en tonos pastel con eucalipto" width="640" height="800" fetchpriority="high" data-parallax="0.12" />
-        </figure>
-        <figure class="hero__img hero__img--2" data-reveal="clip" data-delay="0.25">
-          <img src={heroImgs[1]} alt="Ramo de girasoles con follaje rojo y eucalipto" width="480" height="600" data-parallax="0.2" />
-        </figure>
-        <figure class="hero__img hero__img--3" data-reveal="clip" data-delay="0.45">
-          <img src={heroImgs[2]} alt="Ramo de lirios con paniculata blanca" width="420" height="520" data-parallax="0.28" />
-        </figure>
+        {heroImgs[0] && (
+          <figure class="hero__img hero__img--1" data-reveal="clip">
+            <img src={heroImgs[0].src} alt={heroImgs[0].alt} width="640" height="800" fetchpriority="high" data-parallax="0.12" />
+          </figure>
+        )}
+        {heroImgs[1] && (
+          <figure class="hero__img hero__img--2" data-reveal="clip" data-delay="0.25">
+            <img src={heroImgs[1].thumb} alt={heroImgs[1].alt} width="480" height="600" data-parallax="0.2" />
+          </figure>
+        )}
+        {heroImgs[2] && (
+          <figure class="hero__img hero__img--3" data-reveal="clip" data-delay="0.45">
+            <img src={heroImgs[2].thumb} alt={heroImgs[2].alt} width="420" height="520" data-parallax="0.28" />
+          </figure>
+        )}
         <div class="hero__badge" data-reveal="scale" data-delay="1">
           <svg viewBox="0 0 120 120" class="hero__badge-ring" aria-hidden="true">
             <defs><path id="circle" d="M60 60m-46 0a46 46 0 1 1 92 0a46 46 0 1 1-92 0" /></defs>
@@ -128,7 +141,7 @@ const marquee = ['Ramos a medida', 'Entrega a domicilio', 'Rosas', 'Bodas y even
   <section class="about section" aria-labelledby="about-title">
     <div class="container about__grid">
       <div class="about__media" data-reveal="clip">
-        <img src={find('ramo-armonia').images[0]} alt="Ramo de paniculata blanca con helechos" width="700" height="900" loading="lazy" data-zoom />
+        {aboutImg && <img src={aboutImg.src} alt={aboutImg.alt} width="700" height="900" loading="lazy" data-zoom />}
       </div>
       <div class="about__text">
         <p class="eyebrow" data-reveal="up">Sobre nosotros</p>
@@ -184,10 +197,10 @@ const marquee = ['Ramos a medida', 'Entrega a domicilio', 'Rosas', 'Bodas y even
       <div class="cats__grid">
         {shopCategories.map((c, i) => (
           <a class="cat" href={c.path} data-reveal="up" data-delay={String(i * 0.08)}>
-            <img src={catImg[c.id]} alt="" width="600" height="800" loading="lazy" />
+            {catImg[c.id] && <img src={catImg[c.id]} alt="" width="600" height="800" loading="lazy" />}
             <span class="cat__shade"></span>
             <span class="cat__body">
-              <span class="cat__count">{productsIn(c.id).length} diseños</span>
+              <span class="cat__count">{inCat(c.id).length} diseños</span>
               <span class="cat__name">{c.name}</span>
               <span class="cat__go"><Icon name="arrow" /></span>
             </span>
@@ -216,20 +229,20 @@ const marquee = ['Ramos a medida', 'Entrega a domicilio', 'Rosas', 'Bodas y even
   <!-- ————— BODAS Y FUNERALES ————— -->
   <section class="moments" aria-label="Bodas, eventos y funerales">
     <a class="moment" href="/bodas-eventos-segovia">
-      <div class="moment__media"><img src={find('cupula-3-rosas-preservadas').images[0]} alt="" width="900" height="1100" loading="lazy" data-zoom /></div>
+      <div class="moment__media">{weddingImg && <img src={weddingImg.src} alt="" width="900" height="1100" loading="lazy" data-zoom />}</div>
       <div class="moment__body" data-reveal="up">
         <Icon name="ring" size={34} />
-        <p class="eyebrow" style="color: var(--blush-100)">Bodas y eventos</p>
+        <p class="eyebrow" style="color: var(--blush-100)">Bodas & eventos</p>
         <h2 class="h2">El día más especial merece <em>flores únicas</em></h2>
         <p>Arreglos florales para bodas tradicionales y temáticas, comuniones y celebraciones.</p>
         <span class="link-arrow">Descubrir <Icon name="arrow" /></span>
       </div>
     </a>
     <a class="moment moment--calm" href="/funerales-segovia">
-      <div class="moment__media"><img src={productsIn('funerales')[8].images[0]} alt="" width="900" height="1100" loading="lazy" data-zoom /></div>
+      <div class="moment__media">{funeralImg && <img src={funeralImg.src} alt="" width="900" height="1100" loading="lazy" data-zoom />}</div>
       <div class="moment__body" data-reveal="up" data-delay="0.15">
         <Icon name="leaf" size={34} />
-        <p class="eyebrow" style="color: var(--sage-300)">Funerales</p>
+        <p class="eyebrow" style="color: var(--sage-300)">Funerario</p>
         <h2 class="h2">Cuando faltan las palabras, <em>acompañamos</em></h2>
         <p>Coronas, centros y ramos funerarios preparados con respeto y cuidado.</p>
         <span class="link-arrow">Ver arreglos <Icon name="arrow" /></span>
@@ -364,7 +377,9 @@ const marquee = ['Ramos a medida', 'Entrega a domicilio', 'Rosas', 'Bodas y even
   .cats__head { margin-bottom: clamp(32px, 5vw, 56px); display: grid; gap: 14px; }
   .cats__head h2 :global(em), .featured__head h2 :global(em), .care h2 :global(em) { color: var(--wine); }
   .cats__grid { display: grid; gap: 12px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  @media (min-width: 900px) { .cats__grid { grid-template-columns: repeat(4, 1fr); gap: 16px; } }
+  @media (min-width: 900px) { .cats__grid { grid-template-columns: repeat(3, 1fr); gap: 16px; } }
+  /* Con 3 tarjetas, en móvil la última ocupa toda la fila. */
+  @media (max-width: 899px) { .cat:last-child:nth-child(odd) { grid-column: 1 / -1; aspect-ratio: 16 / 10; } }
   .cat { position: relative; aspect-ratio: 3 / 4; border-radius: var(--radius-lg); overflow: hidden; color: var(--white); text-decoration: none; background: var(--blush-100); }
   .cat img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 1.4s var(--ease); }
   .cat:hover img { transform: scale(1.08); }

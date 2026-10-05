@@ -2,14 +2,16 @@
 import Base from '../layouts/Base.astro';
 import PageHero from '../components/PageHero.astro';
 import Icon from '../components/Icon.astro';
-import { productsIn, getCategory } from '../data/products';
+import { getCategoryById, getProducts } from '../lib/catalog';
+import { cachePublic } from '../lib/cache';
 import { business, waLink } from '../lib/site';
 
-const cat = getCategory('funerales');
-const items = productsIn('funerales');
+cachePublic(Astro.response);
+const cat = (await getCategoryById('funerales'))!;
+const items = await getProducts({ category: 'funerales' });
 const crumbs = [{ name: 'Inicio', href: '/' }, { name: 'Funerales', href: cat.path }];
 ---
-<Base title={cat.title} description={cat.description} breadcrumbs={crumbs} image={items[0].images[0]} bodyClass="calm">
+<Base title={cat.title} description={cat.description} breadcrumbs={crumbs} image={items[0]?.images[0]?.src} bodyClass="calm">
   <PageHero crumbs={crumbs} eyebrow="Flores para funerales" title="Cuando faltan las palabras, <em>las flores acompañan</em>" lead={cat.intro}>
     <div class="f-ctas" data-reveal="up" data-delay="0.5">
       <a class="btn" href={business.phoneHref}><Icon name="phone" /> Llamar ahora</a>
@@ -21,7 +23,7 @@ const crumbs = [{ name: 'Inicio', href: '/' }, { name: 'Funerales', href: cat.pa
     <ul class="f-grid" data-stagger="0.06">
       {items.map((p) => (
         <li class="fcard">
-          <div class="fcard__media"><img src={p.images[0]} alt={p.name} width="600" height="750" loading="lazy" /></div>
+          <div class="fcard__media">{p.images[0] && <img src={p.images[0].thumb} alt={p.images[0].alt || p.name} width="640" height="800" loading="lazy" />}</div>
           <div class="fcard__body">
             <h2 class="fcard__name">{p.name}</h2>
             <a class="link-arrow" href={waLink(`Hola, quiero información sobre el «${p.name}».`)} target="_blank" rel="noopener">Consultar <Icon name="arrow" /></a>

@@ -2,10 +2,12 @@
 import Base from '../layouts/Base.astro';
 import PageHero from '../components/PageHero.astro';
 import Icon from '../components/Icon.astro';
-import { products, productUrl } from '../data/products';
+import { getProducts, productUrl } from '../lib/catalog';
+import { cachePublic } from '../lib/cache';
 import { business } from '../lib/site';
 
-const plants = products.filter((p) => p.care);
+cachePublic(Astro.response);
+const plants = (await getProducts({ category: 'plantas' })).filter((p) => p.care.length > 0);
 const crumbs = [{ name: 'Inicio', href: '/' }, { name: 'Cuidado de plantas', href: '/cuidado-de-plantas' }];
 const faq = {
   '@context': 'https://schema.org',
@@ -13,7 +15,7 @@ const faq = {
   mainEntity: plants.map((p) => ({
     '@type': 'Question',
     name: `¿Cómo cuidar la planta «${p.name}»?`,
-    acceptedAnswer: { '@type': 'Answer', text: p.care!.join(' ') },
+    acceptedAnswer: { '@type': 'Answer', text: p.care.join(' ') },
   })),
 };
 ---
@@ -34,14 +36,14 @@ const faq = {
     {plants.map((p, i) => (
       <article class:list={['plant', { 'plant--rev': i % 2 }]} id={p.slug}>
         <div class="plant__media" data-reveal="clip">
-          <img src={p.images[0]} alt={p.name} width="600" height="750" loading="lazy" data-zoom />
+          {p.images[0] && <img src={p.images[0].src} alt={p.images[0].alt || p.name} width="800" height="1000" loading="lazy" data-zoom />}
         </div>
         <div class="plant__body">
           <h2 class="h2" data-split>{p.name}</h2>
           <p class="lead" data-reveal="up">{p.description}</p>
           {p.watering && <p class="plant__water" data-reveal="up"><Icon name="water" size={22} /> <span><strong>Riego:</strong> {p.watering}</span></p>}
           <ul class="plant__tips" data-stagger>
-            {p.care!.map((c) => <li><Icon name="check" size={18} /> {c}</li>)}
+            {p.care.map((c) => <li><Icon name="check" size={18} /> {c}</li>)}
           </ul>
           <a class="link-arrow" href={productUrl(p)} data-reveal="up">Ver {p.name} <Icon name="arrow" /></a>
         </div>

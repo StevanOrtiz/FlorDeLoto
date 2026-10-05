@@ -1,0 +1,120 @@
+---
+import type { Category, Product } from '../../lib/catalog';
+
+interface Props { categories: Category[]; product?: Product; defaultCategory?: string }
+const { categories, product: p, defaultCategory } = Astro.props;
+const SUBCATEGORIES = ['Orquídeas', 'Plantas de interior', 'Cestas y arreglos', 'Terrarios'];
+const editing = !!p;
+---
+<form class="aform" data-product-form data-id={p?.id ?? ''} novalidate>
+  <section class="acard afs" aria-labelledby="fs-datos">
+    <h2 class="afs__title" id="fs-datos">Datos del producto</h2>
+    <div class="agrid agrid--2">
+      <div class="field">
+        <label for="p-name">Nombre *</label>
+        <input id="p-name" name="name" type="text" required maxlength="120" value={p?.name ?? ''} aria-describedby="p-name-err" />
+        <p class="error" id="p-name-err" data-error="name"></p>
+      </div>
+      <div class="field">
+        <label for="p-slug">Dirección en la web (slug)</label>
+        <input id="p-slug" name="slug" type="text" maxlength="80" value={p?.slug ?? ''} placeholder="se genera con el nombre" autocomplete="off" aria-describedby="p-slug-hint p-slug-err" data-slug-field data-auto={editing ? 'false' : 'true'} />
+        <p class="hint" id="p-slug-hint">Solo letras minúsculas, números y guiones.</p>
+        {editing && <p class="hint hint--warn">Si la cambias, el enlace antiguo dejará de funcionar.</p>}
+        <p class="error" id="p-slug-err" data-error="slug"></p>
+      </div>
+    </div>
+
+    <div class="agrid agrid--3">
+      <div class="field">
+        <label for="p-cat">Categoría *</label>
+        <select id="p-cat" name="category_id" required aria-describedby="p-cat-err">
+          {categories.map((c) => <option value={c.id} selected={c.id === (p?.category ?? defaultCategory ?? categories[0]?.id)}>{c.name}</option>)}
+        </select>
+        <p class="error" id="p-cat-err" data-error="category_id"></p>
+      </div>
+      <div class="field">
+        <label for="p-sub">Tipo (opcional)</label>
+        <input id="p-sub" name="subcategory" type="text" maxlength="40" list="p-sub-list" value={p?.subcategory ?? ''} placeholder="p. ej. Orquídeas" />
+        <datalist id="p-sub-list">{SUBCATEGORIES.map((s) => <option value={s} />)}</datalist>
+        <p class="hint">Sirve de filtro en la página de Plantas.</p>
+      </div>
+      <div class="field field--price">
+        <label for="p-price">Precio (opcional)</label>
+        <input id="p-price" name="price" type="text" inputmode="decimal" maxlength="9" value={p?.price ?? ''} placeholder="Vacío = «Consultar precio»" aria-describedby="p-price-err" />
+        <span class="suffix" aria-hidden="true">€</span>
+        <p class="error" id="p-price-err" data-error="price"></p>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="p-desc">Descripción</label>
+      <textarea id="p-desc" name="description" maxlength="2000">{p?.description ?? ''}</textarea>
+    </div>
+
+    <div class="agrid agrid--2">
+      <div class="field">
+        <label for="p-comp">Composición (una por línea)</label>
+        <textarea id="p-comp" name="composition" placeholder={'Rosas rojas · 12 ud.\nHelechos · 5 ud.'}>{p?.composition.join('\n') ?? ''}</textarea>
+      </div>
+      <div class="field">
+        <label for="p-care">Cuidados (uno por línea)</label>
+        <textarea id="p-care" name="care" placeholder={'Luz indirecta.\nRiego una vez por semana.'}>{p?.care.join('\n') ?? ''}</textarea>
+      </div>
+    </div>
+
+    <div class="agrid agrid--3">
+      <div class="field">
+        <label for="p-dim">Medidas</label>
+        <input id="p-dim" name="dimensions" type="text" maxlength="120" value={p?.dimensions ?? ''} placeholder="45 × 55 cm" />
+      </div>
+      <div class="field">
+        <label for="p-water">Riego</label>
+        <input id="p-water" name="watering" type="text" maxlength="120" value={p?.watering ?? ''} placeholder="Una vez por semana" />
+      </div>
+      <div class="field">
+        <label for="p-occ">Ocasiones (separadas por comas)</label>
+        <input id="p-occ" name="occasions" type="text" maxlength="200" value={p?.occasions.join(', ') ?? ''} placeholder="Aniversario, San Valentín" />
+      </div>
+    </div>
+
+    <div class="checks">
+      <label class="check"><input type="checkbox" name="published" checked={p ? p.published : true} /> <span>Visible en la web</span></label>
+      <label class="check"><input type="checkbox" name="featured" checked={p?.featured ?? false} /> <span>Destacado en la portada («Los más pedidos»)</span></label>
+    </div>
+  </section>
+
+  <section class="acard afs" aria-labelledby="fs-fotos">
+    <h2 class="afs__title" id="fs-fotos">Fotos</h2>
+    {editing && (
+      <ul class="photos" data-photos>
+        {p.images.map((img, i) => (
+          <li class="photo" data-image-id={img.id}>
+            <img src={img.thumb} alt={img.alt} width="220" height="275" loading="lazy" />
+            <label class="sr-only" for={`alt-${img.id}`}>Texto alternativo de la foto {i + 1}</label>
+            <input id={`alt-${img.id}`} type="text" value={img.alt} maxlength="200" placeholder="Descripción de la foto" data-alt />
+            <div class="photo__tools">
+              <span class="grow">{i === 0 ? <span class="photo__badge">Portada</span> : `Foto ${i + 1}`}</span>
+              <button class="iconbtn" type="button" data-move="up" aria-label="Mover antes" disabled={i === 0}>←</button>
+              <button class="iconbtn" type="button" data-move="down" aria-label="Mover después" disabled={i === p.images.length - 1}>→</button>
+              <button class="iconbtn" type="button" data-delete-image aria-label="Eliminar foto">✕</button>
+            </div>
+          </li>
+        ))}
+      </ul>
+    )}
+    <ul class="photos" data-pending hidden></ul>
+    <label class="dropzone" data-dropzone>
+      <input type="file" accept="image/jpeg,image/png,image/webp" multiple data-file-input />
+      <strong>Añadir fotos</strong>
+      <span>Arrástralas aquí o pulsa para elegirlas. JPEG, PNG o WebP; se optimizan solas.</span>
+    </label>
+    <p class="hint">{editing ? 'Las fotos se suben en cuanto las eliges. La primera es la portada.' : 'Se subirán al guardar el producto. La primera será la portada.'}</p>
+  </section>
+
+  <p class="formmsg" role="alert" data-form-message></p>
+  <div class="aform__bar">
+    <button class="btn" type="submit" data-submit>{editing ? 'Guardar cambios' : 'Crear producto'}</button>
+    <a class="btn btn--ghost" href="/admin">Volver</a>
+    {editing && <button class="btn btn--outline-danger danger" type="button" data-delete-product data-name={p.name}>Eliminar producto</button>}
+  </div>
+</form>

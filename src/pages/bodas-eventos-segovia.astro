@@ -3,19 +3,18 @@ import Base from '../layouts/Base.astro';
 import PageHero from '../components/PageHero.astro';
 import ContactForm from '../components/ContactForm.astro';
 import Icon from '../components/Icon.astro';
-import { products } from '../data/products';
+import { getProducts } from '../lib/catalog';
+import { cachePublic } from '../lib/cache';
 import { business, waLink } from '../lib/site';
 
-const crumbs = [{ name: 'Inicio', href: '/' }, { name: 'Bodas y eventos', href: '/bodas-eventos-segovia' }];
-const img = (slug: string, i = 0) => products.find((p) => p.slug === slug)!.images[i];
-const gallery = [
-  { src: img('ramo-amantina'), alt: 'Ramo de rosas blancas con aspidistra' },
-  { src: img('ramo-armonia', 1), alt: 'Ramo de paniculata blanca' },
-  { src: img('cupula-3-rosas-preservadas'), alt: 'Cúpula de rosas preservadas' },
-  { src: img('rosas-multicolor', 1), alt: 'Ramo de rosas multicolor' },
-  { src: img('jarron-aromas-naturales', 1), alt: 'Jarrón de eucalipto' },
-  { src: img('ramo-primavera', 1), alt: 'Ramo de lirios' },
-];
+cachePublic(Astro.response);
+const crumbs = [{ name: 'Inicio', href: '/' }, { name: 'Bodas & eventos', href: '/bodas-eventos-segovia' }];
+// Galería: fotos de rosas, ramos y plantas del catálogo (la primera foto de seis productos distintos).
+const pool = (await getProducts()).filter((p) => p.category !== 'funerales' && p.images.length > 0);
+const pick = (cat: string, n: number) => pool.filter((p) => p.category === cat).slice(0, n);
+const gallery = [...pick('rosas', 2), ...pick('ramos', 3), ...pick('plantas', 1)]
+  .slice(0, 6)
+  .map((p) => ({ src: p.images[0].src, alt: p.images[0].alt || p.name }));
 const offer = [
   { icon: 'ring', title: 'Bodas', text: 'Para bodas tradicionales y para enlaces temáticos.' },
   { icon: 'sparkles', title: 'Comuniones y bautizos', text: 'Decoración floral de iglesias y celebraciones familiares.' },
@@ -28,15 +27,15 @@ const bodasNet = business.channels.find((c) => c.name === 'Bodas.net')!;
   title="Flores para bodas y eventos en Segovia"
   description="Decoración floral para bodas, comuniones y eventos en Segovia: ramos de novia, iglesias y celebraciones. Pide tu presupuesto a Flor de Loto Segovia."
   breadcrumbs={crumbs}
-  image={gallery[0].src}
+  image={gallery[0]?.src}
 >
   <PageHero
     crumbs={crumbs}
     eyebrow="Bodas y eventos"
     title="Flores para <em>los días que no se olvidan</em>"
     lead="Una amplia gama de arreglos florales, tanto para bodas tradicionales como para enlaces temáticos, comuniones y celebraciones."
-    image={gallery[1].src}
-    imageAlt={gallery[1].alt}
+    image={gallery[1]?.src}
+    imageAlt={gallery[1]?.alt}
   >
     <div class="hero-ctas" data-reveal="up" data-delay="0.5">
       <a class="btn" href="#presupuesto">Pedir presupuesto <Icon name="arrow" /></a>

@@ -1,0 +1,20 @@
+---
+import Admin from '../../../layouts/Admin.astro';
+import ProductForm from '../../../components/admin/ProductForm.astro';
+import { getCategories } from '../../../lib/catalog';
+
+const admin = Astro.locals.admin!;
+const categories = await getCategories();
+const wanted = Astro.url.searchParams.get('cat') ?? '';
+---
+<Admin title="Nuevo producto" admin={admin}>
+  <div class="container apage">
+    <div class="apage__head">
+      <div>
+        <h1>Nuevo producto</h1>
+        <p>Rellena los datos y añade las fotos. Podrás cambiarlo cuando quieras.</p>
+      </div>
+    </div>
+    <ProductForm categories={categories} defaultCategory={categories.some((c) => c.id === wanted) ? wanted : undefined} />
+  </div>
+</Admin>

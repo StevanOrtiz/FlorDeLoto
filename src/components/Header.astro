@@ -4,8 +4,7 @@ import Icon from './Icon.astro';
 import { nav, business, waLink } from '../lib/site';
 
 const path = Astro.url.pathname.replace(/\/$/, '') || '/';
-const isActive = (href: string, children?: { href: string }[]) =>
-  href === '/' ? path === '/' : path.startsWith(href) || !!children?.some((c) => path.startsWith(c.href));
+const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWith(href));
 ---
 <header class="site-header" data-header>
   <div class="container site-header__inner">
@@ -16,24 +15,15 @@ const isActive = (href: string, children?: { href: string }[]) =>
     <nav class="nav-desktop" aria-label="Principal">
       <ul>
         {nav.map((item) => (
-          <li class:list={[{ 'has-sub': item.children }]}>
-            <a href={item.href} aria-current={isActive(item.href, item.children) ? 'page' : undefined}>
-              {item.label}
-              {item.children && <Icon name="chevron" size={14} />}
-            </a>
-            {item.children && (
-              <ul class="submenu">
-                {item.children.map((c) => (
-                  <li><a href={c.href} aria-current={path.startsWith(c.href) ? 'page' : undefined}>{c.label}</a></li>
-                ))}
-              </ul>
-            )}
+          <li>
+            <a href={item.href} aria-current={isActive(item.href) ? 'page' : undefined}>{item.label}</a>
           </li>
         ))}
       </ul>
     </nav>
 
     <div class="site-header__actions">
+      <a class="btn btn--ghost btn--sm site-header__contact" href="/contacto" aria-current={isActive('/contacto') ? 'page' : undefined}>Contacto</a>
       <a class="btn btn--wa btn--sm site-header__cta" href={waLink('¡Hola! Me gustaría hacer un pedido.')} target="_blank" rel="noopener" aria-label="Pedir por WhatsApp">
         <Icon name="whatsapp" /> <span aria-hidden="true">Pedir</span>
       </a>
@@ -49,14 +39,10 @@ const isActive = (href: string, children?: { href: string }[]) =>
       <ul class="mobile-menu__list">
         {nav.map((item) => (
           <li>
-            <a href={item.href} aria-current={isActive(item.href, item.children) ? 'page' : undefined}>{item.label}</a>
-            {item.children && (
-              <ul class="mobile-menu__sub">
-                {item.children.map((c) => <li><a href={c.href}>{c.label}</a></li>)}
-              </ul>
-            )}
+            <a href={item.href} aria-current={isActive(item.href) ? 'page' : undefined}>{item.label}</a>
           </li>
         ))}
+        <li><a href="/contacto" aria-current={isActive('/contacto') ? 'page' : undefined}>Contacto</a></li>
       </ul>
       <div class="mobile-menu__contact">
         <a href={business.phoneHref}><Icon name="phone" size={18} /> {business.phone}</a>
@@ -97,18 +83,11 @@ const isActive = (href: string, children?: { href: string }[]) =>
   .nav-desktop > ul > li > a[aria-current='page']::after { transform: scaleX(1); transform-origin: left; }
   .nav-desktop a[aria-current='page'] { color: var(--wine); }
 
-  .has-sub { position: relative; }
-  .submenu {
-    position: absolute; top: 100%; left: -18px; min-width: 220px; list-style: none; padding: 10px;
-    background: var(--white); border-radius: 18px; box-shadow: var(--shadow);
-    opacity: 0; visibility: hidden; transform: translateY(8px);
-    transition: opacity 0.3s, transform 0.4s var(--ease), visibility 0.3s;
-  }
-  .has-sub:hover .submenu, .has-sub:focus-within .submenu { opacity: 1; visibility: visible; transform: none; }
-  .submenu a { display: block; padding: 10px 12px; border-radius: 10px; }
-  .submenu a:hover { background: var(--blush-50); color: var(--wine); }
 
   .site-header__actions { display: flex; align-items: center; gap: 10px; }
+  .site-header__contact { display: none; }
+  @media (min-width: 640px) { .site-header__contact { display: inline-flex; } }
+  .site-header__contact[aria-current='page'] { color: var(--wine); border-color: var(--wine); }
   .site-header__cta span { display: none; }
   @media (min-width: 420px) { .site-header__cta span { display: inline; } }
 
@@ -135,8 +114,6 @@ const isActive = (href: string, children?: { href: string }[]) =>
   .mobile-menu__list > li:nth-child(6) { animation-delay: 0.3s; }
   .mobile-menu__list > li > a { font-family: var(--font-serif); font-size: clamp(2rem, 9vw, 2.8rem); text-decoration: none; line-height: 1.25; }
   .mobile-menu__list a[aria-current='page'] { color: var(--wine); font-style: italic; }
-  .mobile-menu__sub { list-style: none; padding: 4px 0 10px 4px; display: flex; flex-wrap: wrap; gap: 8px; }
-  .mobile-menu__sub a { display: inline-block; padding: 8px 14px; border: 1px solid var(--line); border-radius: 999px; font-size: var(--fs-sm); text-decoration: none; }
   .mobile-menu__contact { margin-top: 36px; display: grid; gap: 14px; color: var(--ink-soft); }
   .mobile-menu__contact a { display: inline-flex; gap: 10px; align-items: center; text-decoration: none; }
   @keyframes menu-in { from { opacity: 0; } }

@@ -1,4 +1,6 @@
 ---
+// Bajo demanda: las páginas dinámicas la usan con Astro.rewrite('/404') (no se puede reescribir hacia una página estática).
+export const prerender = false;
 import Base from '../layouts/Base.astro';
 import Icon from '../components/Icon.astro';
 ---

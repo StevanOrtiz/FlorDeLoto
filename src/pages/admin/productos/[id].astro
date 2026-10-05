@@ -1,0 +1,26 @@
+---
+import Admin from '../../../layouts/Admin.astro';
+import ProductForm from '../../../components/admin/ProductForm.astro';
+import { getCategories, getProductById, productUrl } from '../../../lib/catalog';
+import { UUID_RE } from '../../../lib/db';
+
+const admin = Astro.locals.admin!;
+const id = Astro.params.id ?? '';
+if (!UUID_RE.test(id)) return Astro.rewrite('/404');
+const [product, categories] = await Promise.all([getProductById(id), getCategories()]);
+if (!product) return Astro.rewrite('/404');
+---
+<Admin title={`Editar ${product.name}`} admin={admin}>
+  <div class="container apage">
+    <div class="apage__head">
+      <div>
+        <h1>Editar producto</h1>
+        <p>{product.name}</p>
+      </div>
+      {product.published && product.category !== 'funerales' && (
+        <a class="btn btn--ghost" href={productUrl(product)} target="_blank" rel="noopener">Ver en la web</a>
+      )}
+    </div>
+    <ProductForm categories={categories} product={product} />
+  </div>
+</Admin>

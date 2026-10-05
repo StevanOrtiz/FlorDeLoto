@@ -1,0 +1,30 @@
+---
+import Admin from '../../layouts/Admin.astro';
+import Logo from '../../components/Logo.astro';
+import { COOKIE_NAME, getSession } from '../../lib/auth';
+
+// Si ya hay una sesión válida, directo al panel.
+if (await getSession(Astro.cookies.get(COOKIE_NAME)?.value)) return Astro.redirect('/admin');
+---
+<Admin title="Acceso">
+  <div class="login">
+    <div class="login__card acard">
+      <div class="login__brand"><Logo /></div>
+      <h1>Acceso al panel</h1>
+      <!-- method="post": si el JavaScript no cargara, las credenciales nunca irían en la URL. -->
+      <form data-login-form method="post" action="/api/admin/login" novalidate class="aform" style="gap: 16px">
+        <div class="field">
+          <label for="login-email">Correo electrónico</label>
+          <input id="login-email" name="email" type="email" autocomplete="username" required maxlength="200" />
+        </div>
+        <div class="field">
+          <label for="login-password">Contraseña</label>
+          <input id="login-password" name="password" type="password" autocomplete="current-password" required maxlength="300" />
+        </div>
+        <p class="formmsg" role="alert" data-form-message></p>
+        <button class="btn" type="submit" data-submit>Entrar</button>
+      </form>
+      <p class="login__note">Acceso solo para la persona que administra el catálogo.</p>
+    </div>
+  </div>
+</Admin>

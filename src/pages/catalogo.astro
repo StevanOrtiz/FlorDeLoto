@@ -3,10 +3,14 @@ import Base from '../layouts/Base.astro';
 import PageHero from '../components/PageHero.astro';
 import ProductCard from '../components/ProductCard.astro';
 import OrderChannels from '../components/OrderChannels.astro';
-import { products, shopCategories } from '../data/products';
+import { getProducts, getCategories } from '../lib/catalog';
+import { cachePublic } from '../lib/cache';
 import { SITE_URL } from '../lib/site';
 
-const items = products.filter((p) => p.category !== 'funerales');
+cachePublic(Astro.response);
+const [allProducts, categories] = await Promise.all([getProducts(), getCategories()]);
+const shopCategories = categories.filter((c) => c.id !== 'funerales');
+const items = allProducts.filter((p) => p.category !== 'funerales');
 const crumbs = [{ name: 'Inicio', href: '/' }, { name: 'Catálogo', href: '/catalogo' }];
 const itemList = {
   '@context': 'https://schema.org',

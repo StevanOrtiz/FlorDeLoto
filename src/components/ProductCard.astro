@@ -1,6 +1,6 @@
 ---
 import Icon from './Icon.astro';
-import { type Product, productUrl, formatPrice, getCategory } from '../data/products';
+import { type Product, productUrl, formatPrice } from '../lib/catalog';
 import { waLink } from '../lib/site';
 
 interface Props { product: Product; eager?: boolean; showCategory?: boolean }
@@ -8,14 +8,14 @@ const { product: p, eager = false, showCategory = false } = Astro.props;
 const href = productUrl(p);
 const [img1, img2] = p.images;
 ---
-<article class="pcard" data-category={p.category}>
+<article class="pcard" data-category={p.category} data-sub={p.subcategory ?? undefined}>
   <a href={href} class="pcard__media" aria-label={`Ver ${p.name}`}>
-    <img src={img1} alt={p.name} width="600" height="750" loading={eager ? 'eager' : 'lazy'} decoding="async" />
-    {img2 && <img class="pcard__alt" src={img2} alt="" width="600" height="750" loading="lazy" decoding="async" />}
+    {img1 && <img src={img1.thumb} alt={img1.alt} width="640" height="800" loading={eager ? 'eager' : 'lazy'} decoding="async" />}
+    {img2 && <img class="pcard__alt" src={img2.thumb} alt="" width="640" height="800" loading="lazy" decoding="async" />}
     <span class="pcard__view">Ver detalle <Icon name="arrow" size={16} /></span>
   </a>
   <div class="pcard__body">
-    {showCategory && <p class="pcard__cat">{getCategory(p.category).short}</p>}
+    {showCategory && <p class="pcard__cat">{p.subcategory ?? p.categoryName}</p>}
     <h3 class="pcard__name"><a href={href}>{p.name}</a></h3>
     {p.dimensions && <p class="pcard__meta"><Icon name="ruler" size={15} /> {p.dimensions}</p>}
     <div class="pcard__foot">

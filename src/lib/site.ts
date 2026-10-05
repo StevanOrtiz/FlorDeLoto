@@ -11,20 +11,20 @@ export function waLink(text?: string) {
 
 export const fullAddress = `${business.address.street}, ${business.address.postalCode} ${business.address.city}`;
 
+/** Menú principal, de izquierda a derecha. El logo lleva a Inicio y «Contacto» es un botón aparte. */
 export const nav = [
-  { label: 'Inicio', href: '/' },
-  {
-    label: 'Catálogo',
-    href: '/catalogo',
-    children: [
-      { label: 'Ramos de flores', href: '/ramos-flores-segovia' },
-      { label: 'Rosas y packs', href: '/rosas-segovia' },
-      { label: 'Orquídeas', href: '/orquideas-segovia' },
-      { label: 'Plantas y cestas', href: '/mas-flores-segovia' },
-    ],
-  },
-  { label: 'Bodas y eventos', href: '/bodas-eventos-segovia' },
-  { label: 'Funerales', href: '/funerales-segovia' },
-  { label: 'Cuidados', href: '/cuidado-de-plantas' },
-  { label: 'Contacto', href: '/contacto' },
+  { label: 'Rosas', href: '/rosas-segovia' },
+  { label: 'Ramos', href: '/ramos-flores-segovia' },
+  { label: 'Plantas', href: '/plantas-segovia' },
+  { label: 'Funerario', href: '/funerales-segovia' },
+  { label: 'Bodas & eventos', href: '/bodas-eventos-segovia' },
+];
+
+/** Enlaces de las categorías para el pie de página (fijos, sin consultar la base de datos). */
+export const footerCategories = [
+  { label: 'Rosas', href: '/rosas-segovia' },
+  { label: 'Ramos', href: '/ramos-flores-segovia' },
+  { label: 'Plantas y orquídeas', href: '/plantas-segovia' },
+  { label: 'Funerario', href: '/funerales-segovia' },
+  { label: 'Bodas & eventos', href: '/bodas-eventos-segovia' },
 ];

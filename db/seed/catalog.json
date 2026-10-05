@@ -1,0 +1,1022 @@
+{
+  "categories": [
+    {
+      "id": "rosas",
+      "name": "Rosas y packs regalo",
+      "short": "Rosas",
+      "path": "/rosas-segovia",
+      "title": "Rosas y packs regalo en Segovia",
+      "description": "Rosas rojas, multicolor y preservadas, y packs regalo con bombones, vino y peluche. Floristería en Segovia con entrega a domicilio.",
+      "intro": "Rosas para decir lo que a veces cuesta decir: una sola en jarrón, una cúpula de rosas preservadas o un pack regalo completo para sorprender.",
+      "sort_order": 1
+    },
+    {
+      "id": "ramos",
+      "name": "Ramos de flores",
+      "short": "Ramos",
+      "path": "/ramos-flores-segovia",
+      "title": "Ramos de flores en Segovia a domicilio",
+      "description": "Ramos de flores frescas hechos a mano en Segovia: rosas, girasoles, lirios, margaritas y gerberas. Entrega a domicilio en Segovia y alrededores.",
+      "intro": "Cada ramo se monta a mano con flor fresca, pensando en la persona que lo va a recibir. Elige uno de nuestros diseños o cuéntanos qué buscas y lo preparamos para ti.",
+      "sort_order": 2
+    },
+    {
+      "id": "plantas",
+      "name": "Plantas y orquídeas",
+      "short": "Plantas",
+      "path": "/plantas-segovia",
+      "title": "Plantas de interior, orquídeas, cestas y terrarios en Segovia",
+      "description": "Orquídeas Phalaenopsis, plantas de interior, olivos, cestas de plantas para nacimientos, terrarios y arreglos de eucalipto. Floristería en Segovia con entrega a domicilio.",
+      "intro": "Verde para casa, para la oficina o para regalar. Orquídeas, plantas de interior, cestas, terrarios y arreglos de eucalipto, con consejos de cuidado.",
+      "sort_order": 3
+    },
+    {
+      "id": "funerales",
+      "name": "Flores para funerales",
+      "short": "Funerales",
+      "path": "/funerales-segovia",
+      "title": "Coronas y centros funerarios en Segovia",
+      "description": "Coronas de flores, centros y ramos funerarios en Segovia. Te acompañamos con respeto y cuidamos cada detalle. Llámanos o escríbenos por WhatsApp.",
+      "intro": "En los momentos más difíciles, las flores acompañan cuando faltan las palabras. Preparamos coronas, centros y ramos funerarios con respeto y cuidado.",
+      "sort_order": 4
+    }
+  ],
+  "products": [
+    {
+      "slug": "ramo-armonia",
+      "category_id": "ramos",
+      "subcategory": null,
+      "name": "Ramo Armonía",
+      "description": "Una nube de paniculata blanca (gypsophila) recién cortada, enmarcada con helechos. Sencillo, delicado y luminoso.",
+      "composition": [
+        "Paniculata blanca · 12 ud.",
+        "Helechos · 7 ud."
+      ],
+      "dimensions": "40 × 45 cm",
+      "care": [],
+      "watering": null,
+      "occasions": [],
+      "price": null,
+      "published": true,
+      "sort_order": 0,
+      "images": [
+        "bouquet/ramo-armonia_1.webp",
+        "bouquet/ramo-armonia_2.webp",
+        "bouquet/ramo-armonia_3.webp"
+      ],
+      "featured": false
+    },
+    {
+      "slug": "ramo-girasoles-templanza",
+      "category_id": "ramos",
+      "subcategory": null,
+      "name": "Ramo de girasoles Templanza",
+      "description": "Girasoles teddy, solidago amarillo, follaje rojo y eucalipto. Un ramo vibrante que transmite felicidad y vitalidad.",
+      "composition": [
+        "Girasol teddy · 6 ud.",
+        "Solidago amarillo · 5 ud.",
+        "Eucalipto · 5 ud.",
+        "Follaje rojo decorativo · 6 ud.",
+        "Helechos · 4 ud."
+      ],
+      "dimensions": "45 × 45 cm",
+      "care": [],
+      "watering": null,
+      "occasions": [
+        "Cumpleaños",
+        "Ánimo",
+        "Felicitaciones"
+      ],
+      "price": null,
+      "published": true,
+      "sort_order": 1,
+      "images": [
+        "bouquet/ramo-girasoles_templanza_1.webp",
+        "bouquet/ramo-girasoles_templanza_2.webp"
+      ],
+      "featured": true
+    },
+    {
+      "slug": "ramo-claveles-rojos",
+      "category_id": "ramos",
+      "subcategory": null,
+      "name": "Ramo de claveles rojos",
+      "description": "Claveles colombianos rojos con gypsophila y helechos. Un diseño clásico y elegante para aniversarios, momentos románticos o para expresar admiración.",
+      "composition": [
+        "Clavel colombiano · 12 ud.",
+        "Gypsophila · 6 ud.",
+        "Helechos · 7 ud."
+      ],
+      "dimensions": "45 × 45 cm",
+      "care": [],
+      "watering": null,
+      "occasions": [
+        "Aniversario",
+        "Amor"
+      ],
+      "price": null,
+      "published": true,
+      "sort_order": 2,
+      "images": [
+        "bouquet/ramo-claveles_rojos_1.webp",
+        "bouquet/ramo-claveles_rojos_2.webp"
+      ],
+      "featured": false
+    },
+    {
+      "slug": "ramo-amantina",
+      "category_id": "ramos",
+      "subcategory": null,
+      "name": "Ramo Amantina",
+      "description": "Rosas blancas con hojas de aspidistra, helechos y solidago verde. Clásico y refinado: paz, amor y respeto.",
+      "composition": [
+        "Rosas blancas · 6 ud.",
+        "Helechos · 5 ud.",
+        "Hojas de aspidistra · 4 ud.",
+        "Solidago verde · 3 ud."
+      ],
+      "dimensions": "40 × 50 cm",
+      "care": [],
+      "watering": null,
+      "occasions": [],
+      "price": null,
+      "published": true,
+      "sort_order": 3,
+      "images": [
+        "bouquet/ramo-amantina_1.webp",
+        "bouquet/ramo-amantina_2.webp",
+        "bouquet/ramo-amantina_3.webp"
+      ],
+      "featured": true
+    },
+    {
+      "slug": "ramo-primavera",
+      "category_id": "ramos",
+      "subcategory": null,
+      "name": "Ramo Primavera",
+      "description": "Once lirios con paniculata blanca y verde tropical. Un ramo de gran tamaño y colorido espectacular.",
+      "composition": [
+        "Lirios · 11 ud.",
+        "Verde tropical · 8 ud.",
+        "Paniculata blanca · 4 ud."
+      ],
+      "dimensions": "55 × 55 cm",
+      "care": [],
+      "watering": null,
+      "occasions": [],
+      "price": null,
+      "published": true,
+      "sort_order": 4,
+      "images": [
+        "bouquet/ramo-primavera_1.webp",
+        "bouquet/ramo-primavera_2.webp",
+        "bouquet/ramo-primavera_3.webp"
+      ],
+      "featured": true
+    },
+    {
+      "slug": "ramo-rosas-eucalipto",
+      "category_id": "ramos",
+      "subcategory": null,
+      "name": "Ramo de rosas y eucalipto",
+      "description": "Doce rosas en tonos pastel con eucalipto, paniculata y solidago. Ternura, amor y delicadeza en un solo ramo.",
+      "composition": [
+        "Rosas · 12 ud.",
+        "Eucalipto · 8 ud.",
+        "Helechos y hojas decorativas · 5 ud.",
+        "Paniculata · 2 ud.",
+        "Solidago amarillo · 1 ud."
+      ],
+      "dimensions": "55 × 60 cm",
+      "care": [],
+      "watering": null,
+      "occasions": [
+        "Amor",
+        "Agradecimiento"
+      ],
+      "price": null,
+      "published": true,
+      "sort_order": 5,
+      "images": [
+        "bouquet/ramo-rosas_eucalipto.webp"
+      ],
+      "featured": false
+    },
+    {
+      "slug": "ramo-gerberas",
+      "category_id": "ramos",
+      "subcategory": null,
+      "name": "Ramo de gerberas",
+      "description": "Diez gerberas con solidago, paniculata y follaje verde. Lleno de vida y color, para regalar alegría.",
+      "composition": [
+        "Gerbera · 10 ud.",
+        "Helechos y follaje · 6 ud.",
+        "Solidago amarillo · 3 ud.",
+        "Paniculata · 2 ud."
+      ],
+      "dimensions": "40 × 55 cm",
+      "care": [],
+      "watering": null,
+      "occasions": [
+        "Cumpleaños",
+        "Ánimo"
+      ],
+      "price": null,
+      "published": true,
+      "sort_order": 6,
+      "images": [
+        "bouquet/ramo-gerber_1.webp",
+        "bouquet/ramo-gerber_2.webp"
+      ],
+      "featured": false
+    },
+    {
+      "slug": "ramo-margaritas",
+      "category_id": "ramos",
+      "subcategory": null,
+      "name": "Ramo de margaritas",
+      "description": "Margaritas con eucalipto y solidago amarillo. Un ramo lleno de luz y frescura.",
+      "composition": [
+        "Margaritas · 10 ud.",
+        "Eucalipto · 5 ud.",
+        "Solidago amarillo · 3 ud."
+      ],
+      "dimensions": "45 × 55 cm",
+      "care": [],
+      "watering": null,
+      "occasions": [],
+      "price": null,
+      "published": true,
+      "sort_order": 7,
+      "images": [
+        "bouquet/ramo-margaritas_1.webp",
+        "bouquet/ramo-margaritas_2.webp",
+        "bouquet/ramo-margaritas_3.webp"
+      ],
+      "featured": false
+    },
+    {
+      "slug": "ramo-24-rosas-rojas",
+      "category_id": "ramos",
+      "subcategory": null,
+      "name": "Ramo de 24 rosas rojas",
+      "description": "Veinticuatro rosas rojas con paniculata, solidago y follaje. Elegante y sofisticado: amor y pasión para aniversarios y declaraciones.",
+      "composition": [
+        "Rosas rojas · 24 ud.",
+        "Helechos y follaje · 10 ud.",
+        "Paniculata · 4 ud.",
+        "Solidago amarillo · 3 ud."
+      ],
+      "dimensions": "45 × 55 cm",
+      "care": [],
+      "watering": null,
+      "occasions": [
+        "Aniversario",
+        "San Valentín",
+        "Declaración"
+      ],
+      "price": null,
+      "published": true,
+      "sort_order": 8,
+      "images": [
+        "bouquet/ramo_24_rosas_rojas_1.webp",
+        "bouquet/ramo_24_rosas_rojas_2.webp",
+        "bouquet/ramo_24_rosas_rojas_3.webp"
+      ],
+      "featured": true
+    },
+    {
+      "slug": "ramo-amsterdam",
+      "category_id": "ramos",
+      "subcategory": null,
+      "name": "Ramo Amsterdam",
+      "description": "Gerberas fucsias, lirios orientales rosados, iris azules, crisantemos, clavel amarillo, astromelias y margaritas mini, envueltos en papel amarillo mostaza. Ideal para celebraciones alegres.",
+      "composition": [
+        "Gerberas fucsias",
+        "Lirios orientales rosados",
+        "Iris azules",
+        "Crisantemos",
+        "Clavel amarillo",
+        "Astromelias",
+        "Margaritas mini",
+        "Verdes ornamentales"
+      ],
+      "dimensions": "30–40 × 40–45 cm",
+      "care": [],
+      "watering": null,
+      "occasions": [
+        "Celebraciones",
+        "Cumpleaños"
+      ],
+      "price": null,
+      "published": true,
+      "sort_order": 9,
+      "images": [
+        "bouquet/ramo-amsterdam.webp"
+      ],
+      "featured": false
+    },
+    {
+      "slug": "ramo-colombia",
+      "category_id": "ramos",
+      "subcategory": null,
+      "name": "Ramo Colombia",
+      "description": "Lirios blancos, gerberas y rosas amarillas, claveles rosados y púrpuras y una rosa azul teñida, con helechos y papel blanco. Un ramo alto, colorido y variado.",
+      "composition": [
+        "Lirios blancos",
+        "Gerberas amarillas",
+        "Rosas amarillas",
+        "Claveles rosados y púrpuras",
+        "Rosa azul teñida",
+        "Helechos"
+      ],
+      "dimensions": "40–50 cm de ancho × 60–70 cm de alto",
+      "care": [],
+      "watering": null,
+      "occasions": [],
+      "price": null,
+      "published": true,
+      "sort_order": 10,
+      "images": [
+        "bouquet/ramo-colombia.webp"
+      ],
+      "featured": false
+    },
+    {
+      "slug": "ramo-malaga",
+      "category_id": "ramos",
+      "subcategory": null,
+      "name": "Ramo Málaga",
+      "description": "Una rosa naranja en el centro rodeada de lirios amarillos, crisantemos, claveles y alstroemerias, con papel blanco y lazo verde.",
+      "composition": [
+        "Rosa naranja",
+        "Lirios amarillos",
+        "Crisantemos",
+        "Claveles",
+        "Alstroemerias",
+        "Verdes"
+      ],
+      "dimensions": "40–45 cm de ancho × 50–60 cm de alto",
+      "care": [],
+      "watering": null,
+      "occasions": [],
+      "price": null,
+      "published": true,
+      "sort_order": 11,
+      "images": [
+        "bouquet/ramo-malaga.webp"
+      ],
+      "featured": false
+    },
+    {
+      "slug": "rosas-multicolor",
+      "category_id": "rosas",
+      "subcategory": null,
+      "name": "Rosas multicolor",
+      "description": "Diez rosas de colores con eucalipto, paniculata y solidago. Una explosión de color para cualquier ocasión.",
+      "composition": [
+        "Rosas multicolor · 10 ud.",
+        "Helechos y follaje · 6 ud.",
+        "Eucalipto · 5 ud.",
+        "Paniculata · 3 ud.",
+        "Solidago amarillo · 3 ud."
+      ],
+      "dimensions": "60 × 60 cm",
+      "care": [],
+      "watering": null,
+      "occasions": [],
+      "price": null,
+      "published": true,
+      "sort_order": 12,
+      "images": [
+        "floors/rouses/rosas-multicolor_1.webp",
+        "floors/rouses/rosas-multicolor_2.webp"
+      ],
+      "featured": false
+    },
+    {
+      "slug": "rosa-unica-jarron",
+      "category_id": "rosas",
+      "subcategory": null,
+      "name": "Rosa única con jarrón",
+      "description": "Una rosa roja con eucalipto y paniculata en jarrón de vidrio. Un gesto elegante para expresar amor, admiración o gratitud.",
+      "composition": [
+        "Rosa roja · 1 ud.",
+        "Eucalipto · 4 ud.",
+        "Paniculata · 2 ud.",
+        "Jarrón de vidrio · 1 ud."
+      ],
+      "dimensions": "12 × 40 cm",
+      "care": [],
+      "watering": null,
+      "occasions": [
+        "Amor",
+        "Agradecimiento"
+      ],
+      "price": null,
+      "published": true,
+      "sort_order": 13,
+      "images": [
+        "floors/rouses/rosas-unica-_jarron.webp"
+      ],
+      "featured": false
+    },
+    {
+      "slug": "cupula-3-rosas-preservadas",
+      "category_id": "rosas",
+      "subcategory": null,
+      "name": "Cúpula de 3 rosas preservadas",
+      "description": "Rosas eternas bajo cúpula de cristal. Duran mucho tiempo sin agua ni cuidados.",
+      "composition": [
+        "Cúpula de cristal con rosas preservadas · 1 ud."
+      ],
+      "dimensions": "21 × 34 cm",
+      "care": [],
+      "watering": null,
+      "occasions": [
+        "Aniversario",
+        "Recuerdo"
+      ],
+      "price": null,
+      "published": true,
+      "sort_order": 14,
+      "images": [
+        "floors/rouses/rosas-3_rosas_preservadas.webp"
+      ],
+      "featured": true
+    },
+    {
+      "slug": "rosas-damita",
+      "category_id": "rosas",
+      "subcategory": null,
+      "name": "Rosas Damita",
+      "description": "Caja LOVE con rosas azules teñidas, bombones Ferrero Rocher, oso de peluche, botella de vino Merlot, globo y tarjeta. Un regalo romántico completo.",
+      "composition": [
+        "Rosas azules teñidas",
+        "Bombones Ferrero Rocher",
+        "Oso de peluche",
+        "Vino Merlot",
+        "Globo",
+        "Tarjeta"
+      ],
+      "dimensions": "Caja 30 × 20 × 10 cm · 50–60 cm de alto en total",
+      "care": [],
+      "watering": null,
+      "occasions": [
+        "San Valentín",
+        "Aniversario"
+      ],
+      "price": null,
+      "published": true,
+      "sort_order": 15,
+      "images": [
+        "floors/rouses/rosas-damita.webp"
+      ],
+      "featured": false
+    },
+    {
+      "slug": "pack-amor",
+      "category_id": "rosas",
+      "subcategory": null,
+      "name": "Pack Amor",
+      "description": "Caja negra con cinta roja: rosas rojas, lirios y margaritas, bombones Ferrero Rocher y vino Viña Ardanza Reserva.",
+      "composition": [
+        "Rosas rojas",
+        "Lirios",
+        "Margaritas",
+        "Bombones Ferrero Rocher",
+        "Vino Viña Ardanza Reserva"
+      ],
+      "dimensions": "Caja 30 × 20 × 10 cm · 40–50 cm de alto en total",
+      "care": [],
+      "watering": null,
+      "occasions": [
+        "San Valentín",
+        "Aniversario"
+      ],
+      "price": null,
+      "published": true,
+      "sort_order": 16,
+      "images": [
+        "floors/rouses/rosas-pack_amor.webp"
+      ],
+      "featured": true
+    },
+    {
+      "slug": "pack-siempre-juntos",
+      "category_id": "rosas",
+      "subcategory": null,
+      "name": "Pack Siempre Juntos",
+      "description": "Caja roja en forma de corazón con rosas, lirios y margaritas, oso de peluche, vino de San Valentín, bombones y globo LOVE.",
+      "composition": [
+        "Rosas",
+        "Lirios",
+        "Margaritas",
+        "Oso de peluche",
+        "Vino de San Valentín",
+        "Bombones Nestlé",
+        "Globo LOVE"
+      ],
+      "dimensions": "Caja 35 × 30 × 10 cm · 50–60 cm de alto en total",
+      "care": [],
+      "watering": null,
+      "occasions": [
+        "San Valentín",
+        "Aniversario"
+      ],
+      "price": null,
+      "published": true,
+      "sort_order": 17,
+      "images": [
+        "floors/rouses/rosas-pack_siempre_juntos.webp"
+      ],
+      "featured": false
+    },
+    {
+      "slug": "pack-te-amo",
+      "category_id": "rosas",
+      "subcategory": null,
+      "name": "Pack Te Amo",
+      "description": "Caja roja con corazones: rosas blancas, oso de peluche, globo «te amo» y letrero LOVE.",
+      "composition": [
+        "Rosas blancas",
+        "Oso de peluche",
+        "Globo «te amo»",
+        "Letrero LOVE"
+      ],
+      "dimensions": "Caja 25 × 20 × 10 cm · 40–50 cm de alto en total",
+      "care": [],
+      "watering": null,
+      "occasions": [
+        "San Valentín",
+        "Amor"
+      ],
+      "price": null,
+      "published": true,
+      "sort_order": 18,
+      "images": [
+        "floors/rouses/rosas-te_amo.webp"
+      ],
+      "featured": false
+    },
+    {
+      "slug": "orquidea-phalaenopsis",
+      "category_id": "plantas",
+      "subcategory": "Orquídeas",
+      "name": "Orquídea Phalaenopsis",
+      "description": "La orquídea de interior más agradecida. Con unos cuidados sencillos florece durante semanas.",
+      "composition": [],
+      "dimensions": "25 × 70 cm",
+      "care": [
+        "Luz indirecta y brillante.",
+        "Riego: sumerge la maceta en agua tibia unos minutos, una vez por semana en verano y cada dos semanas en invierno.",
+        "Abono cada 2–3 semanas durante el crecimiento."
+      ],
+      "watering": "Una vez por semana",
+      "occasions": [],
+      "price": null,
+      "published": true,
+      "sort_order": 19,
+      "images": [
+        "floors/orchid/orquidea-phalaenopsis_1.webp",
+        "floors/orchid/orquidea-phalaenopsis_2.webp",
+        "floors/orchid/orquidea-orquidea-phalaenopsis_1.webp"
+      ],
+      "featured": true
+    },
+    {
+      "slug": "planta-phalaenopsis-rosa",
+      "category_id": "plantas",
+      "subcategory": "Orquídeas",
+      "name": "Phalaenopsis rosa de 3 tallos",
+      "description": "Orquídea rosa con tres tallos y unos 75 cm de altura. Planta de interior originaria del sudeste asiático.",
+      "composition": [],
+      "dimensions": "25 × 70 cm",
+      "care": [
+        "Luz indirecta.",
+        "Riego una vez por semana."
+      ],
+      "watering": "Una vez por semana",
+      "occasions": [],
+      "price": null,
+      "published": true,
+      "sort_order": 20,
+      "images": [
+        "floors/orchid/planta-phalaenospsis_1.webp",
+        "floors/orchid/planta-phalaenospsis_2.webp"
+      ],
+      "featured": false
+    },
+    {
+      "slug": "schefflera",
+      "category_id": "plantas",
+      "subcategory": "Plantas de interior",
+      "name": "Schefflera",
+      "description": "Planta de interior de hoja palmeada y gran porte, originaria de Taiwán. Ideal para dar verde a salones y oficinas.",
+      "composition": [],
+      "dimensions": "45 × 130 cm",
+      "care": [
+        "Luz intensa.",
+        "Temperatura entre 10 y 25 °C.",
+        "Riego cada 12 días.",
+        "Abono de mayo a septiembre."
+      ],
+      "watering": "Cada 12 días aproximadamente",
+      "occasions": [],
+      "price": null,
+      "published": true,
+      "sort_order": 21,
+      "images": [
+        "floors/more/planta-schefflera_1.webp",
+        "floors/more/planta-schefflera_2.webp"
+      ],
+      "featured": false
+    },
+    {
+      "slug": "olivo-copa",
+      "category_id": "plantas",
+      "subcategory": "Plantas de interior",
+      "name": "Olivo copa",
+      "description": "Olivo ornamental (Olea europaea) con forma de copa. Se entrega ya trasplantado: no hace falta cambiarlo de maceta.",
+      "composition": [],
+      "dimensions": "30 cm × 1 m",
+      "care": [
+        "Riego una vez por semana.",
+        "Ya trasplantado."
+      ],
+      "watering": "Una vez por semana",
+      "occasions": [],
+      "price": null,
+      "published": true,
+      "sort_order": 22,
+      "images": [
+        "floors/more/planta-olivo_copa_1.webp",
+        "floors/more/planta-olivo_copa_2.webp",
+        "floors/more/planta-olivo_copa_3.webp"
+      ],
+      "featured": true
+    },
+    {
+      "slug": "planta-yucca",
+      "category_id": "plantas",
+      "subcategory": "Plantas de interior",
+      "name": "Yuca",
+      "description": "Planta muy resistente a la sequía, perfecta si buscas poco mantenimiento. Incluye envoltorio de regalo gratuito.",
+      "composition": [],
+      "dimensions": "25 cm × 1 m",
+      "care": [
+        "Riego una vez por semana.",
+        "Muy resistente a la sequía."
+      ],
+      "watering": "Una vez por semana",
+      "occasions": [],
+      "price": null,
+      "published": true,
+      "sort_order": 23,
+      "images": [
+        "floors/more/planta-yucca.webp"
+      ],
+      "featured": false
+    },
+    {
+      "slug": "cesta-aromas-naturales",
+      "category_id": "plantas",
+      "subcategory": "Cestas y arreglos",
+      "name": "Cesta Aromas Naturales",
+      "description": "Veinte tallos de eucalipto en cesta de mimbre. Decora y perfuma con un aroma natural y relajante.",
+      "composition": [
+        "Eucalipto · 20 ud.",
+        "Cesta de mimbre · 1 ud."
+      ],
+      "dimensions": "50 × 30 cm",
+      "care": [],
+      "watering": null,
+      "occasions": [],
+      "price": null,
+      "published": true,
+      "sort_order": 24,
+      "images": [
+        "floors/more/cesta-aromas_naturales_1.webp"
+      ],
+      "featured": false
+    },
+    {
+      "slug": "jarron-aromas-naturales",
+      "category_id": "plantas",
+      "subcategory": "Cestas y arreglos",
+      "name": "Jarrón Aromas Naturales",
+      "description": "Veinte tallos de eucalipto en jarrón. Un toque verde y aromático para cualquier rincón.",
+      "composition": [
+        "Eucalipto · 20 ud."
+      ],
+      "dimensions": "50 × 70 cm",
+      "care": [],
+      "watering": null,
+      "occasions": [],
+      "price": null,
+      "published": true,
+      "sort_order": 25,
+      "images": [
+        "floors/more/planta-jarron_aromas_naturales_1.webp",
+        "floors/more/planta-jarron_aromas_naturales_2.webp",
+        "floors/more/planta-jarron_aromas_naturales_3.webp"
+      ],
+      "featured": false
+    },
+    {
+      "slug": "cesta-alegria",
+      "category_id": "plantas",
+      "subcategory": "Cestas y arreglos",
+      "name": "Cesta Alegría",
+      "description": "Cesta de mimbre blanco con orquídeas amarillas, bromelias naranjas y plantas de flor, rematada con cinta amarilla.",
+      "composition": [
+        "Orquídeas amarillas",
+        "Bromelias naranjas",
+        "Plantas de flor",
+        "Cesta de mimbre blanco"
+      ],
+      "dimensions": "Ø 25–30 cm · 40–50 cm de alto",
+      "care": [],
+      "watering": null,
+      "occasions": [],
+      "price": null,
+      "published": true,
+      "sort_order": 26,
+      "images": [
+        "floors/more/cesta-alegria.webp"
+      ],
+      "featured": false
+    },
+    {
+      "slug": "cesta-nacimientos",
+      "category_id": "plantas",
+      "subcategory": "Cestas y arreglos",
+      "name": "Cesta Nacimientos",
+      "description": "Anthuriums rojos, calathea, kalanchoe y otras plantas verdes en recipiente blanco. Para dar la bienvenida a un recién nacido.",
+      "composition": [
+        "Anthuriums rojos",
+        "Calathea",
+        "Kalanchoe",
+        "Plantas verdes"
+      ],
+      "dimensions": "Recipiente 25–30 cm · 40–50 cm de alto",
+      "care": [],
+      "watering": null,
+      "occasions": [
+        "Nacimiento"
+      ],
+      "price": null,
+      "published": true,
+      "sort_order": 27,
+      "images": [
+        "floors/more/cesta-nacimientos.webp"
+      ],
+      "featured": false
+    },
+    {
+      "slug": "caja-plantas-cactus",
+      "category_id": "plantas",
+      "subcategory": "Cestas y arreglos",
+      "name": "Caja de plantas con cactus",
+      "description": "Croton, plantas de hoja fina, ciclamen o prímula e hiedra en una caja decorada con cactus pintados.",
+      "composition": [
+        "Croton",
+        "Plantas de hoja fina",
+        "Ciclamen o prímula",
+        "Hiedra"
+      ],
+      "dimensions": "Caja 30 × 20 × 15 cm · 40–50 cm de alto",
+      "care": [],
+      "watering": null,
+      "occasions": [
+        "Nacimiento"
+      ],
+      "price": null,
+      "published": true,
+      "sort_order": 28,
+      "images": [
+        "floors/more/cesta-plantas_madrid.webp"
+      ],
+      "featured": false
+    },
+    {
+      "slug": "terrario-pareja-feliz",
+      "category_id": "plantas",
+      "subcategory": "Terrarios",
+      "name": "Terrario Pareja Feliz",
+      "description": "Terrario hexagonal de vidrio con ficus pumila, musgo, suculentas y una figura de dos niños.",
+      "composition": [
+        "Ficus pumila",
+        "Musgo",
+        "Suculentas",
+        "Figura decorativa"
+      ],
+      "dimensions": "25 cm de base · 25–30 cm de alto",
+      "care": [],
+      "watering": null,
+      "occasions": [],
+      "price": null,
+      "published": true,
+      "sort_order": 29,
+      "images": [
+        "floors/more/terrario-pareja_feliz.webp"
+      ],
+      "featured": false
+    },
+    {
+      "slug": "terrario-cupula-pareja",
+      "category_id": "plantas",
+      "subcategory": "Terrarios",
+      "name": "Terrario cúpula Pareja",
+      "description": "Terrario de cúpula con cinta roja, ficus pumila, musgo y una figura de dos niños.",
+      "composition": [
+        "Ficus pumila",
+        "Musgo",
+        "Figura decorativa",
+        "Cúpula de vidrio con cinta roja"
+      ],
+      "dimensions": "20–25 cm de base · 25–30 cm de alto",
+      "care": [],
+      "watering": null,
+      "occasions": [],
+      "price": null,
+      "published": true,
+      "sort_order": 30,
+      "images": [
+        "floors/more/terrario-pareja.webp"
+      ],
+      "featured": false
+    },
+    {
+      "slug": "centro-funerario-azul-naranja",
+      "category_id": "funerales",
+      "subcategory": null,
+      "name": "Centro funerario azul y naranja",
+      "description": "",
+      "composition": [],
+      "dimensions": null,
+      "care": [],
+      "watering": null,
+      "occasions": [],
+      "price": null,
+      "published": true,
+      "sort_order": 31,
+      "images": [
+        "funerals/funeral-centro_funerario_azul_y_naranja.webp"
+      ],
+      "featured": false
+    },
+    {
+      "slug": "centro-funerario-bidasoa",
+      "category_id": "funerales",
+      "subcategory": null,
+      "name": "Centro funerario Bidasoa",
+      "description": "",
+      "composition": [],
+      "dimensions": null,
+      "care": [],
+      "watering": null,
+      "occasions": [],
+      "price": null,
+      "published": true,
+      "sort_order": 32,
+      "images": [
+        "funerals/funeral-centro_funerario_bidasoa.webp"
+      ],
+      "featured": false
+    },
+    {
+      "slug": "centro-funerario-semblante",
+      "category_id": "funerales",
+      "subcategory": null,
+      "name": "Centro funerario Semblante",
+      "description": "",
+      "composition": [],
+      "dimensions": null,
+      "care": [],
+      "watering": null,
+      "occasions": [],
+      "price": null,
+      "published": true,
+      "sort_order": 33,
+      "images": [
+        "funerals/funeral-centro_funerario_semblante.webp"
+      ],
+      "featured": false
+    },
+    {
+      "slug": "centro-funerario-f12",
+      "category_id": "funerales",
+      "subcategory": null,
+      "name": "Centro funerario F12",
+      "description": "",
+      "composition": [],
+      "dimensions": null,
+      "care": [],
+      "watering": null,
+      "occasions": [],
+      "price": null,
+      "published": true,
+      "sort_order": 34,
+      "images": [
+        "funerals/funeral-centro_funerario-F12.webp"
+      ],
+      "featured": false
+    },
+    {
+      "slug": "ramo-funerario",
+      "category_id": "funerales",
+      "subcategory": null,
+      "name": "Ramo funerario",
+      "description": "",
+      "composition": [],
+      "dimensions": null,
+      "care": [],
+      "watering": null,
+      "occasions": [],
+      "price": null,
+      "published": true,
+      "sort_order": 35,
+      "images": [
+        "funerals/ramo_funerario.webp"
+      ],
+      "featured": false
+    },
+    {
+      "slug": "centro-funerario-espana",
+      "category_id": "funerales",
+      "subcategory": null,
+      "name": "Centro funerario España",
+      "description": "",
+      "composition": [],
+      "dimensions": null,
+      "care": [],
+      "watering": null,
+      "occasions": [],
+      "price": null,
+      "published": true,
+      "sort_order": 36,
+      "images": [
+        "funerals/funeral-centro_funerario_espana.webp"
+      ],
+      "featured": false
+    },
+    {
+      "slug": "centro-funerario-f123",
+      "category_id": "funerales",
+      "subcategory": null,
+      "name": "Centro funerario F123",
+      "description": "",
+      "composition": [],
+      "dimensions": null,
+      "care": [],
+      "watering": null,
+      "occasions": [],
+      "price": null,
+      "published": true,
+      "sort_order": 37,
+      "images": [
+        "funerals/funeral-centro-F123.webp"
+      ],
+      "featured": false
+    },
+    {
+      "slug": "centro-laurel-f111",
+      "category_id": "funerales",
+      "subcategory": null,
+      "name": "Centro de laurel F111",
+      "description": "",
+      "composition": [],
+      "dimensions": null,
+      "care": [],
+      "watering": null,
+      "occasions": [],
+      "price": null,
+      "published": true,
+      "sort_order": 38,
+      "images": [
+        "funerals/funeral-centro-F111.webp"
+      ],
+      "featured": false
+    },
+    {
+      "slug": "corona-flores-lisboa",
+      "category_id": "funerales",
+      "subcategory": null,
+      "name": "Corona de flores Lisboa",
+      "description": "",
+      "composition": [],
+      "dimensions": null,
+      "care": [],
+      "watering": null,
+      "occasions": [],
+      "price": null,
+      "published": true,
+      "sort_order": 39,
+      "images": [
+        "funerals/funeral-corona_lisboa.webp"
+      ],
+      "featured": false
+    }
+  ]
+}

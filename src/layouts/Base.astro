@@ -20,7 +20,7 @@ interface Props {
 
 const { title, description, image, noindex = false, jsonLd = [], breadcrumbs, bodyClass } = Astro.props;
 const canonical = new URL(Astro.url.pathname.replace(/\/$/, '') || '/', SITE_URL).href;
-const ogImage = image ?? new URL('/og-image.jpg', SITE_URL).href;
+const ogImage = new URL(image ?? '/og-image.jpg', SITE_URL).href;
 const fullTitle = title.includes(business.name) ? title : `${title} | ${business.name}`;
 
 const florist = {
@@ -84,7 +84,7 @@ const turnstileKey = PUBLIC_TURNSTILE_SITE_KEY;
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
-    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="sitemap" href="/sitemap.xml" />
 
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="es_ES" />
@@ -102,7 +102,7 @@ const turnstileKey = PUBLIC_TURNSTILE_SITE_KEY;
     {/* Google Search Console: pega aquí el código de verificación al dar de alta la propiedad. */}
     {PUBLIC_GSC_VERIFICATION && <meta name="google-site-verification" content={PUBLIC_GSC_VERIFICATION} />}
 
-    {ld.map((item) => <script type="application/ld+json" set:html={JSON.stringify(item)} />)}
+    {ld.map((item) => <script type="application/ld+json" set:html={JSON.stringify(item).replace(/</g, '\\u003c')} />)}
 
     <script is:inline>
       document.documentElement.classList.add('js');

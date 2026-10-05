@@ -1,8 +1,7 @@
 ---
 import Logo from './Logo.astro';
 import Icon from './Icon.astro';
-import { business, fullAddress, waLink } from '../lib/site';
-import { categories } from '../data/products';
+import { business, fullAddress, waLink, footerCategories } from '../lib/site';
 
 const year = new Date().getFullYear();
 const legalName = business.legal.razonSocial ?? business.name;
@@ -49,9 +48,9 @@ const legalName = business.legal.razonSocial ?? business.name;
       <h3 class="footer__h">Flores</h3>
       <ul class="footer__links">
         <li><a href="/catalogo">Todo el catálogo</a></li>
-        {categories.map((c) => <li><a href={c.path}>{c.short}</a></li>)}
-        <li><a href="/bodas-eventos-segovia">Bodas y eventos</a></li>
+        {footerCategories.map((c) => <li><a href={c.href}>{c.label}</a></li>)}
         <li><a href="/cuidado-de-plantas">Cuidado de plantas</a></li>
+        <li><a href="/contacto">Contacto</a></li>
       </ul>
     </div>
 

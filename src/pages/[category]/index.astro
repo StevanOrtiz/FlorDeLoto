@@ -4,39 +4,51 @@ import PageHero from '../../components/PageHero.astro';
 import ProductCard from '../../components/ProductCard.astro';
 import OrderChannels from '../../components/OrderChannels.astro';
 import Icon from '../../components/Icon.astro';
-import { shopCategories, productsIn, type Category } from '../../data/products';
+import { getCategories, getProducts } from '../../lib/catalog';
+import { cachePublic } from '../../lib/cache';
 
-export function getStaticPaths() {
-  return shopCategories.map((c) => ({ params: { category: c.path.slice(1) }, props: { cat: c } }));
-}
-interface Props { cat: Category }
-const { cat } = Astro.props;
-const items = productsIn(cat.id);
+const categories = await getCategories();
+const cat = categories.find((c) => c.path === `/${Astro.params.category}`);
+// «Funerario» tiene su propia página; cualquier otra ruta desconocida es un 404.
+if (!cat || cat.id === 'funerales') return Astro.rewrite('/404');
+cachePublic(Astro.response);
+const items = await getProducts({ category: cat.id });
+const subcategories = [...new Set(items.map((p) => p.subcategory).filter((s): s is string => !!s))];
 const crumbs = [
   { name: 'Inicio', href: '/' },
   { name: 'Catálogo', href: '/catalogo' },
   { name: cat.name, href: cat.path },
 ];
-const others = shopCategories.filter((c) => c.id !== cat.id);
+const others = categories.filter((c) => c.id !== cat.id && c.id !== 'funerales');
 const [first, ...rest] = cat.name.split(' ');
 ---
-<Base title={cat.title} description={cat.description} breadcrumbs={crumbs} image={items[0]?.images[0]}>
+<Base title={cat.title} description={cat.description} breadcrumbs={crumbs} image={items[0]?.images[0]?.src}>
   <PageHero
     crumbs={crumbs}
     eyebrow="Floristería en Segovia"
     title={`${first} <em>${rest.join(' ')}</em>`}
     lead={cat.intro}
-    image={items[0]?.images[1] ?? items[0]?.images[0]}
+    image={(items[0]?.images[1] ?? items[0]?.images[0])?.src}
     imageAlt={items[0]?.name}
   />
 
   <section class="container cat-list" aria-labelledby="cat-h">
     <h2 id="cat-h" class="sr-only">Nuestros {cat.name.toLowerCase()}</h2>
-    <div class="grid-products" data-stagger="0.06">
-      {items.map((p, i) => <ProductCard product={p} eager={i < 3} />)}
+    {subcategories.length > 1 && (
+      <div class="subfilters" role="group" aria-label="Filtrar por tipo" data-subfilters>
+        <button type="button" class="chip" aria-pressed="true" data-sub="all">Todo <span>{items.length}</span></button>
+        {subcategories.map((s) => (
+          <button type="button" class="chip" aria-pressed="false" data-sub={s}>{s} <span>{items.filter((p) => p.subcategory === s).length}</span></button>
+        ))}
+      </div>
+    )}
+    <p class="sr-only" aria-live="polite" data-sub-status></p>
+    {items.length === 0 && <p class="empty">Estamos preparando esta sección. Escríbenos por WhatsApp y te contamos lo que tenemos disponible.</p>}
+    <div class="grid-products" data-stagger="0.06" data-sub-grid>
+      {items.map((p, i) => <ProductCard product={p} eager={i < 3} showCategory={subcategories.length > 1} />)}
     </div>
 
-    {(cat.id === 'orquideas' || cat.id === 'plantas') && (
+    {(cat.id === 'plantas') && (
       <aside class="care-cta" data-reveal="up">
         <Icon name="water" size={34} />
         <div>
@@ -59,6 +71,13 @@ const [first, ...rest] = cat.name.split(' ');
 </Base>
 
 <style>
+  .subfilters { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: clamp(24px, 4vw, 40px); }
+  .chip { display: inline-flex; gap: 8px; align-items: center; padding: 10px 18px; border-radius: 999px; border: 1px solid var(--line); background: var(--white); font-size: var(--fs-sm); font-weight: 500; transition: background 0.3s, color 0.3s, transform 0.4s var(--ease); }
+  .chip span { font-size: var(--fs-xs); opacity: 0.85; }
+  .chip:hover { transform: translateY(-2px); }
+  .chip[aria-pressed='true'] { background: var(--wine); color: var(--white); border-color: var(--wine); }
+  .empty { padding: 32px; border-radius: var(--radius); background: var(--blush-50); color: var(--ink-soft); }
+  :global(.pcard[hidden]) { display: none; }
   .cat-list { padding-bottom: clamp(48px, 8vw, 96px); }
   .care-cta { margin-top: 48px; display: flex; flex-wrap: wrap; align-items: center; gap: 20px; padding: 28px; border-radius: var(--radius-lg); background: var(--sage-100); }
   .care-cta > svg { color: var(--eucalyptus); }
@@ -68,3 +87,25 @@ const [first, ...rest] = cat.name.split(' ');
   .more a { display: flex; justify-content: space-between; align-items: center; padding: 22px 4px; border-bottom: 1px solid var(--line); font-family: var(--font-serif); font-size: var(--fs-xl); text-decoration: none; transition: padding 0.5s var(--ease), color 0.3s; }
   .more a:hover { padding-left: 18px; color: var(--wine); }
 </style>
+
+<script>
+  const group = document.querySelector<HTMLElement>('[data-subfilters]');
+  if (group) {
+    const cards = Array.from(document.querySelectorAll<HTMLElement>('[data-sub-grid] .pcard'));
+    const chips = Array.from(group.querySelectorAll<HTMLButtonElement>('[data-sub]'));
+    const status = document.querySelector<HTMLElement>('[data-sub-status]')!;
+    chips.forEach((chip) =>
+      chip.addEventListener('click', () => {
+        const id = chip.dataset.sub!;
+        let shown = 0;
+        cards.forEach((c) => {
+          const match = id === 'all' || c.dataset.sub === id;
+          c.hidden = !match;
+          if (match) { shown++; c.style.opacity = '1'; c.style.transform = ''; }
+        });
+        chips.forEach((b) => b.setAttribute('aria-pressed', String(b === chip)));
+        status.textContent = `${shown} productos`;
+      }),
+    );
+  }
+</script>

@@ -1,5 +1,7 @@
 import type { APIRoute } from 'astro';
-import { SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, TURNSTILE_SECRET_KEY } from 'astro:env/server';
+import { TURNSTILE_SECRET_KEY } from 'astro:env/server';
+import { sql } from '../../lib/db';
+import { hit } from '../../lib/ratelimit';
 import { normalize, validate } from '../../lib/validation';
 
 // Función de servidor (no se genera como estática).
@@ -8,22 +10,13 @@ export const prerender = false;
 const MIN_FILL_MS = 3000; // un humano tarda más de 3 s en rellenar el formulario
 const MAX_AGE_MS = 1000 * 60 * 60 * 24;
 const RATE_LIMIT = 5; // envíos por IP y ventana
-const WINDOW_MS = 1000 * 60 * 10;
-const hits = new Map<string, number[]>(); // límite orientativo por instancia; en producción reforzarlo en Supabase
+const WINDOW_SECONDS = 600;
 
-const json = (body: unknown, status = 200) =>
+const json = (body: unknown, status = 200, headers: Record<string, string> = {}) =>
   new Response(JSON.stringify(body), {
     status,
-    headers: { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' },
+    headers: { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store', ...headers },
   });
-
-function rateLimited(ip: string) {
-  const now = Date.now();
-  const list = (hits.get(ip) ?? []).filter((t) => now - t < WINDOW_MS);
-  list.push(now);
-  hits.set(ip, list);
-  return list.length > RATE_LIMIT;
-}
 
 async function verifyTurnstile(token: string, ip: string) {
   if (!TURNSTILE_SECRET_KEY) return true; // Turnstile aún no configurado: quedan honeypot, tiempo y límite
@@ -63,8 +56,13 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
   if (raw.website || !Number.isFinite(elapsed) || elapsed < MIN_FILL_MS || elapsed > MAX_AGE_MS) {
     return json({ ok: true });
   }
-  if (rateLimited(ip)) {
-    return json({ ok: false, error: 'Has enviado varios mensajes seguidos. Inténtalo de nuevo en unos minutos.' }, 429);
+  const rate = await hit(`contact:${ip}`, RATE_LIMIT, WINDOW_SECONDS);
+  if (!rate.ok) {
+    return json(
+      { ok: false, error: 'Has enviado varios mensajes seguidos. Inténtalo de nuevo en unos minutos.' },
+      429,
+      { 'Retry-After': String(rate.retryAfter) },
+    );
   }
   if (!(await verifyTurnstile(String(raw['cf-turnstile-response'] ?? ''), ip))) {
     return json({ ok: false, error: 'No hemos podido verificar que no eres un robot. Recarga la página e inténtalo de nuevo.' }, 400);
@@ -74,43 +72,16 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
   const errors = validate(data);
   if (Object.keys(errors).length) return json({ ok: false, errors }, 422);
 
-  // Guardado en Supabase (tabla contact_messages, ver supabase/schema.sql).
-  if (SUPABASE_URL && SUPABASE_SERVICE_ROLE_KEY) {
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/contact_messages`, {
-      method: 'POST',
-      headers: {
-        apikey: SUPABASE_SERVICE_ROLE_KEY,
-        Authorization: `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
-        'Content-Type': 'application/json',
-        Prefer: 'return=minimal',
-      },
-      body: JSON.stringify({
-        kind: data.kind,
-        nombre: data.nombre,
-        email: data.email,
-        telefono: data.telefono || null,
-        asunto: data.asunto || null,
-        tipo_evento: data.tipoEvento || null,
-        fecha_evento: data.fecha || null,
-        lugar: data.lugar || null,
-        mensaje: data.mensaje,
-        consentimiento: data.consentimiento,
-        consentimiento_at: new Date().toISOString(),
-      }),
-    });
-    if (!res.ok) {
-      console.error('[contact] Supabase', res.status, await res.text());
-      return json({ ok: false, error: 'No hemos podido enviar tu mensaje. Escríbenos por WhatsApp o llámanos.' }, 502);
-    }
-    return json({ ok: true });
+  try {
+    await sql`
+      insert into contact_messages (kind, nombre, email, telefono, asunto, tipo_evento, fecha_evento, lugar, mensaje, consentimiento, consentimiento_at)
+      values (${data.kind}, ${data.nombre}, ${data.email}, ${data.telefono || null}, ${data.asunto || null}, ${data.tipoEvento || null},
+              ${data.fecha || null}, ${data.lugar || null}, ${data.mensaje}, ${data.consentimiento}, now())`;
+  } catch (e) {
+    console.error('[contact] No se pudo guardar el mensaje', e);
+    return json({ ok: false, error: 'No hemos podido enviar tu mensaje. Escríbenos por WhatsApp o llámanos.' }, 502);
   }
-
-  // Sin base de datos configurada.
-  if (import.meta.env.DEV) {
-    console.info('[contact] (desarrollo, no se guarda)', { ...data, email: '***' });
-    return json({ ok: true, dev: true });
-  }
-  return json({ ok: false, error: 'El formulario no está disponible en este momento. Escríbenos por WhatsApp o llámanos.' }, 503);
+  return json({ ok: true });
 };
 
 export const ALL: APIRoute = () => json({ ok: false, error: 'Método no permitido.' }, 405);

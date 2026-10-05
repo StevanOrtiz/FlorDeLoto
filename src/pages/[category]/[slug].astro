@@ -3,25 +3,24 @@ import Base from '../../layouts/Base.astro';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import ProductCard from '../../components/ProductCard.astro';
 import Icon from '../../components/Icon.astro';
-import { products, getCategory, productsIn, formatPrice, productUrl, type Product } from '../../data/products';
+import { getCategories, getProductBySlug, getProducts, formatPrice, productUrl } from '../../lib/catalog';
+import { cachePublic } from '../../lib/cache';
 import { business, waLink, SITE_URL } from '../../lib/site';
 
-export function getStaticPaths() {
-  return products
-    .filter((p) => p.category !== 'funerales')
-    .map((p) => ({ params: { category: getCategory(p.category).path.slice(1), slug: p.slug }, props: { product: p } }));
-}
-interface Props { product: Product }
-const { product: p } = Astro.props;
-const cat = getCategory(p.category);
+const cat = (await getCategories()).find((c) => c.path === `/${Astro.params.category}`);
+if (!cat || cat.id === 'funerales') return Astro.rewrite('/404');
+const p = await getProductBySlug(cat.id, Astro.params.slug ?? '');
+if (!p) return Astro.rewrite('/404');
+cachePublic(Astro.response);
+
 const url = productUrl(p);
 const crumbs = [
   { name: 'Inicio', href: '/' },
   { name: cat.name, href: cat.path },
   { name: p.name, href: url },
 ];
-const related = productsIn(p.category).filter((x) => x.slug !== p.slug).slice(0, 4);
-const isPlant = p.category === 'orquideas' || p.category === 'plantas';
+const related = (await getProducts({ category: p.category })).filter((x) => x.id !== p.id).slice(0, 4);
+const isPlant = p.category === 'plantas';
 
 const description = `${p.name}: ${p.description}${p.dimensions ? ` Medidas: ${p.dimensions}.` : ''} Floristería en Segovia con entrega a domicilio.`.slice(0, 158);
 
@@ -30,7 +29,7 @@ const productLd = {
   '@type': 'Product',
   name: p.name,
   description: p.description,
-  image: p.images,
+  image: p.images.map((i) => new URL(i.src, SITE_URL).href),
   url: new URL(url, SITE_URL).href,
   category: cat.name,
   brand: { '@type': 'Brand', name: business.name },
@@ -41,22 +40,23 @@ const productLd = {
     : {}),
 };
 ---
-<Base title={`${p.name} | ${cat.short} en Segovia`} description={description} breadcrumbs={crumbs} image={p.images[0]} jsonLd={[productLd]}>
+<Base title={`${p.name} | ${cat.short} en Segovia`} description={description} breadcrumbs={crumbs} image={p.images[0]?.src} jsonLd={[productLd]}>
   <article class="product container">
     <div class="product__crumbs"><Breadcrumbs items={crumbs} /></div>
 
     <div class="product__grid">
       <div class="gallery" data-gallery>
         <div class="gallery__main" data-reveal="clip">
-          {p.images.map((src, i) => (
-            <img src={src} alt={i === 0 ? p.name : `${p.name}, vista ${i + 1}`} width="800" height="1000" loading={i === 0 ? 'eager' : 'lazy'} fetchpriority={i === 0 ? 'high' : undefined} class:list={{ 'is-active': i === 0 }} data-gallery-img />
+          {p.images.map((img, i) => (
+            <img src={img.src} alt={img.alt || (i === 0 ? p.name : `${p.name}, vista ${i + 1}`)} width="800" height="1000" loading={i === 0 ? 'eager' : 'lazy'} fetchpriority={i === 0 ? 'high' : undefined} class:list={{ 'is-active': i === 0 }} data-gallery-img />
           ))}
+          {p.images.length === 0 && <div class="gallery__empty">Foto próximamente</div>}
         </div>
         {p.images.length > 1 && (
           <div class="gallery__thumbs" role="group" aria-label="Imágenes del producto">
-            {p.images.map((src, i) => (
+            {p.images.map((img, i) => (
               <button type="button" aria-pressed={i === 0 ? 'true' : 'false'} data-gallery-thumb={i}>
-                <img src={src} alt="" width="120" height="150" loading="lazy" />
+                <img src={img.thumb} alt="" width="120" height="150" loading="lazy" />
                 <span class="sr-only">Ver imagen {i + 1}</span>
               </button>
             ))}
@@ -70,7 +70,7 @@ const productLd = {
         <p class="info__price" data-reveal="up">{formatPrice(p)}</p>
         <p class="lead" data-reveal="up">{p.description}</p>
 
-        {p.occasions && (
+        {p.occasions.length > 0 && (
           <ul class="tags" aria-label="Ocasiones" data-reveal="up">
             {p.occasions.map((o) => <li>{o}</li>)}
           </ul>
@@ -84,7 +84,7 @@ const productLd = {
         </div>
 
         <dl class="specs" data-stagger>
-          {p.composition && (
+          {p.composition.length > 0 && (
             <div>
               <dt><Icon name="flower" size={20} /> Composición</dt>
               <dd><ul>{p.composition.map((c) => <li>{c}</li>)}</ul></dd>
@@ -102,7 +102,7 @@ const productLd = {
               <dd>{p.watering}</dd>
             </div>
           )}
-          {p.care && (
+          {p.care.length > 0 && (
             <div>
               <dt><Icon name="sun" size={20} /> Cuidados</dt>
               <dd><ul>{p.care.map((c) => <li>{c}</li>)}</ul></dd>
@@ -161,6 +161,7 @@ const productLd = {
   .gallery__main { position: relative; aspect-ratio: 4 / 5; border-radius: var(--radius-lg); overflow: hidden; background: var(--blush-50); box-shadow: var(--shadow); }
   .gallery__main img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transform: scale(1.05); transition: opacity 0.7s var(--ease), transform 1.2s var(--ease); }
   .gallery__main img.is-active { opacity: 1; transform: none; }
+  .gallery__empty { position: absolute; inset: 0; display: grid; place-items: center; color: var(--ink-soft); }
   .gallery__thumbs { display: flex; gap: 10px; }
   .gallery__thumbs button { width: 76px; aspect-ratio: 4 / 5; padding: 0; border: 2px solid transparent; border-radius: 14px; overflow: hidden; background: var(--blush-50); transition: border-color 0.3s, transform 0.4s var(--ease); }
   .gallery__thumbs button:hover { transform: translateY(-3px); }
