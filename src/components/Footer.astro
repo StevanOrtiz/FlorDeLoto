@@ -71,6 +71,10 @@ const legalName = business.legal.razonSocial ?? business.name;
       <li><a href="/politica-de-privacidad">Privacidad</a></li>
       <li><a href="/politica-de-cookies">Cookies</a></li>
       <li><button type="button" data-cookie-settings>Configurar cookies</button></li>
+      <li>
+        <!-- Acceso discreto para los propietarios: solo un candado. nofollow + robots.txt (Disallow /admin) lo mantienen fuera de los buscadores. -->
+        <a class="footer__admin" href="/admin/login" rel="nofollow" aria-label="Acceso del administrador" title="Acceso del administrador"><Icon name="lock" size={15} /></a>
+      </li>
     </ul>
   </div>
 
@@ -109,6 +113,8 @@ const legalName = business.legal.razonSocial ?? business.name;
   .footer__bottom { display: flex; flex-wrap: wrap; gap: 14px 28px; justify-content: space-between; padding-block: 24px; border-top: 1px solid rgba(255,255,255,0.12); font-size: var(--fs-xs); color: #b9aea8; }
   .footer__bottom ul { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 8px 20px; }
   .footer__bottom a:hover, .footer__bottom button:hover { color: var(--white); }
+  .footer__admin { display: inline-grid; place-items: center; width: 28px; height: 28px; margin: -6px -6px -6px 0; border-radius: 8px; opacity: 0.35; transition: opacity 0.3s, background 0.3s; }
+  .footer__admin:hover, .footer__admin:focus-visible { opacity: 1; background: rgba(255,255,255,0.1); }
   .footer__bottom button { background: none; border: 0; padding: 0; font-size: inherit; text-decoration: underline; text-underline-offset: 0.2em; }
 
   .footer__wordmark { white-space: nowrap; font-family: var(--font-serif); font-style: italic; font-size: clamp(4rem, 16vw, 14rem); line-height: 1; color: rgba(232, 180, 184, 0.12); padding-bottom: 0.1em; user-select: none; }
