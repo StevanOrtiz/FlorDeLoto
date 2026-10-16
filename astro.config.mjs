@@ -7,7 +7,7 @@ import netlify from '@astrojs/netlify';
 const adapter = process.env.NETLIFY ? netlify() : vercel();
 
 export default defineConfig({
-  site: 'https://flordlotosegovia.com',
+  site: 'https://flordelotosegovia.co',
   trailingSlash: 'never',
   devToolbar: { enabled: false },
   // Las páginas del catálogo y el panel se generan bajo demanda desde Neon.

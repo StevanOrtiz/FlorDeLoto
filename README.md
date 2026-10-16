@@ -127,5 +127,5 @@ El `sitemap.xml` se genera desde la base de datos.
 - [ ] Zonas y coste de envío, y plazos de encargo en fechas de alta demanda.
 - [ ] Logo vectorial y fotos originales en alta resolución (se cambian desde el panel).
 - [ ] Permiso para mostrar nombres de clientes (ahora solo el nombre de pila) y del equipo.
-- [ ] Confirmar el dominio (flordlotosegovia.com) y la página de Facebook.
+- [ ] Confirmar la página de Facebook (el dominio es flordelotosegovia.co).
 - [ ] Revisión de los textos legales por un profesional.

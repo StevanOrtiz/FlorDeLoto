@@ -3,9 +3,9 @@ import Base from '../../layouts/Base.astro';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import ProductCard from '../../components/ProductCard.astro';
 import Icon from '../../components/Icon.astro';
-import { getCategories, getProductBySlug, getProducts, formatPrice, productUrl } from '../../lib/catalog';
+import { getCategories, getProductBySlug, getProducts, formatPrice, productUrl, productWaLink } from '../../lib/catalog';
 import { cachePublic } from '../../lib/cache';
-import { business, waLink, SITE_URL } from '../../lib/site';
+import { business, SITE_URL } from '../../lib/site';
 
 const cat = (await getCategories()).find((c) => c.path === `/${Astro.params.category}`);
 if (!cat || cat.id === 'funerales') return Astro.rewrite('/404');
@@ -77,7 +77,7 @@ const productLd = {
         )}
 
         <div class="info__ctas" data-reveal="up">
-          <a class="btn btn--wa" href={waLink(`¡Hola! Me gustaría pedir el «${p.name}». ¿Me confirmáis precio y disponibilidad?`)} target="_blank" rel="noopener">
+          <a class="btn btn--wa" href={productWaLink(p, `¡Hola! Me gustaría pedir el «${p.name}». ¿Me confirmáis precio y disponibilidad?`)} target="_blank" rel="noopener">
             <Icon name="whatsapp" /> Pedir por WhatsApp
           </a>
           <a class="btn btn--ghost" href={business.phoneHref}><Icon name="phone" /> Llamar</a>

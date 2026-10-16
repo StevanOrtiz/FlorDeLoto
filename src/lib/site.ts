@@ -1,6 +1,6 @@
 import business from '../data/business.json';
 
-export const SITE_URL = 'https://flordlotosegovia.com';
+export const SITE_URL = 'https://flordelotosegovia.co';
 export { business };
 
 /** Enlace de WhatsApp con mensaje prellenado. */

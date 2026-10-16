@@ -1,4 +1,5 @@
 import { sql } from './db';
+import { SITE_URL, waLink } from './site';
 
 export interface Category {
   id: string;
@@ -143,6 +144,11 @@ export async function getProductById(id: string): Promise<Product | null> {
 }
 
 export const productUrl = (p: Pick<Product, 'categoryPath' | 'slug'>) => `${p.categoryPath}/${p.slug}`;
+
+/** Enlace de WhatsApp con el mensaje y la dirección completa del producto, para que quien atiende sepa cuál es sin buscarlo. */
+export function productWaLink(p: Pick<Product, 'categoryPath' | 'slug'>, message: string) {
+  return waLink(`${message}\n${new URL(productUrl(p), SITE_URL).href}`);
+}
 
 export function formatPrice(p: Pick<Product, 'price'>) {
   return p.price == null

@@ -1,7 +1,6 @@
 ---
 import Icon from './Icon.astro';
-import { type Product, productUrl, formatPrice } from '../lib/catalog';
-import { waLink } from '../lib/site';
+import { type Product, productUrl, formatPrice, productWaLink } from '../lib/catalog';
 
 interface Props { product: Product; eager?: boolean; showCategory?: boolean }
 const { product: p, eager = false, showCategory = false } = Astro.props;
@@ -20,7 +19,7 @@ const [img1, img2] = p.images;
     {p.dimensions && <p class="pcard__meta"><Icon name="ruler" size={15} /> {p.dimensions}</p>}
     <div class="pcard__foot">
       <span class="pcard__price">{formatPrice(p)}</span>
-      <a class="pcard__wa" href={waLink(`¡Hola! Me interesa el «${p.name}». ¿Me dais más información?`)} target="_blank" rel="noopener" aria-label={`Pedir ${p.name} por WhatsApp`}>
+      <a class="pcard__wa" href={productWaLink(p, `¡Hola! Me interesa el «${p.name}». ¿Me dais más información?`)} target="_blank" rel="noopener" aria-label={`Pedir ${p.name} por WhatsApp`}>
         <Icon name="whatsapp" size={20} />
       </a>
     </div>
