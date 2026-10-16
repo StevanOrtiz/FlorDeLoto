@@ -1,0 +1,68 @@
+---
+import Icon from './Icon.astro';
+import { searchSuggestions } from '../lib/site';
+---
+<div class="search" data-search role="dialog" aria-modal="true" aria-label="Buscar en el catálogo" hidden>
+  <div class="search__backdrop" data-search-close></div>
+  <div class="search__panel">
+    <form class="search__form" action="/buscar" method="get" role="search">
+      <Icon name="search" size={24} />
+      <label class="sr-only" for="search-input">Buscar flores, colores u ocasiones</label>
+      <input
+        id="search-input" name="q" type="search" maxlength="80" autocomplete="off" enterkeyhint="search"
+        placeholder="Busca rosas, aniversario, orquídea…"
+        role="combobox" aria-expanded="false" aria-controls="search-list" aria-autocomplete="list" data-search-input
+      />
+      <button class="search__close" type="button" data-search-close aria-label="Cerrar buscador"><Icon name="close" size={22} /></button>
+    </form>
+
+    <p class="sr-only" role="status" aria-live="polite" data-search-status></p>
+    <ul class="search__list" id="search-list" role="listbox" aria-label="Sugerencias" data-search-list hidden></ul>
+    <a class="search__all" href="/buscar" data-search-all hidden>Ver todos los resultados <Icon name="arrow" size={16} /></a>
+
+    <div class="search__hint" data-search-hint>
+      <p>Prueba con</p>
+      <ul>{searchSuggestions.map((s) => <li><a href={`/buscar?q=${encodeURIComponent(s)}`}>{s}</a></li>)}</ul>
+    </div>
+    <p class="search__empty" data-search-empty hidden>
+      No encontramos nada con eso. <a href="/buscar" data-search-all-empty>Ver la búsqueda completa</a> o escríbenos y lo preparamos.
+    </p>
+  </div>
+</div>
+
+<style>
+  .search { position: fixed; inset: 0; z-index: 300; display: grid; justify-items: center; align-items: start; padding: clamp(12px, 6vh, 72px) 16px 16px; }
+  .search[hidden] { display: none; }
+  .search__backdrop { position: absolute; inset: 0; background: rgba(34, 24, 28, 0.45); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); animation: s-fade 0.3s ease both; }
+  .search__panel { position: relative; width: min(680px, 100%); max-height: calc(100dvh - 32px); overflow-y: auto; background: var(--cream); border-radius: 28px; padding: 14px; box-shadow: 0 30px 80px rgba(34, 24, 28, 0.3); animation: s-in 0.45s var(--ease) both; }
+  .search__form { display: flex; align-items: center; gap: 12px; padding: 6px 6px 6px 18px; background: var(--white); border: 1px solid var(--line); border-radius: 999px; }
+  .search__form:focus-within { border-color: var(--wine); }
+  .search__form input { flex: 1; min-width: 0; border: 0; background: none; outline: none; font: inherit; font-size: 1.1rem; padding: 12px 0; }
+  .search__form input::-webkit-search-cancel-button { display: none; }
+  .search__close { width: 44px; height: 44px; flex: none; border-radius: 50%; border: 0; background: var(--blush-50); display: grid; place-items: center; }
+  .search__list { list-style: none; padding: 0; margin: 12px 0 0; display: grid; gap: 4px; }
+  .search__list :global(a) { display: flex; gap: 14px; align-items: center; padding: 8px; border-radius: 18px; text-decoration: none; }
+  .search__list :global(a:hover), .search__list :global(a[aria-selected='true']) { background: var(--white); outline: 1px solid var(--line); }
+  :global(.search__thumb) { width: 56px; height: 70px; flex: none; border-radius: 12px; object-fit: cover; background: var(--blush-50); }
+  :global(.search__meta) { display: grid; gap: 2px; min-width: 0; }
+  :global(.search__name) { font-family: var(--font-serif); font-size: 1.1rem; line-height: 1.2; }
+  :global(.search__sub) { font-size: var(--fs-xs); color: var(--ink-soft); }
+  :global(.search__price) { margin-left: auto; font-size: var(--fs-sm); font-weight: 600; white-space: nowrap; color: var(--wine); }
+  .search__all { display: flex; gap: 8px; align-items: center; justify-content: center; margin-top: 8px; padding: 14px; border-radius: 999px; background: var(--wine); color: var(--white); text-decoration: none; font-weight: 600; font-size: var(--fs-sm); }
+  .search__all[hidden] { display: none; }
+  .search__hint { padding: 18px 8px 8px; }
+  .search__hint[hidden] { display: none; }
+  .search__hint p { font-size: var(--fs-xs); letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-soft); margin-bottom: 10px; }
+  .search__hint ul { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+  .search__hint a { display: inline-block; padding: 8px 16px; border-radius: 999px; background: var(--white); border: 1px solid var(--line); text-decoration: none; font-size: var(--fs-sm); }
+  .search__hint a:hover { border-color: var(--wine); color: var(--wine); }
+  .search__empty { padding: 20px 10px 10px; color: var(--ink-soft); }
+  .search__empty[hidden] { display: none; }
+  @keyframes s-fade { from { opacity: 0; } }
+  @keyframes s-in { from { opacity: 0; transform: translateY(-16px) scale(0.98); } }
+  @media (prefers-reduced-motion: reduce) { .search__backdrop, .search__panel { animation: none; } }
+</style>
+
+<script>
+  import '../scripts/search';
+</script>

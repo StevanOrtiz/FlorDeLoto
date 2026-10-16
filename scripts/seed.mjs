@@ -34,9 +34,9 @@ console.log(`Categorías: ${categories.length}`);
 let imgCount = 0, skipped = 0;
 for (const p of products) {
   const [row] = await sql`
-    insert into products (slug, category_id, subcategory, name, description, composition, dimensions, care, watering, occasions, price, published, featured, sort_order)
+    insert into products (slug, category_id, subcategory, name, description, composition, dimensions, care, watering, occasions, keywords, price, published, featured, sort_order)
     values (${p.slug}, ${p.category_id}, ${p.subcategory}, ${p.name}, ${p.description}, ${p.composition}, ${p.dimensions},
-            ${p.care}, ${p.watering}, ${p.occasions}, ${p.price}, ${p.published}, ${p.featured}, ${p.sort_order})
+            ${p.care}, ${p.watering}, ${p.occasions}, ${p.keywords ?? []}, ${p.price}, ${p.published}, ${p.featured}, ${p.sort_order})
     on conflict (slug) do update set category_id = excluded.category_id, subcategory = excluded.subcategory, name = excluded.name,
       description = excluded.description, composition = excluded.composition, dimensions = excluded.dimensions, care = excluded.care,
       watering = excluded.watering, occasions = excluded.occasions, price = excluded.price, featured = excluded.featured, sort_order = excluded.sort_order,

@@ -77,6 +77,12 @@ const editing = !!p;
       </div>
     </div>
 
+    <div class="field">
+      <label for="p-kw">Palabras clave para el buscador (separadas por comas)</label>
+      <textarea id="p-kw" name="keywords" rows="2" maxlength="900" placeholder="romántico, rojo, regalo, aniversario, perfumado" aria-describedby="p-kw-hint">{p?.keywords.join(', ') ?? ''}</textarea>
+      <p class="hint" id="p-kw-hint">Lo que escribiría un cliente para encontrarlo: tipo de flor, color, sensación u ocasión. No hace falta repetir el nombre; ya se busca en él, en la descripción, la composición y las ocasiones.</p>
+    </div>
+
     <div class="checks">
       <label class="check"><input type="checkbox" name="published" checked={p ? p.published : true} /> <span>Visible en la web</span></label>
       <label class="check"><input type="checkbox" name="featured" checked={p?.featured ?? false} /> <span>Destacado en la portada («Los más pedidos»)</span></label>

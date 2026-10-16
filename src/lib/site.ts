@@ -28,3 +28,6 @@ export const footerCategories = [
   { label: 'Funerario', href: '/funerales-segovia' },
   { label: 'Bodas & eventos', href: '/bodas-eventos-segovia' },
 ];
+
+/** Búsquedas sugeridas cuando todavía no se ha escrito nada o no hay resultados. */
+export const searchSuggestions = ['Rosas', 'Ramos', 'Orquídea', 'Bonsái', 'Aniversario', 'Cumpleaños', 'Regalo', 'Funeral'];

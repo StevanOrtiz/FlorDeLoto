@@ -23,7 +23,7 @@ export const PUT: APIRoute = async ({ params, request }) => {
     const rows = await sql`
       update products set slug = ${p.slug}, category_id = ${p.category_id}, subcategory = ${p.subcategory}, name = ${p.name},
              description = ${p.description}, composition = ${p.composition}, dimensions = ${p.dimensions}, care = ${p.care},
-             watering = ${p.watering}, occasions = ${p.occasions}, price = ${p.price}, published = ${p.published},
+             watering = ${p.watering}, occasions = ${p.occasions}, keywords = ${p.keywords}, price = ${p.price}, published = ${p.published},
              featured = ${p.featured}, updated_at = now()
        where id = ${id} returning id, slug`;
     if (!rows[0]) return json({ ok: false, error: 'Producto no encontrado.' }, 404);

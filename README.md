@@ -57,6 +57,21 @@ ADMIN_EMAIL=... ADMIN_PASSWORD=... npm run admin:create -- --reset
   cuerpo de una petición a ~4,5 MB.
 - El panel responde con `no-store`, `noindex` y `X-Frame-Options: DENY`.
 
+## Buscador
+
+Lupa en la cabecera (atajo: tecla `/`) con sugerencias en vivo, y página de resultados `/buscar?q=…` con filtro por
+categoría (`noindex`). Sin JavaScript, la lupa lleva directamente a `/buscar`.
+
+- **Qué busca** (de más a menos peso): nombre → *palabras clave* → tipo, categoría y ocasiones → composición → descripción.
+- **Cómo busca** (`src/lib/search.ts`): sin tildes ni mayúsculas, plurales, sinónimos básicos (cumple/cumpleaños,
+  novia/boda, pésame/funeral…, lista editable en `SYNONYMS`) y tolerancia a erratas con `pg_trgm`. Todas las palabras
+  escritas deben aparecer en algún campo. Consultas parametrizadas; `/api/search` se guarda 1 minuto en la CDN.
+- **Palabras clave**: campo «Palabras clave para el buscador» en el panel de cada producto (separadas por comas).
+- `npm run db:migrate-search` prepara la base de datos (extensiones `unaccent` y `pg_trgm`, función `f_unaccent`,
+  columna `keywords`). Idempotente.
+- `npm run db:keywords` muestra una vista previa de palabras clave sugeridas a partir de lo que cada producto ya dice
+  (nombre, categoría, ocasiones…); con `-- --apply` las guarda solo en los productos que no tienen ninguna.
+
 ## Estructura
 
 ```

@@ -1,0 +1,124 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import ProductCard from '../components/ProductCard.astro';
+import Icon from '../components/Icon.astro';
+import { toProduct, getCategories } from '../lib/catalog';
+import { searchProducts } from '../lib/search';
+import { cachePublic } from '../lib/cache';
+import { searchSuggestions, waLink } from '../lib/site';
+
+const q = (Astro.url.searchParams.get('q') ?? '').replace(/\s+/g, ' ').trim().slice(0, 80);
+const catParam = Astro.url.searchParams.get('categoria') ?? '';
+
+let all: ReturnType<typeof toProduct>[] = [];
+let failed = false;
+const categories = await getCategories().catch(() => []);
+if (q) {
+  try {
+    const { rows } = await searchProducts(q, { limit: 100 });
+    all = rows.map(toProduct);
+  } catch (e) {
+    console.error('[buscar] error', e);
+    failed = true;
+  }
+}
+cachePublic(Astro.response);
+if (failed) Astro.response.headers.set('Cache-Control', 'no-store');
+
+const active = categories.find((c) => c.id === catParam)?.id ?? '';
+const items = active ? all.filter((p) => p.category === active) : all;
+const counts = categories
+  .map((c) => ({ ...c, n: all.filter((p) => p.category === c.id).length }))
+  .filter((c) => c.n > 0);
+const href = (extra: Record<string, string>) => `/buscar?${new URLSearchParams({ q, ...extra })}`;
+const crumbs = [{ name: 'Inicio', href: '/' }, { name: 'Buscar', href: '/buscar' }];
+---
+<Base
+  title={q ? `Resultados para «${q}»` : 'Buscar flores y plantas'}
+  description="Busca flores, ramos, plantas y arreglos de Flor de Loto Segovia por nombre, color, ocasión o característica."
+  noindex
+  breadcrumbs={crumbs}
+>
+  <PageHero
+    crumbs={crumbs}
+    eyebrow="Buscador"
+    title="¿Qué flor <em>buscas?</em>"
+    lead="Escribe el nombre de una flor, un color o una ocasión: «rosas», «aniversario», «orquídea blanca»…"
+  >
+    <form class="sform" action="/buscar" method="get" role="search" data-reveal="up" data-delay="0.4">
+      <label class="sr-only" for="buscar-q">Buscar en el catálogo</label>
+      <Icon name="search" size={22} />
+      <input id="buscar-q" name="q" type="search" value={q} maxlength="80" placeholder="Rosas rojas, cumpleaños, orquídea…" autocomplete="off" enterkeyhint="search" />
+      <button class="btn" type="submit">Buscar</button>
+    </form>
+  </PageHero>
+
+  <section class="container results" aria-labelledby="results-h">
+    {!q && (
+      <div class="results__empty">
+        <h2 id="results-h" class="h3">Prueba con…</h2>
+        <ul class="tags">{searchSuggestions.map((s) => <li><a class="chip" href={href({ q: s })}>{s}</a></li>)}</ul>
+      </div>
+    )}
+
+    {q && failed && (
+      <div class="results__empty">
+        <h2 id="results-h" class="h3">No hemos podido buscar ahora mismo</h2>
+        <p class="muted">Inténtalo de nuevo en un momento o mira el <a href="/catalogo">catálogo completo</a>.</p>
+      </div>
+    )}
+
+    {q && !failed && (
+      <>
+        <h2 id="results-h" class="h3">
+          {all.length === 0
+            ? <>Sin resultados para «{q}»</>
+            : <>{all.length} {all.length === 1 ? 'resultado' : 'resultados'} para «{q}»</>}
+        </h2>
+
+        {counts.length > 1 && (
+          <nav class="filters" aria-label="Filtrar resultados por categoría">
+            <a class="chip" href={href({})} aria-current={active ? undefined : 'true'}>Todo <span>{all.length}</span></a>
+            {counts.map((c) => (
+              <a class="chip" href={href({ categoria: c.id })} aria-current={active === c.id ? 'true' : undefined}>{c.short} <span>{c.n}</span></a>
+            ))}
+          </nav>
+        )}
+
+        {items.length > 0 && (
+          <div class="grid-products" data-stagger="0.05">
+            {items.map((p, i) => <ProductCard product={p} eager={i < 3} showCategory />)}
+          </div>
+        )}
+
+        {all.length === 0 && (
+          <div class="results__empty">
+            <p class="muted">Revisa la ortografía o prueba con una palabra más general. También puedes pedirnos lo que buscas: lo preparamos a tu medida.</p>
+            <ul class="tags">{searchSuggestions.map((s) => <li><a class="chip" href={href({ q: s })}>{s}</a></li>)}</ul>
+            <p>
+              <a class="btn btn--wa" href={waLink(`¡Hola! Estoy buscando «${q}». ¿Me podéis ayudar?`)} target="_blank" rel="noopener">
+                <Icon name="whatsapp" /> Pregúntanos por WhatsApp
+              </a>
+            </p>
+          </div>
+        )}
+      </>
+    )}
+  </section>
+</Base>
+
+<style>
+  .sform { display: flex; align-items: center; gap: 12px; margin-top: 28px; max-width: 640px; padding: 8px 8px 8px 20px; background: var(--white); border: 1px solid var(--line); border-radius: 999px; box-shadow: var(--shadow-soft); }
+  .sform:focus-within { border-color: var(--wine); }
+  .sform input { flex: 1; min-width: 0; border: 0; background: none; font: inherit; font-size: var(--fs-md, 1.05rem); padding: 10px 0; outline: none; }
+  .results { padding-bottom: clamp(48px, 8vw, 96px); }
+  .results h2 { margin-bottom: 20px; }
+  .filters { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: clamp(24px, 4vw, 40px); }
+  .chip { display: inline-flex; gap: 8px; align-items: center; padding: 10px 18px; border-radius: 999px; border: 1px solid var(--line); background: var(--white); font-size: var(--fs-sm); font-weight: 500; text-decoration: none; transition: background 0.3s, color 0.3s, transform 0.4s var(--ease); }
+  .chip span { font-size: var(--fs-xs); opacity: 0.85; }
+  .chip:hover { transform: translateY(-2px); }
+  .chip[aria-current='true'] { background: var(--wine); color: var(--white); border-color: var(--wine); }
+  .tags { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 10px; margin: 16px 0 28px; }
+  .results__empty { max-width: 60ch; }
+</style>

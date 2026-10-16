@@ -9,7 +9,9 @@
     "preview": "astro preview",
     "check": "astro check",
     "db:seed": "node --env-file=.env scripts/seed.mjs",
-    "admin:create": "node --env-file=.env scripts/create-admin.mjs"
+    "admin:create": "node --env-file=.env scripts/create-admin.mjs",
+    "db:migrate-search": "node --env-file=.env scripts/migrate-search.mjs",
+    "db:keywords": "node --env-file=.env scripts/add-keywords.mjs"
   },
   "dependencies": {
     "@astrojs/netlify": "^8.2.6",

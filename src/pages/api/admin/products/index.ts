@@ -19,9 +19,9 @@ export const POST: APIRoute = async ({ request }) => {
 
   try {
     const [row] = await sql`
-      insert into products (slug, category_id, subcategory, name, description, composition, dimensions, care, watering, occasions, price, published, featured, sort_order)
+      insert into products (slug, category_id, subcategory, name, description, composition, dimensions, care, watering, occasions, keywords, price, published, featured, sort_order)
       values (${p.slug}, ${p.category_id}, ${p.subcategory}, ${p.name}, ${p.description}, ${p.composition}, ${p.dimensions}, ${p.care},
-              ${p.watering}, ${p.occasions}, ${p.price}, ${p.published}, ${p.featured},
+              ${p.watering}, ${p.occasions}, ${p.keywords}, ${p.price}, ${p.published}, ${p.featured},
               (select coalesce(max(sort_order), 0) + 1 from products where category_id = ${p.category_id}))
       returning id, slug`;
     return json({ ok: true, id: row.id, slug: row.slug }, 201);

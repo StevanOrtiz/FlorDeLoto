@@ -145,6 +145,7 @@ function initProductForm(form: HTMLFormElement) {
     dimensions: field('dimensions').value,
     watering: field('watering').value,
     occasions: field('occasions').value.split(',').map((s) => s.trim()).filter(Boolean),
+    keywords: field('keywords').value,
     published: (field('published') as HTMLInputElement).checked,
     featured: (field('featured') as HTMLInputElement).checked,
   });

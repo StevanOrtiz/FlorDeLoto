@@ -12,6 +12,7 @@ export interface ProductInput {
   care: string[];
   watering: string | null;
   occasions: string[];
+  keywords: string[];
   price: number | null;
   published: boolean;
   featured: boolean;
@@ -39,6 +40,22 @@ function toList(value: unknown, maxItems: number, maxLen: number): string[] {
     .map((v) => clean(v, maxLen))
     .filter(Boolean)
     .slice(0, maxItems);
+}
+
+/** Palabras clave: lista o texto separado por comas / saltos de línea; sin repetidas (sin distinguir mayúsculas ni tildes). */
+function toKeywords(value: unknown): string[] {
+  const raw = Array.isArray(value) ? value : typeof value === 'string' ? value.split(/[,\n]/) : [];
+  const seen = new Set<string>();
+  const out: string[] = [];
+  for (const v of raw) {
+    const k = clean(v, 40).replace(/\s+/g, ' ');
+    const key = k.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+    if (!k || seen.has(key)) continue;
+    seen.add(key);
+    out.push(k);
+    if (out.length >= 30) break;
+  }
+  return out;
 }
 
 const toBool = (v: unknown) => v === true || v === 'true' || v === 'on';
@@ -78,6 +95,7 @@ export function parseProduct(raw: Record<string, unknown>): { data: ProductInput
       care: toList(raw.care, 15, 300),
       watering: clean(raw.watering, 120) || null,
       occasions: toList(raw.occasions, 10, 40),
+      keywords: toKeywords(raw.keywords),
       price,
       published: toBool(raw.published),
       featured: toBool(raw.featured),

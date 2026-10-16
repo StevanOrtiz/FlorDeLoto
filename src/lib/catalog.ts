@@ -34,6 +34,7 @@ export interface Product {
   care: string[];
   watering: string | null;
   occasions: string[];
+  keywords: string[];
   price: number | null;
   published: boolean;
   featured: boolean;
@@ -51,7 +52,7 @@ const toCategory = (r: Row): Category => ({
   description: r.description, intro: r.intro, sortOrder: r.sort_order,
 });
 
-const toProduct = (r: Row): Product => ({
+export const toProduct = (r: Row): Product => ({
   id: r.id,
   slug: r.slug,
   category: r.category_id,
@@ -65,6 +66,7 @@ const toProduct = (r: Row): Product => ({
   care: r.care ?? [],
   watering: r.watering,
   occasions: r.occasions ?? [],
+  keywords: r.keywords ?? [],
   price: r.price == null ? null : Number(r.price),
   published: r.published,
   featured: r.featured,

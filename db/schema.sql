@@ -25,6 +25,7 @@ create table if not exists products (
   care         text[] not null default '{}',
   watering     text check (char_length(watering) <= 120),
   occasions    text[] not null default '{}',
+  keywords     text[] not null default '{}',     -- palabras clave para el buscador (las escribe el administrador)
   price        numeric(8,2) check (price is null or (price >= 0 and price < 100000)),
   published    boolean not null default true,
   featured     boolean not null default false,   -- aparece en «Los más pedidos» y en el collage de la portada
@@ -93,3 +94,12 @@ create index if not exists contact_messages_created_idx on contact_messages (cre
 
 -- Conservación (RGPD): borrar mensajes atendidos de más de 12 meses.
 -- delete from contact_messages where atendido and created_at < now() - interval '12 months';
+
+-- ───────── Buscador ─────────
+-- Búsqueda sin tildes ni mayúsculas y tolerante a erratas (trigramas). Ver scripts/migrate-search.mjs.
+create extension if not exists unaccent;
+create extension if not exists pg_trgm;
+create or replace function f_unaccent(text) returns text
+  language sql immutable parallel safe strict
+  as $$ select public.unaccent('public.unaccent'::regdictionary, $1) $$;
+alter table products add column if not exists keywords text[] not null default '{}';
