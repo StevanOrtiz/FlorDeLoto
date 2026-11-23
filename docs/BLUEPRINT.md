@@ -160,7 +160,7 @@ Capas antispam y de seguridad, en este orden: Origin del mismo sitio → `Conten
 
 ## 9. SEO y contenido
 
-- `Base.astro`: `<title>` (añade el nombre del negocio), meta description, canonical (de `SITE_URL`, sin barra final), Open Graph/Twitter, `noindex` opcional, JSON-LD `Florist` con dirección, geo, horarios, valoración y redes (`@id: SITE_URL/#florist`), `BreadcrumbList`, `ItemList` (catálogo) y `Product` en fichas. JSON-LD escapa `<` para evitar inyección. Meta `google-site-verification` desde `PUBLIC_GSC_VERIFICATION`.
+- `Base.astro`: `<title>` (añade el nombre del negocio), meta description, canonical (de `SITE_URL`, sin barra final), Open Graph/Twitter, `noindex` opcional, JSON-LD `Florist` con dirección, geo, horarios y redes (`@id: SITE_URL/#florist`), `BreadcrumbList`, `ItemList` (catálogo) y `Product` en fichas. JSON-LD escapa `<` para evitar inyección. Meta `google-site-verification` desde `PUBLIC_GSC_VERIFICATION`.
 - `sitemap.xml`: estáticas + categorías + productos publicados (con `lastmod` = `updated_at`), excluyendo funerales; `robots.txt` con `Disallow: /admin` y `/api/`.
 - Datos del negocio en **`src/data/business.json`** (nombre, tagline, teléfono, `whatsappNumber`, dirección, geo, mapas, horarios, redes, canales de pedido, comodidades, valoración, datos legales) y reseñas en `src/data/reviews.ts`. **Nunca se inventan datos**: los que faltan aparecen como «[Pendiente: …]» (`Pending.astro`).
 - Textos: reescritos para SEO local («floristería en Segovia», «entrega a domicilio»); URLs con ciudad (`/rosas-segovia`).
